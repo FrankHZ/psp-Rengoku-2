@@ -22,15 +22,28 @@ from align_reference_text import align_reference_text
 from decode_offset_table_text import decode_values
 from extract_offset_table_runs import classify_run, decode_ascii_run, parse_record_runs
 from export_glyph_cells import crop_rgba, glyph_id_contiguous, glyph_id_page100
+from copy_mig_font_cell import copy_font_cell
+from font_cell_inventory import inventory_page_cells
 from glyph_map import decode_glyph_values, read_glyph_map
-from mig import decode_mig_indices, decode_palette_color, read_mig, render_mig_rgba, unswizzle_texture_bytes
+from mig import (
+    decode_mig_indices,
+    decode_palette_color,
+    read_mig,
+    render_mig_rgba,
+    replace_mig_indices,
+    swizzle_texture_bytes,
+    unswizzle_texture_bytes,
+)
 from map_runtime_font_pages import map_runtime_pages, parse_dump_address
+from patch_mig_font_cell import parse_cell_range, patch_font_cell, patch_font_cells
 from png_rgba import read_png_rgba
 from search_encoded_text import search_phrase
+from stage_font_probe import apply_font_patch, parse_cells
 from mscr import read_mscr
 from offset_table import read_offset_table
 from pack0001 import read_pack0001
-from tdl import read_tdl
+from tdl import read_tdl, replace_tdl_child, replace_tdl_children
+from translation_char_inventory import collect_translation_chars, is_cjk
 
 
 class Mcd3Tests(unittest.TestCase):
@@ -139,6 +152,49 @@ class Mcd3Tests(unittest.TestCase):
             self.assertEqual(tdl.entries[0].offset, 0x40)
             self.assertEqual(tdl.entries[1].end_offset, 0x48)
 
+    def test_replace_tdl_child_writes_container_copy(self) -> None:
+        with self.make_temp_dir() as temp_dir:
+            temp = Path(temp_dir)
+            source = temp / "sample.tdl"
+            replacement = temp / "replacement.bin"
+            output = temp / "patched.tdl"
+            header = struct.pack("<4sIII", b".TDL", 2, 8, 0)
+            rows = b"".join(
+                [
+                    b"font_a".ljust(16, b"\x00") + struct.pack("<II", 4, 0x40),
+                    b"font_b".ljust(16, b"\x00") + struct.pack("<II", 4, 0x44),
+                ]
+            )
+            source.write_bytes((header + rows).ljust(0x40, b"\x00") + b"AAAABBBB")
+            replacement.write_bytes(b"CCCC")
+
+            replace_tdl_child(source, 1, replacement, output)
+
+            self.assertEqual(output.read_bytes()[-8:], b"AAAACCCC")
+            self.assertEqual(source.read_bytes()[-8:], b"AAAABBBB")
+
+    def test_replace_tdl_children_writes_multiple_children(self) -> None:
+        with self.make_temp_dir() as temp_dir:
+            temp = Path(temp_dir)
+            source = temp / "sample.tdl"
+            first = temp / "first.bin"
+            second = temp / "second.bin"
+            output = temp / "patched.tdl"
+            header = struct.pack("<4sIII", b".TDL", 2, 8, 0)
+            rows = b"".join(
+                [
+                    b"font_a".ljust(16, b"\x00") + struct.pack("<II", 4, 0x40),
+                    b"font_b".ljust(16, b"\x00") + struct.pack("<II", 4, 0x44),
+                ]
+            )
+            source.write_bytes((header + rows).ljust(0x40, b"\x00") + b"AAAABBBB")
+            first.write_bytes(b"1111")
+            second.write_bytes(b"2222")
+
+            replace_tdl_children(source, {0: first, 1: second}, output)
+
+            self.assertEqual(output.read_bytes()[-8:], b"11112222")
+
     def test_read_pack0001_synthetic_container(self) -> None:
         with self.make_temp_dir() as temp_dir:
             path = Path(temp_dir) / "sample.pack"
@@ -203,6 +259,107 @@ class Mcd3Tests(unittest.TestCase):
             self.assertEqual((width, height), (128, 128))
             self.assertEqual(indices[:2], bytes([1, 2]))
 
+    def test_swizzle_texture_bytes_round_trips_linear_data(self) -> None:
+        linear = bytes(index % 256 for index in range(64 * 16))
+        swizzled = swizzle_texture_bytes(linear, width_bytes=64, height=16)
+
+        self.assertEqual(unswizzle_texture_bytes(swizzled, width_bytes=64, height=16), linear)
+
+    def test_replace_mig_indices_preserves_shape_and_updates_pixels(self) -> None:
+        with self.make_temp_dir() as temp_dir:
+            temp = Path(temp_dir)
+            source = temp / "0001_codeJAP14x14_00_.bin"
+            output = temp / "patched.bin"
+            data = bytearray(0x2110)
+            data[0:11] = b"MIG.00.1PSP"
+            struct.pack_into("<HH", data, 0xD8, 128, 128)
+            source.write_bytes(data)
+
+            indices = bytearray(128 * 128)
+            indices[0] = 7
+            indices[127 * 128 + 127] = 9
+            replace_mig_indices(source, bytes(indices), output)
+
+            self.assertEqual(source.read_bytes()[:0x110], output.read_bytes()[:0x110])
+            self.assertEqual(decode_mig_indices(output), (128, 128, bytes(indices)))
+
+    def test_patch_font_cell_writes_pattern_to_requested_cell(self) -> None:
+        with self.make_temp_dir() as temp_dir:
+            temp = Path(temp_dir)
+            source = temp / "0001_codeJAP14x14_00_.bin"
+            output = temp / "patched.bin"
+            data = bytearray(0x2110)
+            data[0:11] = b"MIG.00.1PSP"
+            struct.pack_into("<HH", data, 0xD8, 128, 128)
+            source.write_bytes(data)
+
+            patch_font_cell(source, output, cell_index=10, pattern="box", ink_index=12)
+            _, _, indices = decode_mig_indices(output)
+
+            self.assertFalse(cell_has_ink(indices, image_width=128, x=0, y=0, width=14, height=14))
+            self.assertTrue(cell_has_ink(indices, image_width=128, x=14, y=14, width=14, height=14))
+            self.assertEqual(indices[(14 + 1) * 128 + 14 + 1], 12)
+
+    def test_patch_font_cells_writes_multiple_requested_cells(self) -> None:
+        with self.make_temp_dir() as temp_dir:
+            temp = Path(temp_dir)
+            source = temp / "0001_codeJAP14x14_00_.bin"
+            output = temp / "patched.bin"
+            data = bytearray(0x2110)
+            data[0:11] = b"MIG.00.1PSP"
+            struct.pack_into("<HH", data, 0xD8, 128, 128)
+            source.write_bytes(data)
+
+            patch_font_cells(source, output, cell_indices=[0, 80], pattern="cross", ink_index=8)
+            _, _, indices = decode_mig_indices(output)
+
+            self.assertTrue(cell_has_ink(indices, image_width=128, x=0, y=0, width=14, height=14))
+            self.assertTrue(cell_has_ink(indices, image_width=128, x=112, y=112, width=14, height=14))
+            self.assertFalse(cell_has_ink(indices, image_width=128, x=14, y=0, width=14, height=14))
+
+    def test_parse_cell_range_accepts_lists_and_ranges(self) -> None:
+        self.assertEqual(parse_cell_range("0-2,5 7"), [0, 1, 2, 5, 7])
+
+    def test_stage_font_probe_parse_cells(self) -> None:
+        self.assertEqual(parse_cells({"target_cell": 65}), [65])
+        self.assertEqual(parse_cells({"target_cells": "61-63,65"}), [61, 62, 63, 65])
+
+    def test_stage_font_probe_apply_font_patch_box_mode(self) -> None:
+        with self.make_temp_dir() as temp_dir:
+            temp = Path(temp_dir)
+            target = temp / "0001_codeJAP14x14_00_.bin"
+            output = temp / "patched.bin"
+            data = bytearray(0x2110)
+            data[0:11] = b"MIG.00.1PSP"
+            struct.pack_into("<HH", data, 0xD8, 128, 128)
+            target.write_bytes(data)
+
+            apply_font_patch({"mode": "box", "target_cell": 3}, target, output)
+
+            _, _, indices = decode_mig_indices(output)
+            self.assertTrue(cell_has_ink(indices, image_width=128, x=42, y=0, width=14, height=14))
+
+    def test_copy_font_cell_between_pages(self) -> None:
+        with self.make_temp_dir() as temp_dir:
+            temp = Path(temp_dir)
+            source = temp / "0001_codeJAP14x14_00_.bin"
+            target = temp / "0002_codeJAP14x14_02_.bin"
+            output = temp / "patched.bin"
+            data = bytearray(0x2110)
+            data[0:11] = b"MIG.00.1PSP"
+            struct.pack_into("<HH", data, 0xD8, 128, 128)
+            source_indices = bytearray(128 * 128)
+            source_indices[(14 + 1) * 128 + 14 + 1] = 9
+            source.write_bytes(data)
+            replace_mig_indices(source, bytes(source_indices), source)
+            target.write_bytes(data)
+
+            copy_font_cell(source, 10, target, 20, output)
+            _, _, copied = decode_mig_indices(output)
+
+            self.assertEqual(copied[(28 + 1) * 128 + 28 + 1], 9)
+            self.assertFalse(cell_has_ink(copied, image_width=128, x=14, y=14, width=14, height=14))
+
     def test_write_and_read_png_rgba(self) -> None:
         from mig import write_png_rgba
 
@@ -262,6 +419,37 @@ class Mcd3Tests(unittest.TestCase):
         self.assertEqual(glyph_id_contiguous("0000_codeANK9x14_00_0", 0, 5), 5)
         self.assertEqual(glyph_id_contiguous("0006_codeJAP14x14_10_", 6, 16), 0x223)
         self.assertEqual(glyph_id_page100("0006_codeJAP14x14_10_", 6, 16), 0x610)
+
+    def test_font_cell_inventory_marks_empty_and_occupied_cells(self) -> None:
+        with self.make_temp_dir() as temp_dir:
+            path = Path(temp_dir) / "0000_codeANK9x14_00_0.bin"
+            data = bytearray(0x2110)
+            data[0:11] = b"MIG.00.1PSP"
+            struct.pack_into("<HH", data, 0xD8, 128, 128)
+            data[0x110] = 0x01
+            path.write_bytes(data)
+
+            rows = inventory_page_cells(path, page_index=0)
+
+            self.assertEqual(len(rows), 126)
+            self.assertTrue(rows[0]["has_ink"])
+            self.assertFalse(rows[1]["has_ink"])
+            self.assertEqual(rows[0]["glyph_id_contiguous"], "0x0000")
+
+    def test_translation_char_inventory_counts_cjk_chars(self) -> None:
+        with self.make_temp_dir() as temp_dir:
+            path = Path(temp_dir) / "draft.json"
+            path.write_text(
+                json.dumps({"entries": [{"chs_translation": "移动 MOVE"}, {"chs_translation": "锁定"}]}),
+                encoding="utf-8",
+            )
+
+            report = collect_translation_chars([path], ("chs_translation",))
+
+            self.assertTrue(is_cjk("移"))
+            self.assertFalse(is_cjk("A"))
+            self.assertEqual(report["cjk_unique"], 4)
+            self.assertIn("移", report["cjk_chars"])
 
     def test_search_phrase_finds_encoded_text(self) -> None:
         with self.make_temp_dir() as temp_dir:

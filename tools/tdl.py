@@ -62,5 +62,28 @@ def read_tdl_bytes(data: bytes, path: Path | None = None) -> TdlFile:
     )
 
 
+def replace_tdl_child(source_path: Path, child_index: int, replacement_path: Path, output_path: Path) -> None:
+    replace_tdl_children(source_path, {child_index: replacement_path}, output_path)
+
+
+def replace_tdl_children(source_path: Path, replacements: dict[int, Path], output_path: Path) -> None:
+    tdl = read_tdl(source_path)
+    data = bytearray(source_path.read_bytes())
+
+    for child_index, replacement_path in sorted(replacements.items()):
+        if child_index < 0 or child_index >= len(tdl.entries):
+            raise ValueError(f"child index {child_index} is outside TDL entry count {len(tdl.entries)}")
+
+        entry = tdl.entries[child_index]
+        replacement = replacement_path.read_bytes()
+        if len(replacement) != entry.size:
+            raise ValueError(f"replacement size {len(replacement)} does not match child size {entry.size}")
+
+        data[entry.offset : entry.end_offset] = replacement
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_bytes(data)
+
+
 def _decode_c_string(data: bytes) -> str:
     return data.split(b"\x00", 1)[0].decode("ascii", errors="replace")

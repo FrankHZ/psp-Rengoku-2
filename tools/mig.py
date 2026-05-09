@@ -129,6 +129,43 @@ def decode_mig_indices(path: Path) -> tuple[int, int, bytes]:
     return mig.width, mig.height, bytes(indices)
 
 
+def replace_mig_indices(path: Path, indices: bytes, output_path: Path) -> None:
+    mig = read_mig(path)
+    if (
+        mig.width is None
+        or mig.height is None
+        or mig.bits_per_pixel != 4
+        or mig.pixel_offset is None
+        or mig.pixel_size is None
+    ):
+        raise ValueError(f"{path} is not a supported 4bpp paletted MIG texture")
+
+    expected = mig.width * mig.height
+    if len(indices) != expected:
+        raise ValueError(f"got {len(indices)} indices, expected {expected}")
+
+    packed_linear = pack_4bpp_indices(indices)
+    swizzled = swizzle_texture_bytes(packed_linear, width_bytes=mig.width // 2, height=mig.height)
+
+    data = bytearray(path.read_bytes())
+    data[mig.pixel_offset : mig.pixel_offset + mig.pixel_size] = swizzled
+    output_path.write_bytes(data)
+
+
+def pack_4bpp_indices(indices: bytes) -> bytes:
+    if len(indices) % 2:
+        raise ValueError("4bpp index buffer must have an even number of pixels")
+
+    packed = bytearray(len(indices) // 2)
+    for index in range(0, len(indices), 2):
+        low = indices[index]
+        high = indices[index + 1]
+        if low > 0x0F or high > 0x0F:
+            raise ValueError("4bpp palette indices must be in range 0..15")
+        packed[index // 2] = low | (high << 4)
+    return bytes(packed)
+
+
 def decode_palette_color(color: bytes, palette_mode: str) -> tuple[int, int, int, int]:
     if len(color) != 4:
         raise ValueError("palette color must be 4 bytes")
@@ -173,6 +210,33 @@ def unswizzle_texture_bytes(data: bytes, width_bytes: int, height: int) -> bytes
             )
             linear[y * width_bytes + x] = data[swizzled_offset]
     return bytes(linear)
+
+
+def swizzle_texture_bytes(data: bytes, width_bytes: int, height: int) -> bytes:
+    block_width = 16
+    block_height = 8
+    if width_bytes % block_width != 0 or height % block_height != 0:
+        raise ValueError("unsupported linear texture dimensions")
+
+    expected = width_bytes * height
+    if len(data) != expected:
+        raise ValueError(f"got {len(data)} linear bytes, expected {expected}")
+
+    blocks_per_row = width_bytes // block_width
+    swizzled = bytearray(expected)
+    for y in range(height):
+        for x in range(width_bytes):
+            block_x = x // block_width
+            block_y = y // block_height
+            in_block_x = x % block_width
+            in_block_y = y % block_height
+            swizzled_offset = (
+                (block_y * blocks_per_row + block_x) * block_width * block_height
+                + in_block_y * block_width
+                + in_block_x
+            )
+            swizzled[swizzled_offset] = data[y * width_bytes + x]
+    return bytes(swizzled)
 
 
 def write_png_rgba(path: Path, width: int, height: int, rgba: bytes) -> None:

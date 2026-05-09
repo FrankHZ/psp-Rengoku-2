@@ -6,6 +6,8 @@ Status: Survey phase complete enough to stop.
 
 ## Summary
 
+Project target is now explicit: a Simplified Chinese translation patch for the Japanese Rengoku 2 dump. The USA dump and wiki transcripts are reference/alignment sources only.
+
 The extracted Rengoku 2 ISO uses `DATA000.BIN` as a top-level `MCD3` archive index for `DATA001.BIN` through `DATA005.BIN`.
 
 The survey did not find high-confidence dialogue/prose strings in raw archive scans. Most strings found so far are resource names, map object names, model names, texture names, media identifiers, or PSP metadata.
@@ -213,6 +215,7 @@ Continue practical edit/rebuild tests:
     - `E01` -> `DATA001` entry `16`, record `12`: input-key info/help overlay.
     - `G1E` -> `DATA002` entry `65`, record `82`: new-game player-name input screen.
     - `G1F` -> `DATA002` entry `65`, record `84`: new-game player-name input screen.
-15. USA reference alignment is now available for the confirmed `DATA001` tables. Use `tools/align_reference_text.py` to create ignored local comparison reports. The next implementation target is a translator-facing table for `DATA001/0008` that includes source record IDs, max code units, USA reference text, and concise replacement fields.
+15. USA reference alignment is now available for the confirmed `DATA001` tables. Use `tools/align_reference_text.py` to create ignored local comparison reports. The next implementation target is a translator-facing table for `DATA001/0008` that includes source record IDs, max code units, USA reference text, and CHS replacement fields.
+16. CHS font strategy is tracked in `docs/chs-plan.md`. The current best path is a curated glyph subset rendered into the existing 14x14 font atlas, starting with the runtime-confirmed tutorial table.
 
 This is the right next phase because raw string scans did not reveal obvious dialogue text, but the offset-table and glyph-map workflow now decodes a complete boss scene from game data.

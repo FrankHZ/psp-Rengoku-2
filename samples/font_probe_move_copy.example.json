@@ -1,0 +1,19 @@
+{
+  "extracted_root": "local/extracted/Rengoku 2",
+  "entries_root": "local/work/mcd3_entries",
+  "work_root": "local/work/prototype_chs_font/stage_move_copy",
+  "output_root": "local/rebuilt/font_move_copy_probe_extracted",
+  "font_patch": {
+    "mode": "copy",
+    "source_page": "local/work/tdl_DATA001_0002/0006_codeJAP14x14_10_.bin",
+    "source_cell": 59,
+    "target_page": "local/work/tdl_DATA001_0002/0005_codeJAP14x14_08_.bin",
+    "target_child": 5,
+    "target_cell": 65
+  },
+  "text_patch": {
+    "entry_id": 8,
+    "source_entry": "local/work/mcd3_entries/DATA001/0008_bin.bin",
+    "json": "local/work/prototype_chs_font/font_cell33_text_probe_DATA001_0008.json"
+  }
+}

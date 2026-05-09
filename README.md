@@ -2,6 +2,8 @@
 
 This repository contains scripts, tests, and notes for analyzing and translating text from a legally obtained PSP game dump.
 
+Current project target: a Simplified Chinese translation patch for Rengoku 2. English text from the USA release is used only as ignored local reference material for alignment and translation drafting.
+
 Do not commit copyrighted game files, extracted assets, rebuilt images, or generated binary patches. Keep those files in local paths such as `input/`, `work/`, or `out/`, which are ignored by git.
 
 ## Workflow
@@ -55,10 +57,17 @@ The initial tools intentionally avoid assuming any game-specific format:
 - `tools/archive_entry_inventory.py` inventories entries referenced by the `MCD3` index.
 - `tools/binary_inventory.py` summarizes headers, entropy, markers, and ASCII strings.
 - `tools/inspect_tdl.py` inspects `.TDL` resource containers.
+- `tools/replace_tdl_child.py` replaces one same-size child inside a `.TDL` copy.
+- `tools/replace_tdl_children.py` replaces multiple same-size children inside a `.TDL` copy.
 - `tools/inspect_pack0001.py` inspects `PACK0001` resource containers.
 - `tools/inspect_mig.py` inspects `MIG.00.1PSP` resources.
 - `tools/export_mig_png.py` exports supported `MIG.00.1PSP` textures to PNG.
 - `tools/export_glyph_cells.py` exports font atlas cells and glyph ID hypotheses for mapping work.
+- `tools/copy_mig_font_cell.py` copies one compatible MIG font cell into another page.
+- `tools/font_cell_inventory.py` inventories occupied and empty font cells for CHS glyph planning.
+- `tools/patch_mig_font_cell.py` replaces one font atlas cell with a test pattern for glyph-code probes.
+- `tools/stage_font_probe.py` stages ignored extracted-folder font probes from a JSON config.
+- `tools/translation_char_inventory.py` counts unique characters needed by local CHS translation drafts.
 - `tools/extract_offset_table_runs.py` extracts length-prefixed text/glyph-code runs from confirmed offset-table containers.
 - `tools/decode_offset_table_text.py` applies a seed glyph map to offset-table records for survey/debug output.
 - `tools/export_script_table.py` exports script-like offset-table rows with nearby `#start` command context.

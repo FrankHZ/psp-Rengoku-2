@@ -269,6 +269,8 @@ Verification:
 - `tools/analyze_font_grid.py` confirms `codeANK9x14` uses a 14x9 grid and `codeJAP14x14` uses 9x9 grids.
 - `pixel_offset=0x110` is confirmed against PPSSPP dumped textures; the earlier `0x100` guess included a 16-byte descriptor and caused cracked glyphs.
 - `tools/export_glyph_cells.py` exports per-cell PNGs plus a manifest for glyph mapping work.
+- `tools/font_cell_inventory.py` inventories occupied and empty font cells for CHS glyph planning. Current useful empty range is the tail of `codeJAP14x14_20_`, page index `11`, cells `33-80`.
+- `tools/patch_mig_font_cell.py` can replace a single font atlas cell with a same-size test pattern. Combined with `tools/replace_tdl_child.py` and `tools/replace_mcd3_entry.py`, this gives a same-size font-routing probe path.
 
 Unknowns:
 - Exact runtime palette/CLUT variant behavior.
