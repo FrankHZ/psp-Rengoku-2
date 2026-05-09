@@ -4,7 +4,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from text_codec import find_candidate_spans
+from text_codec import find_candidate_spans, has_japanese
 
 
 def main() -> int:
@@ -17,6 +17,7 @@ def main() -> int:
         choices=("ascii", "utf-8", "shift_jis"),
         help="Encoding to scan. May be repeated. Defaults to all supported encodings.",
     )
+    parser.add_argument("--require-japanese", action="store_true", help="Only print spans containing Japanese text.")
     args = parser.parse_args()
 
     if hasattr(sys.stdout, "reconfigure"):
@@ -26,6 +27,8 @@ def main() -> int:
     encodings = tuple(args.encoding) if args.encoding else ("ascii", "utf-8", "shift_jis")
     try:
         for span in find_candidate_spans(data, args.min_length, encodings=encodings):
+            if args.require_japanese and not has_japanese(span.text):
+                continue
             preview = span.text.replace("\n", "\\n").replace("\r", "\\r")
             print(f"0x{span.offset:08X}\t{span.length}\t{span.encoding}\t{preview}")
     except OSError:

@@ -72,6 +72,16 @@ def encode_replacement(text: str, encoding: str, original_length: int) -> bytes:
     return encoded.ljust(original_length, b"\x00")
 
 
+def has_japanese(text: str) -> bool:
+    return any(
+        "\u3040" <= char <= "\u30ff"
+        or "\u3400" <= char <= "\u4dbf"
+        or "\u4e00" <= char <= "\u9fff"
+        or "\uff66" <= char <= "\uff9f"
+        for char in text
+    )
+
+
 def _ascii_span(data: bytes, start: int, end: int, min_length: int) -> Iterable[TextSpan]:
     length = end - start
     if length >= min_length:

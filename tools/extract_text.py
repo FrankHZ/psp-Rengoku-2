@@ -4,6 +4,8 @@ import argparse
 import json
 from pathlib import Path
 
+from extract_offset_table_runs import extract_file_runs
+from glyph_map import decode_glyph_values, read_glyph_map
 from text_codec import find_candidate_spans
 
 
@@ -41,10 +43,59 @@ def export_text(
     return entries
 
 
+def export_offset_table_runs(
+    input_path: Path,
+    output_path: Path,
+    glyph_map_path: Path | None = None,
+) -> list[dict[str, object]]:
+    runs = extract_file_runs(input_path)
+    glyphs = read_glyph_map(glyph_map_path) if glyph_map_path else {}
+    entries: list[dict[str, object]] = []
+    for index, run in enumerate(runs):
+        if run["kind"] == "text":
+            source_text = str(run["text"])
+            decoded_known = int(run["length"])
+        else:
+            values = [int(str(code), 0) for code in run["codes"]]
+            source_text, decoded_known = decode_glyph_values(values, glyphs) if glyphs else (" ".join(run["codes"]), 0)
+        entries.append(
+            {
+                "id": index,
+                "record": int(run["entry"]),
+                "run": int(run["run"]),
+                "entry_offset": int(run["entry_offset"]),
+                "kind": run["kind"],
+                "length": int(run["length"]),
+                "codes": run["codes"],
+                "decoded_known": decoded_known,
+                "text": source_text,
+                "translation": source_text if run["kind"] == "text" else "",
+                "notes": "",
+            }
+        )
+
+    payload = {
+        "source": str(input_path),
+        "format": "offset-table-runs-v1",
+        "assumptions": [
+            "Records are addressed by offset-table record index and run index.",
+            "kind=text runs are direct u16 ASCII code-unit strings.",
+            "kind=glyph_codes runs require a glyph map before translator-facing Japanese extraction is complete.",
+            "When --glyph-map is supplied, glyph_codes text is a partial decode and unknown glyphs are shown as middots.",
+            "Importer support for this format is not implemented yet.",
+        ],
+        "entries": entries,
+    }
+    output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return entries
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Export candidate text strings from a binary file to JSON.")
     parser.add_argument("input", type=Path, help="Source binary file.")
     parser.add_argument("output", type=Path, help="Output JSON file.")
+    parser.add_argument("--format", choices=("raw", "offset-table-runs"), default="raw")
+    parser.add_argument("--glyph-map", type=Path, help="CSV with code,char columns for decoding glyph-code runs.")
     parser.add_argument("--min-length", type=int, default=4, help="Minimum decoded character length.")
     parser.add_argument(
         "--encoding",
@@ -54,8 +105,11 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    encodings = tuple(args.encoding) if args.encoding else ("ascii", "utf-8", "shift_jis")
-    entries = export_text(args.input, args.output, args.min_length, encodings=encodings)
+    if args.format == "offset-table-runs":
+        entries = export_offset_table_runs(args.input, args.output, args.glyph_map)
+    else:
+        encodings = tuple(args.encoding) if args.encoding else ("ascii", "utf-8", "shift_jis")
+        entries = export_text(args.input, args.output, args.min_length, encodings=encodings)
     print(f"exported {len(entries)} entries to {args.output}")
     return 0
 
