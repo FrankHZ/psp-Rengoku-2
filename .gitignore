@@ -1,0 +1,64 @@
+# Local PSP dumps and rebuilt images
+*.iso
+*.ISO
+*.cso
+*.CSO
+*.pbp
+*.PBP
+
+# Raw/extracted binary assets from game dumps
+*.bin
+*.BIN
+*.dat
+*.DAT
+*.pak
+*.PAK
+*.arc
+*.ARC
+*.afs
+*.AFS
+*.cpk
+*.CPK
+*.pmf
+*.PMF
+*.at3
+*.AT3
+*.adx
+*.ADX
+*.prx
+*.PRX
+*.elf
+*.ELF
+
+# Common local dump/extract/build folders
+input/
+local/
+roms/
+ppsspp*/
+PPSSPP*/
+work/
+working/
+dump/
+dumps/
+extracted/
+rebuild/
+rebuilt/
+out/
+dist/
+
+# Large generated patch/output artifacts
+*.xdelta
+*.xdelta3
+*.ppf
+*.bps
+*.ups
+
+# Python/tooling cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+tests/.tmp/
+.venv/
+venv/
