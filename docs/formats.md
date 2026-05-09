@@ -299,6 +299,9 @@ Role:
 Mutation rules:
 - Read-only until record commands and payload boundaries are understood.
 - Any importer must preserve offsets or rebuild the table from record lengths.
+- Same-length or shorter direct `u16` ASCII runs can be patched in place with `tools/import_text.py`; shorter replacements are padded inside the existing run payload.
+- Explicit same-length or shorter glyph-code replacements can also be patched with `translation_codes` in `offset-table-runs-v1` JSON. This is intended for controlled experiments where the replacement codepoints are already known.
+- Replacing the edited entry back into `DATA001.BIN` must preserve the indexed `MCD3` entry size. `tools/replace_mcd3_entry.py` enforces same-size replacement.
 
 Verification:
 - `tools/inspect_offset_table.py` parses the current candidate entries.
@@ -310,6 +313,38 @@ Verification:
 - `local/work/offset_table_runs_DATA001_candidates.json` is an ignored generated extraction report.
 - `local/work/extract_text_DATA001_0016_seeded.json` is an ignored generated seeded export for the currently confirmed UI table.
 - `local/work/extract_text_DATA001_0012_story_seeded.json` is an ignored generated seeded export for the confirmed Briareos dialogue table.
+- Local smoke-test artifact: `local/rebuilt/help_to_test_extracted/` contains a staged extracted tree where `DATA001` entry `16`, record `56`, changes `HELP` to `TEST`. This was confirmed at runtime in PPSSPP.
+- Local glyph-code smoke-test artifact: `local/rebuilt/help_to_test_plus_help_page_extracted/` also changes embedded `HELP` tokens inside `DATA001` entry `17`, records `30` and `42`, to `TEST`. This was confirmed at runtime in PPSSPP on the help page.
+- Local tutorial-probe artifact: `local/rebuilt/tutorial_probe_extracted/` marks selected candidate rows with ASCII tags for runtime ownership testing: `T3A` (`DATA001/0003` record `2`), `T65A` and `T65B` (`DATA002/0065` records `86` and `88`), and `T1089A` and `T1089B` (`DATA003/1089` records `412` and `702`).
+- First tutorial-probe result: no marker appeared in the 0F tutorial overlay or bottom prompt.
+- Second tutorial-probe artifact: `local/rebuilt/tutorial_probe2_extracted/` marks `DATA001/0016` records `86-92` with `16A` through `16G`, and `DATA001/0017` records `12`, `30`, `38`, `42`, `57`, `91`, `97`, `99`, and `101` with `17A` through `17I`.
+- Second tutorial-probe result: no marker appeared in the 0F tutorial overlay or bottom prompt.
+- Third tutorial-probe artifact: `local/rebuilt/tutorial_probe3_extracted/` marks selected rows in `DATA001/0008`, `DATA001/0012`, and `DATA001/0015` with `8A` through `8L`, `12A` through `12I`, and `15A` through `15I`.
+- Third tutorial-probe result: markers appeared in menu/tutorial-help screens, but no marker appeared in the live 0F tutorial overlay or bottom prompt. Treat global menu/help tutorial text and in-stage tutorial text as separate layers.
+- Sixth broad parsed-table probe result: `DATA001` entry `8` is confirmed as the live in-stage tutorial/objective overlay table. Runtime PPSSPP screenshots showed these marker mappings:
+  - `B01` -> record `10`, objective prompt state.
+  - `B02` -> record `11`, objective prompt state.
+  - `B0I` -> record `36`, short UI/objective label seen in the broad probe.
+  - `B1C` -> record `66`, 1F attack tutorial title.
+  - `B1D` -> record `67`, 1F attack tutorial body.
+  - `B1E` -> record `68`, 1F lock-on tutorial title.
+  - `B1F` -> record `69`, 1F lock-on tutorial body.
+  - `B1G` -> record `70`, 0F movement tutorial title.
+  - `B1H` -> record `71`, 0F movement tutorial body.
+- The same broad probe also confirmed non-tutorial UI anchors:
+  - `A00` -> `DATA001/0003` record `0`, init loading screen before the main title.
+  - `E01` -> `DATA001/0016` record `12`, input-key info/help overlay.
+  - `G1E` -> `DATA002/0065` record `82`, new-game player-name input screen.
+  - `G1F` -> `DATA002/0065` record `84`, new-game player-name input screen.
+- Focused tutorial replacement artifact: `local/rebuilt/live_tutorial_english_extracted/` changes only `DATA001` entry `8` in `DATA001.BIN`, using same-size or shorter ASCII glyph-code replacements for records `10`, `11`, and `66-71`.
+- Ignored local USA reference alignment shows the same `DATA001` offset-table family with shifted entry IDs:
+  - JP `DATA001/0003` -> USA `DATA001/0009`.
+  - JP `DATA001/0008` -> USA `DATA001/0017`.
+  - JP `DATA001/0012` -> USA `DATA001/0022`.
+  - JP `DATA001/0015` -> USA `DATA001/0026`.
+  - JP `DATA001/0016` -> USA `DATA001/0027`.
+  - JP `DATA001/0017` -> USA `DATA001/0028`.
+- Generated reference exports and alignments live under `local/work/` only and must not be committed. They are useful for record alignment and English drafting, not as direct binary replacement sources.
 
 Unknowns:
 - Record command structure.
@@ -347,6 +382,11 @@ Verification:
 - `tools/extract_offset_table_runs.py` extracts both ASCII command rows and glyph-code rows.
 - `tools/export_script_table.py` adds `#start` section context and exports a script-focused JSON report.
 - Local generated report: `local/work/script_DATA003_1089_dialogue_seeded.json`.
+- Local event/tutorial probe artifact: `local/rebuilt/tutorial_probe4_extracted/` marks every glyph row in sections `#start 01A`, `#start 02A`, and `#start 03A`. Local marker map: `local/work/tutorial_probe4_marker_map.json`.
+- Fourth event/tutorial probe result: no marker appeared in the live 0F tutorial overlay.
+- Local broad script probe artifact: `local/rebuilt/tutorial_probe5_extracted/` marks the remaining `DATA003/1089` sections `#start 2F-8F` and `#start 04A-09A`. Local marker map: `local/work/tutorial_probe5_marker_map.json`.
+- Fifth event/tutorial probe result: no marker appeared in the live tutorial overlays.
+- Local broad parsed-table probe artifact: `local/rebuilt/tutorial_probe6_extracted/` marks every patchable glyph-code row in `DATA001` entries `3`, `8`, `12`, `15`, `16`, `17`, and `DATA002` entry `65`. Local marker map: `local/work/tutorial_probe6_marker_map.json`.
 
 Unknowns:
 - Full story glyph-code map.

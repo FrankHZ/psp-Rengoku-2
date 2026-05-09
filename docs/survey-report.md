@@ -102,6 +102,34 @@ Known story glyph-code anchor from record `306`:
 マ      タ      、      キ      タ      ー      ー      ー
 ```
 
+## USA Reference Alignment
+
+The ignored local USA extract is available only as reference material. The Japanese dump remains the patch target. Do not commit generated USA extraction or alignment files because they can contain copyrighted English text.
+
+Confirmed `DATA001` offset-table mappings:
+
+| Japanese table | USA reference table | Current role |
+| --- | --- | --- |
+| `DATA001/0003` | `DATA001/0009` | Boot/init UI table |
+| `DATA001/0008` | `DATA001/0017` | Live tutorial/objective overlay table |
+| `DATA001/0012` | `DATA001/0022` | Story/dialogue table |
+| `DATA001/0015` | `DATA001/0026` | Large UI/text table |
+| `DATA001/0016` | `DATA001/0027` | Menu/UI label table |
+| `DATA001/0017` | `DATA001/0028` | Help/manual table |
+
+Generated local alignment reports:
+
+| Alignment report | Rows | Fits current same-size budget | Does not fit |
+| --- | ---: | ---: | ---: |
+| `local/work/align_JP0003_USA0009_boot_ui.json` | 14 | 0 | 14 |
+| `local/work/align_JP0008_USA0017_tutorial.json` | 8 | 0 | 8 |
+| `local/work/align_JP0012_USA0022_story.json` | 226 | 4 | 222 |
+| `local/work/align_JP0015_USA0026_ui.json` | 672 | 207 | 465 |
+| `local/work/align_JP0016_USA0027_ui.json` | 297 | 145 | 152 |
+| `local/work/align_JP0017_USA0028_help.json` | 103 | 14 | 89 |
+
+Interpretation: the record/run alignment is strong for the matched `DATA001` tables, but official English text is often longer than the Japanese run budget. The safe importer can already make concise playable replacements; full-length reference text needs either shorter writing, page/layout changes, or a future offset-table/archive resizing workflow.
+
 ## Completed Survey Targets
 
 | Target | Result | Decision |
@@ -114,7 +142,11 @@ Known story glyph-code anchor from record `306`:
 | Runtime equipment/status UI | Uses same `codeJAP14x14` atlas pages for visible labels | Confirms font atlas covers UI text |
 | `DATA001` offset tables | Parsed as `u32 word0`, `u32 count`, `u32 offsets[count]`, records with length-prefixed text/glyph-code runs | Confirmed text/layout containers |
 | `DATA001` entry `12` | Confirmed 4F boss / Briareos dialogue records `140-143` and `160-174` | Translation-relevant target |
+| `DATA001` entry `8` | Confirmed live in-stage tutorial/objective overlay table | Translation-relevant target |
+| `DATA001` entry `3` | Runtime marker `A00` appears on init loading before the main title | UI/boot text target |
+| `DATA001` entry `16` | Runtime marker `E01` appears on the input-key info/help overlay | UI/help text target |
 | `DATA002` entry `65` | Offset table with 702 records; appears to contain game text/data labels and glyph rows | Translation-relevant candidate |
+| `DATA002` entry `65`, records `82` and `84` | Runtime markers `G1E` and `G1F` appear on the new-game player-name input screen | UI/name-input text target |
 | `DATA003` entry `1089` | Offset table with 1499 records; confirmed story script command table | Translation-relevant target |
 | `DATA001.BIN` entries `10`, `11` / `PACK0001` | Object/model packs containing `OMG` children such as `item_obj001` | Asset/media |
 | `DATA004.BIN` / `MSCR` | Map/scene bundles with embedded `.TDL` resource tables | Asset/media for now |
@@ -153,10 +185,34 @@ These are local analysis products and must not be committed.
 
 ## Actual Next Phase
 
-Start the story extraction/import phase:
+Continue practical edit/rebuild tests:
 
-1. Continue extending `samples/story_glyph_map_seed.csv` from known scenes in `DATA001/0012` and related text tables.
-2. Keep `tools/export_script_table.py` for command/control context in `DATA003/1089`, preserving command rows and `#start` context.
-3. Design a reversible importer for edited same-length or rebuilt offset-table records, then test on a copy of `DATA001/0012`.
+1. Same-length ASCII UI replacement is confirmed in PPSSPP: `DATA001` entry `16`, record `56`, changes `HELP` to `TEST`.
+2. PPSSPP can launch the staged extracted folder directly, so ISO rebuild is not required for fast local smoke tests.
+3. Glyph-code/mixed-run replacement is confirmed in PPSSPP: `DATA001` entry `17`, records `30` and `42`, change embedded help-page `HELP` labels to `TEST`.
+4. Confirmed staged folder: `local/rebuilt/help_to_test_plus_help_page_extracted/`.
+5. First tutorial probe at `local/rebuilt/tutorial_probe_extracted/` missed the 0F tutorial overlay and bottom prompt. It replaced selected candidate rows with tags `T3A`, `T65A`, `T65B`, `T1089A`, and `T1089B`.
+6. Second tutorial probe at `local/rebuilt/tutorial_probe2_extracted/` also missed. It focused on `DATA001` entry `16`, records `86-92`, and `DATA001` entry `17`, records `12`, `30`, `38`, `42`, `57`, `91`, `97`, `99`, and `101`.
+7. Third tutorial probe at `local/rebuilt/tutorial_probe3_extracted/` changed menu/tutorial-help text but did not affect the live 0F overlay. It broadened to `DATA001` entries `8`, `12`, and `15`.
+8. Fourth tutorial probe at `local/rebuilt/tutorial_probe4_extracted/` missed the live 0F overlay. It marked every glyph row in `DATA003` entry `1089` script sections `#start 01A`, `#start 02A`, and `#start 03A`.
+9. Fifth tutorial probe at `local/rebuilt/tutorial_probe5_extracted/` also missed. It marked the remaining `DATA003/1089` script sections: `#start 2F-8F` and `#start 04A-09A`.
+10. Sixth tutorial probe is staged at `local/rebuilt/tutorial_probe6_extracted/`. It marks every patchable glyph-code row in all currently parsed non-script text tables: `DATA001` entries `3`, `8`, `12`, `15`, `16`, `17`, and `DATA002` entry `65`.
+11. Sixth tutorial probe result: `DATA001` entry `8` owns the live in-stage tutorial/objective overlay. Confirmed runtime markers:
+    - `B01` / record `10`: 0F bottom objective prompt state.
+    - `B02` / record `11`: 0F bottom objective prompt state.
+    - `B1C` / record `66`: 1F attack tutorial title.
+    - `B1D` / record `67`: 1F attack tutorial body.
+    - `B1E` / record `68`: 1F lock-on tutorial title.
+    - `B1F` / record `69`: 1F lock-on tutorial body.
+    - `B1G` / record `70`: 0F movement tutorial title.
+    - `B1H` / record `71`: 0F movement tutorial body.
+12. A focused English tutorial probe is staged at `local/rebuilt/live_tutorial_english_extracted/`. It changes only `DATA001` entry `8`, records `10`, `11`, and `66-71`, using same-size or shorter ASCII glyph-code replacements.
+13. The broad probe also changed start menu and new-game name-prompt text via other marked tables, especially `DATA002` entry `65`. Treat those as separate UI targets from the live tutorial overlay.
+14. Additional confirmed broad-probe UI anchors:
+    - `A00` -> `DATA001` entry `3`, record `0`: init loading screen before the main title.
+    - `E01` -> `DATA001` entry `16`, record `12`: input-key info/help overlay.
+    - `G1E` -> `DATA002` entry `65`, record `82`: new-game player-name input screen.
+    - `G1F` -> `DATA002` entry `65`, record `84`: new-game player-name input screen.
+15. USA reference alignment is now available for the confirmed `DATA001` tables. Use `tools/align_reference_text.py` to create ignored local comparison reports. The next implementation target is a translator-facing table for `DATA001/0008` that includes source record IDs, max code units, USA reference text, and concise replacement fields.
 
 This is the right next phase because raw string scans did not reveal obvious dialogue text, but the offset-table and glyph-map workflow now decodes a complete boss scene from game data.

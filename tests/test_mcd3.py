@@ -15,7 +15,10 @@ from mcd3 import read_mcd3, selector_to_archive_index
 from extract_mcd3_entries import extract_mcd3_entries
 from extract_text import export_offset_table_runs
 from export_script_table import export_script_table
+from import_text import import_text
+from replace_mcd3_entry import replace_mcd3_entry
 from analyze_font_grid import cell_has_ink, parse_cell_size
+from align_reference_text import align_reference_text
 from decode_offset_table_text import decode_values
 from extract_offset_table_runs import classify_run, decode_ascii_run, parse_record_runs
 from export_glyph_cells import crop_rgba, glyph_id_contiguous, glyph_id_page100
@@ -95,6 +98,27 @@ class Mcd3Tests(unittest.TestCase):
             self.assertTrue((output_dir / "manifest.json").exists())
             self.assertEqual((output_dir / "DATA001" / "0000_mscr.bin").read_bytes(), b"MSCRabcd")
             self.assertEqual((output_dir / "DATA002" / "0002_pack0001.bin").read_bytes(), b"PACK0001tail")
+
+    def test_replace_mcd3_entry_writes_archive_copy(self) -> None:
+        with self.make_temp_dir() as temp_dir:
+            temp = Path(temp_dir)
+            index_path = temp / "DATA000.BIN"
+            archives_dir = temp / "archives"
+            output_path = temp / "DATA001_patched.BIN"
+            replacement_path = temp / "replacement.bin"
+            archives_dir.mkdir()
+
+            header = struct.pack("<III4s", 0x60, 1, 1, b"MCD3")
+            names = b"DATA001.BIN".ljust(16, b"\x00")
+            entries = struct.pack("<IIII", 0x8000, 4, 2, 4)
+            index_path.write_bytes((header + names).ljust(0x60, b"\x00") + entries)
+            (archives_dir / "DATA001.BIN").write_bytes(b"aaOLD!zz")
+            replacement_path.write_bytes(b"NEW!")
+
+            replace_mcd3_entry(index_path, archives_dir, 0, replacement_path, output_path)
+
+            self.assertEqual(output_path.read_bytes(), b"aaNEW!zz")
+            self.assertEqual((archives_dir / "DATA001.BIN").read_bytes(), b"aaOLD!zz")
 
     def test_read_tdl_synthetic_container(self) -> None:
         with self.make_temp_dir() as temp_dir:
@@ -398,6 +422,134 @@ class Mcd3Tests(unittest.TestCase):
             self.assertEqual(entries[0]["text"], "移動")
             self.assertEqual(entries[0]["decoded_known"], 2)
             self.assertEqual(payload["entries"][0]["translation"], "")
+
+    def test_import_offset_table_runs_replaces_shorter_ascii_text(self) -> None:
+        with self.make_temp_dir() as temp_dir:
+            temp = Path(temp_dir)
+            table_path = temp / "table.bin"
+            json_path = temp / "table.json"
+            output_path = temp / "patched.bin"
+            record = struct.pack(
+                "<" + "H" * 17,
+                1,
+                0,
+                1,
+                0,
+                0xC,
+                0,
+                2,
+                0,
+                1,
+                0,
+                0xC,
+                0,
+                5,
+                ord("H"),
+                ord("E"),
+                ord("L"),
+                ord("P"),
+            ) + struct.pack("<H", 0)
+            table_path.write_bytes(struct.pack("<III", 0, 1, 12) + record)
+            entries = export_offset_table_runs(table_path, json_path)
+            payload = json.loads(json_path.read_text(encoding="utf-8"))
+            payload["entries"][0]["translation"] = "TEST"
+            json_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+
+            applied = import_text(table_path, json_path, output_path)
+            patched_entries = export_offset_table_runs(output_path, temp / "patched.json")
+
+            self.assertEqual(applied, 1)
+            self.assertEqual(entries[0]["text"], "HELP")
+            self.assertEqual(patched_entries[0]["text"], "TEST")
+
+    def test_import_offset_table_runs_replaces_explicit_glyph_codes(self) -> None:
+        with self.make_temp_dir() as temp_dir:
+            temp = Path(temp_dir)
+            table_path = temp / "table.bin"
+            json_path = temp / "table.json"
+            output_path = temp / "patched.bin"
+            record = struct.pack(
+                "<" + "H" * 16,
+                1,
+                0,
+                1,
+                0,
+                0xC,
+                0,
+                2,
+                0,
+                1,
+                0,
+                0xC,
+                0,
+                3,
+                0x123,
+                0x124,
+                0,
+            )
+            table_path.write_bytes(struct.pack("<III", 0, 1, 12) + record)
+            export_offset_table_runs(table_path, json_path)
+            payload = json.loads(json_path.read_text(encoding="utf-8"))
+            payload["entries"][0]["translation_codes"] = ["0x0124", "0x0123"]
+            json_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+
+            applied = import_text(table_path, json_path, output_path)
+            patched_entries = export_offset_table_runs(output_path, temp / "patched.json")
+
+            self.assertEqual(applied, 1)
+            self.assertEqual(patched_entries[0]["codes"], ["0x0124", "0x0123"])
+
+    def test_align_reference_text_matches_records_and_checks_budget(self) -> None:
+        with self.make_temp_dir() as temp_dir:
+            temp = Path(temp_dir)
+            source_json = temp / "source.json"
+            reference_json = temp / "reference.json"
+            output_json = temp / "aligned.json"
+            source_json.write_text(
+                json.dumps(
+                    {
+                        "format": "offset-table-runs-v1",
+                        "entries": [
+                            {"record": 1, "run": 0, "kind": "glyph_codes", "length": 5, "text": ""},
+                            {"record": 2, "run": 0, "kind": "glyph_codes", "length": 3, "text": ""},
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            reference_json.write_text(
+                json.dumps(
+                    {
+                        "format": "offset-table-runs-v1",
+                        "entries": [
+                            {
+                                "record": 1,
+                                "run": 0,
+                                "kind": "glyph_codes",
+                                "length": 4,
+                                "codes": ["0x004f", "0x004b", "0x0020", "0x013e"],
+                                "text": "",
+                            },
+                            {
+                                "record": 2,
+                                "run": 0,
+                                "kind": "text",
+                                "length": 4,
+                                "codes": [],
+                                "text": "TOO!",
+                            },
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            rows = align_reference_text(source_json, reference_json, output_json)
+
+            self.assertEqual(rows[0]["reference_text"], "OK [X]")
+            self.assertTrue(rows[0]["fits_source_slot"])
+            self.assertFalse(rows[1]["fits_source_slot"])
+            self.assertTrue(output_json.exists())
 
     def test_export_script_table_tracks_start_sections_and_commands(self) -> None:
         with self.make_temp_dir() as temp_dir:

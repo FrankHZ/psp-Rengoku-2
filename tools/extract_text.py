@@ -82,7 +82,7 @@ def export_offset_table_runs(
             "kind=text runs are direct u16 ASCII code-unit strings.",
             "kind=glyph_codes runs require a glyph map before translator-facing Japanese extraction is complete.",
             "When --glyph-map is supplied, glyph_codes text is a partial decode and unknown glyphs are shown as middots.",
-            "Importer support for this format is not implemented yet.",
+            "Importer supports same-size or shorter text/glyph-code replacements for this format.",
         ],
         "entries": entries,
     }
