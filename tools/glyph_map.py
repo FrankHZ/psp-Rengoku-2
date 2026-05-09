@@ -9,12 +9,21 @@ def read_glyph_map(path: Path) -> dict[int, str]:
     with path.open("r", encoding="utf-8", newline="") as file:
         reader = csv.DictReader(file)
         for row in reader:
-            char = (row.get("char") or "").strip()
+            char = parse_glyph_char(row.get("char") or "")
             code = (row.get("code") or "").strip()
             if not char or not code:
                 continue
             glyphs[int(code, 0)] = char
     return glyphs
+
+
+def parse_glyph_char(raw: str) -> str:
+    char = raw.strip()
+    if char == r"\n":
+        return "\n"
+    if char == r"\t":
+        return "\t"
+    return char
 
 
 def decode_glyph_values(values: list[int] | tuple[int, ...], glyphs: dict[int, str]) -> tuple[str, int]:

@@ -61,6 +61,7 @@ The initial tools intentionally avoid assuming any game-specific format:
 - `tools/export_glyph_cells.py` exports font atlas cells and glyph ID hypotheses for mapping work.
 - `tools/extract_offset_table_runs.py` extracts length-prefixed text/glyph-code runs from confirmed offset-table containers.
 - `tools/decode_offset_table_text.py` applies a seed glyph map to offset-table records for survey/debug output.
+- `tools/export_script_table.py` exports script-like offset-table rows with nearby `#start` command context.
 - `tools/inspect_mscr.py` inspects `MSCR` map/scene resource bundles.
 - `tools/runtime_texture_inventory.py` inventories PPSSPP dumped texture PNGs.
 - `tools/map_runtime_font_pages.py` maps PPSSPP dumped font texture addresses back to extracted font pages.
@@ -69,6 +70,12 @@ For the current Rengoku 2 UI table lead, export a partial translator-facing JSON
 
 ```powershell
 python tools/extract_text.py --format offset-table-runs --glyph-map samples/glyph_map_seed.csv local/work/mcd3_entries/DATA001/0016_bin.bin local/work/extract_text_DATA001_0016_seeded.json
+```
+
+For the confirmed 4F boss / Briareos dialogue slice, export the story table with:
+
+```powershell
+python tools/extract_text.py --format offset-table-runs --glyph-map samples/story_glyph_map_seed.csv local/work/mcd3_entries/DATA001/0012_bin.bin local/work/extract_text_DATA001_0012_story_seeded.json
 ```
 
 By default, import only supports same-size or shorter encoded strings. Shorter replacements are padded with null bytes. Longer strings require a known container format, pointer table, or relocation strategy and should be implemented format-by-format.

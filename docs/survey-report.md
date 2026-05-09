@@ -49,6 +49,59 @@ A partial seeded glyph-map export is also available for the confirmed UI table:
 
 Current result: 328 extracted runs from `DATA001` entry `16`; 168 are direct `u16` ASCII text runs and 160 are glyph-code runs. The seed map is intentionally incomplete and currently decodes known glyphs only, leaving unknown Japanese glyphs as middots. This is enough to validate the extraction shape, not enough for translation.
 
+The first confirmed story text table with fully anchored dialogue is:
+
+```text
+DATA001.BIN -> MCD3 entry 12 -> offset table
+```
+
+The 4F boss / Briareos scene supplied by runtime capture and checked against the Rengoku 2 wiki transcript decodes in this table:
+
+| Scene slice | Records | Notes |
+| --- | --- | --- |
+| Briareos pre-fight | `140-143` | Matches the supplied screenshot dialogue; record `142` has five `ｋ` codepoints in the ROM export. |
+| Briareos post-fight | `160-174` | Matches the same reference transcript; record `170` uses `@GRAM@` as a placeholder token. |
+
+Story dialogue export command:
+
+```powershell
+.\.venv\Scripts\python.exe tools/extract_text.py --format offset-table-runs --glyph-map samples/story_glyph_map_seed.csv local/work/mcd3_entries/DATA001/0012_bin.bin local/work/extract_text_DATA001_0012_story_seeded.json
+```
+
+The first confirmed story command/control table is:
+
+```text
+DATA003.BIN -> MCD3 entry 1089 -> offset table
+```
+
+It contains script commands stored as direct `u16` ASCII, including `#start 2F`, `#start 3F`, `#start 4F`, `#start 6F`, `#page`, `#white`, `#center`, `#left`, `#color`, `#readbg`, `#readwait`, `#wait`, and `#end`. The observed blue-character line also appears as an encoded row in the `#start 6F` section, record `306`, by the exact repeated code window for `マタ、キターーー`; treat this as command/script context until its relationship to the `DATA001/0012` text table is proven.
+
+Story-script export command:
+
+```powershell
+.\.venv\Scripts\python.exe tools/export_script_table.py --glyph-map local/work/dialogue_glyph_map.csv local/work/mcd3_entries/DATA003/1089_bin.bin local/work/script_DATA003_1089_dialogue_seeded.json
+```
+
+Current result: 1,174 rows from `DATA003` entry `1089`; 319 are readable script commands and 855 are glyph rows. The generated JSON is ignored local data.
+
+`#start 6F` current page structure:
+
+| Page | Records | Commands | Glyph row lengths |
+| ---: | --- | --- | --- |
+| setup | `275-283` | `#start 6F`, `#bgm 21`, `#readbg 4`, `#readwait`, fades/wait, `#center 1` | `10` |
+| 0 | `284-299` | `#page`, `#left 32`, `#color 255,215,92` | `7, 19, 21, 19, 16, 19, 10, 11, 13, 10, 13, 16, 14` |
+| 1 | `300-312` | `#page`, `#white`, `#center 1` | `27, 33, 34, 30, 27, 30, 22, 26, 34` |
+| 2 | `313-322` | `#page` | `18, 35, 16, 30, 29, 9, 33, 33` |
+| 3 | `323-334` | `#page`, `#left 32`, `#color 255,215,92` | `7, 18, 17, 14, 21, 9, 14, 10, 24` |
+| 4 | `335-341` | `#page`, `#center 1`, `#white`, `#end`, `#end` | `32` |
+
+Known story glyph-code anchor from record `306`:
+
+```text
+0x0276 0x024c 0x0270 0x0227 0x024c 0x011c 0x011c 0x011c
+マ      タ      、      キ      タ      ー      ー      ー
+```
+
 ## Completed Survey Targets
 
 | Target | Result | Decision |
@@ -60,6 +113,9 @@ Current result: 328 extracted runs from `DATA001` entry `16`; 168 are direct `u1
 | Runtime tutorial/menu phrases | No exact UTF-8, Shift-JIS/CP932, or EUC-JP hits | Text likely encoded/compressed/indexed |
 | Runtime equipment/status UI | Uses same `codeJAP14x14` atlas pages for visible labels | Confirms font atlas covers UI text |
 | `DATA001` offset tables | Parsed as `u32 word0`, `u32 count`, `u32 offsets[count]`, records with length-prefixed text/glyph-code runs | Confirmed text/layout containers |
+| `DATA001` entry `12` | Confirmed 4F boss / Briareos dialogue records `140-143` and `160-174` | Translation-relevant target |
+| `DATA002` entry `65` | Offset table with 702 records; appears to contain game text/data labels and glyph rows | Translation-relevant candidate |
+| `DATA003` entry `1089` | Offset table with 1499 records; confirmed story script command table | Translation-relevant target |
 | `DATA001.BIN` entries `10`, `11` / `PACK0001` | Object/model packs containing `OMG` children such as `item_obj001` | Asset/media |
 | `DATA004.BIN` / `MSCR` | Map/scene bundles with embedded `.TDL` resource tables | Asset/media for now |
 | `PARAM.SFO` | Contains title `煉獄弐 - The Stairway to H.E.A.V.E.N.` | Metadata, optional translation target |
@@ -97,10 +153,10 @@ These are local analysis products and must not be committed.
 
 ## Actual Next Phase
 
-Start the glyph-map and text-container phase:
+Start the story extraction/import phase:
 
-1. Expand `samples/glyph_map_seed.csv` from exported glyph-cell PNGs and runtime screenshots until Japanese UI entries decode into meaningful strings.
-2. Use `tools/extract_text.py --format offset-table-runs --glyph-map ...` as the translator-facing export path for `DATA001` offset tables.
-3. Implement a reversible importer for edited same-length or rebuilt offset-table records, then test on a copy.
+1. Continue extending `samples/story_glyph_map_seed.csv` from known scenes in `DATA001/0012` and related text tables.
+2. Keep `tools/export_script_table.py` for command/control context in `DATA003/1089`, preserving command rows and `#start` context.
+3. Design a reversible importer for edited same-length or rebuilt offset-table records, then test on a copy of `DATA001/0012`.
 
-This is the right next phase because raw string scans did not reveal obvious dialogue text. The game may use indexed text, compressed script data, or executable-driven tables, and font mapping will tell us what encodings and glyph ranges are actually supported.
+This is the right next phase because raw string scans did not reveal obvious dialogue text, but the offset-table and glyph-map workflow now decodes a complete boss scene from game data.

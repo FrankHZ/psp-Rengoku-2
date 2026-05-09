@@ -14,6 +14,7 @@ sys.path.insert(0, str(TOOLS))
 from mcd3 import read_mcd3, selector_to_archive_index
 from extract_mcd3_entries import extract_mcd3_entries
 from extract_text import export_offset_table_runs
+from export_script_table import export_script_table
 from analyze_font_grid import cell_has_ink, parse_cell_size
 from decode_offset_table_text import decode_values
 from extract_offset_table_runs import classify_run, decode_ascii_run, parse_record_runs
@@ -279,6 +280,13 @@ class Mcd3Tests(unittest.TestCase):
 
             self.assertEqual(read_glyph_map(path), {0x123: "移"})
 
+    def test_read_glyph_map_csv_decodes_escaped_newline(self) -> None:
+        with self.make_temp_dir() as temp_dir:
+            path = Path(temp_dir) / "glyphs.csv"
+            path.write_text('code,char\n0x000a,"\\n"\n', encoding="utf-8")
+
+            self.assertEqual(read_glyph_map(path), {0x000A: "\n"})
+
     def test_decode_glyph_values_uses_known_glyphs_and_ascii(self) -> None:
         decoded, known = decode_glyph_values((0x123, 0, ord("A"), 0x124, 0x999), {0x123: "移", 0x124: "動"})
 
@@ -390,6 +398,32 @@ class Mcd3Tests(unittest.TestCase):
             self.assertEqual(entries[0]["text"], "移動")
             self.assertEqual(entries[0]["decoded_known"], 2)
             self.assertEqual(payload["entries"][0]["translation"], "")
+
+    def test_export_script_table_tracks_start_sections_and_commands(self) -> None:
+        with self.make_temp_dir() as temp_dir:
+            temp = Path(temp_dir)
+            table_path = temp / "script.bin"
+            json_path = temp / "script.json"
+
+            def record(values: tuple[int, ...]) -> bytes:
+                prefix = (1, 0, 1, 0, 0xC, 0, 2, 0, 1, 0, 0xC, 0)
+                run = (len(values) + 1, *values, 0)
+                return struct.pack("<" + "H" * (len(prefix) + len(run)), *(prefix + run))
+
+            start = record(tuple(ord(ch) for ch in "#start 1F"))
+            glyph = record((0x123, 0x124))
+            page = record(tuple(ord(ch) for ch in "#page"))
+            offsets = (20, 20 + len(start), 20 + len(start) + len(glyph))
+            table_path.write_bytes(struct.pack("<IIIII", 0, 3, *offsets) + start + glyph + page)
+
+            entries = export_script_table(table_path, json_path, None)
+
+            self.assertEqual(entries[0]["role"], "command")
+            self.assertEqual(entries[0]["text"], "#start 1F")
+            self.assertEqual(entries[1]["section"], "#start 1F")
+            self.assertEqual(entries[1]["role"], "glyph")
+            self.assertEqual(entries[2]["role"], "command")
+            self.assertTrue(json_path.exists())
 
     def test_unswizzle_texture_bytes(self) -> None:
         width_bytes = 16

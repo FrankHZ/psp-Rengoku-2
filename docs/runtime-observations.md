@@ -185,3 +185,131 @@ samples/glyph_map_seed.csv
 ```
 
 It starts with a manually transcribed subset of `codeJAP14x14_10_` using the `glyph_id_contiguous` formula. It is only a seed: successful decoding should be judged by recognizable strings in `DATA001` offset-table exports, not by the presence of isolated known characters.
+
+## Dialogue Capture: 4F Boss / Briareos
+
+Runtime dialogue supplied on 2026-05-09:
+
+```text
+マタ、キターーー！
+オレ、モウ何モシタクナイノニ…
+メンドクサイカラne、終ワロウヨ。
+```
+
+GE captures during this dialogue showed active font pages at:
+
+```text
+0x040de300
+0x040e0400
+0x040e8800
+```
+
+The `0x040e0400` page matches the shared Latin/kana atlas well enough to reuse as a visual reference, but the `0x040e8800` capture showed a different kanji set from the earlier UI seed page. Treat runtime VRAM address as page slot identity only; story scenes may load different glyph page contents into the same address range.
+
+The external reference transcript for this scene is the Rengoku 2 wiki Briareos page:
+
+```text
+https://w.atwiki.jp/rengoku2/pages/14.html
+```
+
+The actual translation target for the captured Briareos dialogue is:
+
+```text
+DATA001.BIN -> MCD3 entry 12 -> records 140-143 and 160-174
+```
+
+Reproducible export:
+
+```powershell
+.\.venv\Scripts\python.exe tools/extract_text.py --format offset-table-runs --glyph-map samples/story_glyph_map_seed.csv local/work/mcd3_entries/DATA001/0012_bin.bin local/work/extract_text_DATA001_0012_story_seeded.json
+```
+
+Confirmed pre-fight records:
+
+| Record | Decoded text |
+| ---: | --- |
+| `140` | `マタ、キターーー！\nオレ、モウ何モシタクナイノニ…` |
+| `141` | `メンドクサイカラne、終ワロウヨ。` |
+| `142` | `ウハｗｗｗオｋｋｋｋｋ\nイイコト思イツイタyo…` |
+| `143` | `ボボ、ボクガ終ワラセテageルネ！` |
+
+Confirmed post-fight records:
+
+| Record | Decoded text |
+| ---: | --- |
+| `160` | `アア、アアアア、タタ、隊長…` |
+| `161` | `オ、オレ、戦ワナイデ逃ゲヨウトシタラ…\n後ロカラ撃タレテ、ソレデ…` |
+| `162` | `ウッ…また…思い…メモリーガ…` |
+| `163` | `ブリアレオス…` |
+| `164` | `死ンダハズ…ダ…` |
+| `165` | `オオオレ、悪イコトシテナイヨネ？` |
+| `166` | `デモ何モシナカッタカラ…\n撃タレタ…` |
+| `167` | `何モシナイノモ、悪イコトナノカナ？` |
+| `168` | `自分ヲ守レッテ、隊長ハ言ッテタ。` |
+| `169` | `オレ、自分守レナカッタ…` |
+| `170` | `ゴメンネ…@GRAM@。\n会エテ…ヨカッタ…` |
+| `171` | `…マタ…会エタ？` |
+| `172` | `俺ノメモリーニハ…\nオマエノ記録ハ残ッテイナイ。` |
+| `173` | `ダガ…ブリアレオス。\nオマエノ名ハ刻まれている…` |
+| `174` | `確かにコノ体の何処かに…！` |
+
+Known transcript differences:
+
+- Record `142` contains five `ｋ` codepoints in the ROM export.
+- Record `170` contains an embedded `@GRAM@` token.
+- Record `171` contains an ellipsis before `会エタ`.
+
+Earlier static script lead for this capture was `#start 4F`, but the exact repeated code pattern for:
+
+```text
+マタ、キターーー
+```
+
+anchors the supplied dialogue in:
+
+```text
+DATA003.BIN -> MCD3 entry 1089 -> #start 6F section -> record 306
+```
+
+That `DATA003/1089` row is now treated as script/control context rather than the primary translation text table. The relevant command flow is:
+
+```text
+#start 6F
+#bgm 21
+#readbg 4
+#readwait
+#fade 30,100
+#wait 30
+#fade 30,50
+#center 1
+glyph row
+#page
+...
+#end
+```
+
+`#start 6F` contains five page blocks. Page 1 includes record `306`, which contains this code window:
+
+```text
+0x0276 0x024c 0x0270 0x0227 0x024c 0x011c 0x011c 0x011c
+```
+
+Known mapping from the runtime line:
+
+| Code | Character |
+| --- | --- |
+| `0x0276` | `マ` |
+| `0x024c` | `タ` |
+| `0x0270` | `、` |
+| `0x0227` | `キ` |
+| `0x011c` | `ー` |
+
+These `DATA003/1089` codes do not match the confirmed `DATA001/0012` story glyph map one-to-one, so do not merge this table into `samples/story_glyph_map_seed.csv` until the indirection or page context is understood.
+
+The current tracked story glyph map is:
+
+```text
+samples/story_glyph_map_seed.csv
+```
+
+It is a manually seeded, repo-safe map confirmed from the Briareos records and should be extended scene by scene.

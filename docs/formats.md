@@ -293,6 +293,7 @@ Role:
 - Confirmed text/layout container family.
 - These entries are near the shared UI/font resources in `DATA001.BIN`.
 - `DATA001` entry `16` contains visible UI/menu strings such as `GRAPPLE`, `SLASH`, `IMPACT`, `QUANTUM`, `BULLET`, `HEAT`, `EQUIP`, `BUILD`, `ITEM`, `FILE`, `OPTION`, `EXIT`, `HELP`, and floor labels.
+- `DATA001` entry `12` contains confirmed story dialogue. The 4F boss / Briareos scene decodes at records `140-143` and `160-174` with `samples/story_glyph_map_seed.csv`.
 - Screenshot Japanese phrases are not present as exact standard encoded strings because they are represented as glyph-code streams rather than plain Shift-JIS/UTF-8 text.
 
 Mutation rules:
@@ -304,15 +305,54 @@ Verification:
 - `tools/extract_offset_table_runs.py` extracts length-prefixed runs and identifies ASCII text runs.
 - `tools/extract_text.py --format offset-table-runs` exports these runs to the normal translation JSON shape.
 - `tools/extract_text.py --format offset-table-runs --glyph-map samples/glyph_map_seed.csv` performs partial Japanese glyph-code decoding for known glyph IDs.
-- `samples/glyph_map_seed.csv` is a repo-safe, manually seeded `code,char` table. It is intentionally incomplete and should grow from screenshots plus exported glyph-cell images.
+- `samples/glyph_map_seed.csv` is a repo-safe, manually seeded UI `code,char` table. It is intentionally incomplete and should grow from screenshots plus exported glyph-cell images.
+- `samples/story_glyph_map_seed.csv` is a repo-safe, manually seeded story-dialogue `code,char` table. It currently covers the confirmed Briareos dialogue slice in `DATA001/0012`.
 - `local/work/offset_table_runs_DATA001_candidates.json` is an ignored generated extraction report.
 - `local/work/extract_text_DATA001_0016_seeded.json` is an ignored generated seeded export for the currently confirmed UI table.
+- `local/work/extract_text_DATA001_0012_story_seeded.json` is an ignored generated seeded export for the confirmed Briareos dialogue table.
 
 Unknowns:
 - Record command structure.
 - Exact meaning of control fields before text runs.
 - Full glyph-code map for Japanese runs.
 - Rebuild rules for changed run lengths.
+
+## Story Script Offset Tables
+
+Files:
+`DATA003.BIN` MCD3 entry `1089`.
+
+Evidence:
+- No ASCII magic.
+- Same outer shape as the `DATA001` offset tables: `u32 word0`, `u32 count`, then `count` little-endian `u32` record offsets.
+- Observed `word0 = 0`, `count = 1499`, `table_end = 0x1774`.
+- Records use the same repeated prefix pattern as the known offset-table family.
+- Many records are direct `u16` ASCII script commands:
+  - `#start 2F`, `#start 3F`, `#start 4F`, through later floor/area sections.
+  - `#page`, `#white`, `#center`, `#left`, `#color`, `#readbg`, `#readwait`, `#wait`, `#fade`, `#bgm`, `#end`.
+- Non-command records contain glyph-code streams and occasional embedded direct ASCII tokens such as `#GRAM#`, `SLEEP`, and `ALIVE`.
+
+Role:
+- Confirmed story command/control table.
+- Runtime dialogue supplied on 2026-05-09 initially appeared to belong to this class of table, but the text itself is now confirmed in `DATA001/0012`.
+- `DATA003/1089` still matters because it carries readable script commands and `#start` sections that may explain scene ordering, background reads, page breaks, layout, and control flow.
+
+Mutation rules:
+- Read-only until control codes inside glyph rows are understood.
+- Preserve command rows exactly until the script command language is documented.
+- Any importer must preserve or rebuild the outer offset table and keep record boundaries valid.
+
+Verification:
+- `tools/inspect_offset_table.py` recognizes `DATA003/1089`.
+- `tools/extract_offset_table_runs.py` extracts both ASCII command rows and glyph-code rows.
+- `tools/export_script_table.py` adds `#start` section context and exports a script-focused JSON report.
+- Local generated report: `local/work/script_DATA003_1089_dialogue_seeded.json`.
+
+Unknowns:
+- Full story glyph-code map.
+- Meaning of low control-like values such as `0x0100`, `0x0101`, `0x0102`, `0x0108`, `0x0109`, `0x011c`, `0x0123`, `0x0135`, and `0x0136`.
+- Whether every `DATA003/1089` glyph row is dialogue text, nameplate text, layout text, or command payload.
+- Whether other `DATA002` / `DATA003` offset tables share this script command language.
 
 ## PARAM.SFO
 

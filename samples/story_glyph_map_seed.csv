@@ -1,0 +1,95 @@
+code,char,source,notes
+0x000a,"\n",DATA001_0012_entries_140_143,confirmed newline in Briareos pre-fight transcript
+0x0101,、,DATA001_0012_entries_140_143,confirmed punctuation in Briareos pre-fight transcript
+0x0102,。,DATA001_0012_entries_140_143,confirmed punctuation in Briareos pre-fight transcript
+0x0108,？,DATA001_0012_entries_165_171,confirmed punctuation in Briareos post-fight transcript
+0x0109,！,DATA001_0012_entries_140_143,confirmed punctuation in Briareos pre-fight transcript
+0x011b,ー,DATA001_0012_entry_140,confirmed long vowel mark
+0x0123,…,DATA001_0012_entries_140_142,confirmed ellipsis
+0x01b7,a,DATA001_0012_entry_143,confirmed half-width romaji
+0x01bb,e,DATA001_0012_entries_141_143,confirmed half-width romaji
+0x01bd,g,DATA001_0012_entry_143,confirmed half-width romaji
+0x01c1,ｋ,DATA001_0012_entry_142,confirmed half-width kana-style latin
+0x01c4,n,DATA001_0012_entry_141,confirmed half-width romaji
+0x01c5,o,DATA001_0012_entry_142,confirmed half-width romaji
+0x01cd,ｗ,DATA001_0012_entry_142,confirmed full-width lowercase w
+0x01cf,y,DATA001_0012_entry_142,confirmed half-width romaji
+0x01d4,い,DATA001_0012_entries_162_174,confirmed Briareos post-fight transcript
+0x01db,か,DATA001_0012_entry_174,confirmed Briareos post-fight transcript
+0x01ef,た,DATA001_0012_entry_162,confirmed Briareos post-fight transcript
+0x01f6,て,DATA001_0012_entry_173,confirmed Briareos post-fight transcript
+0x01fb,に,DATA001_0012_entry_174,confirmed Briareos post-fight transcript
+0x01fe,の,DATA001_0012_entry_174,confirmed Briareos post-fight transcript
+0x020e,ま,DATA001_0012_entries_162_173,confirmed Briareos post-fight transcript
+0x021b,る,DATA001_0012_entry_173,confirmed Briareos post-fight transcript
+0x021c,れ,DATA001_0012_entry_173,confirmed Briareos post-fight transcript
+0x0227,イ,DATA001_0012_entries_140_142,confirmed katakana
+0x0229,ウ,DATA001_0012_entries_140_142,confirmed katakana
+0x0225,ア,DATA001_0012_entry_160,confirmed katakana
+0x022b,エ,DATA001_0012_entries_170_171,confirmed katakana
+0x022d,オ,DATA001_0012_entries_140_142,confirmed katakana
+0x022e,カ,DATA001_0012_entry_141,confirmed katakana
+0x022f,ガ,DATA001_0012_entry_143,confirmed katakana
+0x0235,ゲ,DATA001_0012_entry_161,confirmed katakana ge in post-fight transcript
+0x0230,キ,DATA001_0012_entry_140,confirmed katakana
+0x0232,ク,DATA001_0012_entries_140_143,confirmed katakana
+0x0237,ゴ,DATA001_0012_entry_170,confirmed katakana
+0x0236,コ,DATA001_0012_entry_142,confirmed katakana
+0x0238,サ,DATA001_0012_entry_141,confirmed katakana
+0x023a,シ,DATA001_0012_entry_140,confirmed katakana
+0x023c,ス,DATA001_0012_entries_163_164,confirmed katakana
+0x023d,ズ,DATA001_0012_entry_164,confirmed katakana
+0x023e,セ,DATA001_0012_entry_143,confirmed katakana
+0x0240,ソ,DATA001_0012_entry_161,confirmed katakana
+0x0242,タ,DATA001_0012_entry_140,confirmed katakana
+0x0243,ダ,DATA001_0012_entries_164_173,confirmed katakana
+0x0246,ッ,DATA001_0012_entries_162_172,confirmed small katakana tsu
+0x0247,ツ,DATA001_0012_entry_142,confirmed katakana
+0x0249,テ,DATA001_0012_entry_143,confirmed katakana
+0x024a,デ,DATA001_0012_entries_161_166,confirmed katakana
+0x024b,ト,DATA001_0012_entry_142,confirmed katakana
+0x024c,ド,DATA001_0012_entry_141,confirmed katakana
+0x024d,ナ,DATA001_0012_entry_140,confirmed katakana
+0x024e,ニ,DATA001_0012_entry_140,confirmed katakana
+0x0250,ネ,DATA001_0012_entry_143,confirmed katakana
+0x0251,ノ,DATA001_0012_entry_140,confirmed katakana
+0x0252,ハ,DATA001_0012_entry_142,confirmed katakana
+0x0259,ブ,DATA001_0012_entries_163_173,confirmed katakana
+0x025f,ボ,DATA001_0012_entry_143,confirmed katakana
+0x0261,マ,DATA001_0012_entry_140,confirmed katakana
+0x0264,メ,DATA001_0012_entry_141,confirmed katakana
+0x0265,モ,DATA001_0012_entry_140,confirmed katakana
+0x026b,ヨ,DATA001_0012_entry_141,confirmed katakana
+0x026c,ラ,DATA001_0012_entries_141_143,confirmed katakana
+0x026d,リ,DATA001_0012_entries_162_173,confirmed katakana
+0x026e,ル,DATA001_0012_entry_143,confirmed katakana
+0x026f,レ,DATA001_0012_entry_140,confirmed katakana
+0x0270,ロ,DATA001_0012_entry_141,confirmed katakana
+0x0272,ワ,DATA001_0012_entries_141_143,confirmed katakana
+0x0275,ヲ,DATA001_0012_entry_168,confirmed katakana
+0x0276,ン,DATA001_0012_entry_141,confirmed katakana
+0x033a,撃,DATA001_0012_entries_161_166,confirmed kanji
+0x0394,処,DATA001_0012_entry_174,confirmed kanji
+0x03c1,後,DATA001_0012_entry_161,confirmed kanji
+0x03de,戦,DATA001_0012_entry_161,confirmed kanji
+0x03eb,悪,DATA001_0012_entries_165_167,confirmed kanji
+0x03ff,残,DATA001_0012_entry_172,confirmed kanji
+0x0408,長,DATA001_0012_entries_160_168,confirmed kanji
+0x042a,体,DATA001_0012_entry_174,confirmed kanji
+0x044d,自,DATA001_0012_entries_168_169,confirmed kanji
+0x0485,確,DATA001_0012_entry_174,confirmed kanji
+0x048a,俺,DATA001_0012_entry_172,confirmed kanji
+0x0499,言,DATA001_0012_entry_168,confirmed kanji
+0x049d,分,DATA001_0012_entries_168_169,confirmed kanji
+0x049f,名,DATA001_0012_entry_173,confirmed kanji
+0x0496,終,DATA001_0012_entries_141_143,confirmed kanji
+0x049c,思,DATA001_0012_entry_142,confirmed kanji
+0x04a0,刻,DATA001_0012_entry_173,confirmed kanji
+0x04a9,会,DATA001_0012_entries_170_171,confirmed kanji
+0x04a5,何,DATA001_0012_entry_140,confirmed kanji
+0x04be,死,DATA001_0012_entry_164,confirmed kanji
+0x04d1,守,DATA001_0012_entries_168_169,confirmed kanji
+0x04f0,記,DATA001_0012_entry_172,confirmed kanji
+0x04f1,録,DATA001_0012_entry_172,confirmed kanji
+0x0515,逃,DATA001_0012_entry_161,confirmed Briareos post-fight transcript
+0x0599,隊,DATA001_0012_entries_160_168,confirmed kanji
