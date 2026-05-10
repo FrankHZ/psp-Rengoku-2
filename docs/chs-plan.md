@@ -676,9 +676,9 @@ PPSSPP/GE observation from the first probe run:
 
 - `0x021b` rendered as `る` in the overlay/body row and is cell `40` on runtime texture `local/work/dumped_textures/040e040028998f6f134f822a.png`.
 - `0x023c` rendered as `ス` in the overlay/body row and is cell `73` on runtime texture `local/work/dumped_textures/040e2500676a3b4e3748fa38.png`.
-- `0x0222` rendered as `を` in the overlay/body row and is cell `47`.
-- `0x026e` rendered as `ル` in the overlay/body row and is cell `42`.
-- `0x0276` rendered as `ン` in the overlay/body row and is cell `50`.
+- `0x0222` rendered as `を` in the overlay/body row and is cell `47` on runtime texture `0x040e0400`.
+- `0x026e` rendered as `ル` in the overlay/body row and is cell `42` on runtime texture `0x040e2500`.
+- `0x0276` rendered as `ン` in the overlay/body row and is cell `50` on runtime texture `0x040e2500`.
 - The `0x021b`, `0x0222`, and `0x023c` observations give `code - cell = 0x01f3`.
 - The `0x026e` and `0x0276` observations give `code - cell = 0x0244`.
 - Because these came from the overlay/body runtime path, treat `0x01f3` and `0x0244` as overlay-context base observations rather than globally promoted title-page bases.
