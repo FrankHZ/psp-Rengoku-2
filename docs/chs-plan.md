@@ -620,6 +620,55 @@ local/rebuilt/combined_chs_v1_0008_0015_0016_extracted/
 
 This build patches one shared `DATA001/0002` font archive, then applies multiple same-size text entry replacements into the same `DATA001.BIN`.
 
+Multi-base runtime probe artifact:
+
+```text
+local/rebuilt/page_base_probe_v1_extracted/
+```
+
+Build command:
+
+```powershell
+python tools/build_page_base_probe.py --overwrite
+```
+
+Local marker map:
+
+```text
+local/work/page_base_probe_v1/probe_manifest.csv
+```
+
+This probe patches `DATA001/0008` tutorial rows with raw codes from several
+candidate base families, while rendering marker letters into competing static
+MIG cells. The marker visible in PPSSPP identifies which candidate page/cell
+route the runtime used.
+
+Patched rows:
+
+```text
+record 10: BASE PROBE
+record 11: LOOK AT BODY ROWS
+record 67: B0 0100=<mark> 0101=<mark> 011B=<mark>
+record 69: B1 01FE=<mark> 01FB=<mark> 01D4=<mark>
+record 71: B2 021B=<mark> 0222=<mark> 023C=<mark> 0276=<mark> 026E=<mark>
+```
+
+Candidate interpretation:
+
+```text
+0100: A = child 1 cell  0 base 0x0100; B = child 2 cell 49 base 0x00cf
+0101: C = child 1 cell  1 base 0x0100; D = child 2 cell 50 base 0x00cf
+011B: E = child 1 cell 27 base 0x0100; F = child 2 cell 76 base 0x00cf
+01FE: G = child 5 cell 60 base 0x01c2
+01FB: H = child 5 cell 57 base 0x01c2
+01D4: I = child 5 cell 18 base 0x01c2
+021B: J = child 6 cell  8 base 0x0213; K = child 2 cell 27 base 0x0200
+0222: L = child 6 cell 15 base 0x0213; M = child 2 cell 34 base 0x0200
+023C: N = child 6 cell 41 base 0x0213; O = child 2 cell 60 base 0x0200
+0276: P = child 7 cell 18 base 0x0264
+026E: Q = child 7 cell 10 base 0x0264
+```
+
 Included:
 
 ```text

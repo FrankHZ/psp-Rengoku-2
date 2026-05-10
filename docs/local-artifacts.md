@@ -28,7 +28,9 @@ These folders are useful local evidence or inputs for the current workflow:
 | `local/work/font_compare/` | SimSun/local-font comparison report and contact sheet. |
 | `local/work/font_level_analysis/` | Original font palette/index-level analysis. |
 | `local/work/page_base_candidates/` | Unknown JP code scan and static MIG candidate matches. |
+| `local/work/page_base_probe_v1/` | Multi-base probe manifest, stage config, and marker previews. |
 | `local/rebuilt/combined_chs_v1_0008_0015_0016_extracted/` | Current large PPSSPP-ready build. |
+| `local/rebuilt/page_base_probe_v1_extracted/` | Multi-base PPSSPP probe build. |
 | `local/rebuilt/equipment_chs_v1_extracted/` | First equipment screenshot-slice build. |
 | `local/rebuilt/equipment_chs_v1_generic_extracted/` | Same equipment slice through the generic builder. |
 | `local/rebuilt/equipment_chs_v2_extracted/` | Expanded melee equipment build. |
