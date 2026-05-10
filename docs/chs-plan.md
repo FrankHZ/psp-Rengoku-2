@@ -1063,3 +1063,32 @@ Current combined build:
   uses `81`, child 6 / base `0x042a` uses `18`, and child 8 / base `0x05bf`
   uses `1`.
 - PPSSPP-ready output: `local/rebuilt/combined_chs_v2_0008_0015_0016_0017_extracted/`.
+
+Expanded combined build after the unknown-base/kana milestone:
+
+```text
+local/rebuilt/combined_chs_v5_0008_0015merged_0016_0017_expanded_extracted/
+```
+
+Build command:
+
+```powershell
+python tools/build_chs_combined_data001.py --target DATA001/0008 local/work/chs_tutorial_draft_DATA001_0008.json --target DATA001/0015 local/work/equipment_chs_v3/DATA001_0015_equipment_merged_v1_v2.json --target DATA001/0016 local/work/ui_help_chs_v1/DATA001_0016_ui_sheet.json --target DATA001/0017 local/work/ui_help_chs_v1/DATA001_0017_help_sheet.json --work-root local/work/combined_chs_v5_0008_0015merged_0016_0017_expanded --output-root local/rebuilt/combined_chs_v5_0008_0015merged_0016_0017_expanded_extracted --overwrite
+```
+
+Included rows:
+
+```text
+DATA001/0008:   8 tutorial rows
+DATA001/0015: 140 merged equipment rows from equipment_chs_v1 + equipment_chs_v2
+DATA001/0016: 296 UI/menu/help rows
+DATA001/0017:  60 help/manual rows
+total:        504 translated rows
+```
+
+This build uses `449` assigned non-ASCII glyphs. The expanded runtime slot
+pool now includes child 3 / base `0x0295`, child 9 / base `0x0610`, and child
+10 / base `0x0703` in addition to the earlier pools, so the theoretical
+capacity is no longer the immediate blocker. Remaining untranslated help rows
+are mostly long manual prose that need careful compression rather than more
+glyph capacity.

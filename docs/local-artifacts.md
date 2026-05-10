@@ -23,9 +23,11 @@ These folders are useful local evidence or inputs for the current workflow:
 | `local/work/ui_help_chs_build_v1/` | UI/help selected build sheets and summary. |
 | `local/work/equipment_chs_v1/` | Screenshot equipment slice sheets and summary. |
 | `local/work/equipment_chs_v2/` | Expanded melee equipment sheet and summary. |
+| `local/work/equipment_chs_v3/` | Merged equipment v1+v2 sheet for combined builds. |
 | `local/work/tutorial_chs_full_v1/` | Full tutorial sheet, stage config, and glyph assignments. |
 | `local/work/combined_chs_v1_0008_0015_0016/` | Combined tutorial/equipment/UI build metadata. |
 | `local/work/combined_chs_v2_0008_0015_0016_0017/` | Combined tutorial/equipment/UI/help build metadata using expanded runtime slot pools. |
+| `local/work/combined_chs_v5_0008_0015merged_0016_0017_expanded/` | Current broad combined build metadata with merged equipment and expanded UI/help drafts. |
 | `local/work/font_compare/` | SimSun/local-font comparison report and contact sheet. |
 | `local/work/font_level_analysis/` | Original font palette/index-level analysis. |
 | `local/work/page_base_candidates/` | Unknown JP code scan and static MIG candidate matches. |
@@ -37,6 +39,7 @@ These folders are useful local evidence or inputs for the current workflow:
 | `local/rebuilt/equipment_chs_v1_extracted/` | First equipment screenshot-slice build. |
 | `local/rebuilt/equipment_chs_v1_generic_extracted/` | Same equipment slice through the generic builder. |
 | `local/rebuilt/equipment_chs_v2_extracted/` | Expanded melee equipment build. |
+| `local/rebuilt/combined_chs_v5_0008_0015merged_0016_0017_expanded_extracted/` | Current broad PPSSPP-ready build with 504 translated rows. |
 | `local/rebuilt/tutorial_chs_full_v1_extracted/` | Full tutorial CHS build. |
 | `local/rebuilt/ui_help_chs_v1_DATA001_0016_extracted/` | UI build probe. |
 | `local/rebuilt/ui_help_chs_v1_DATA001_0017_extracted/` | Help/manual build probe. |

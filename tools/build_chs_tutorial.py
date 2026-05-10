@@ -11,11 +11,14 @@ from stage_font_probe import stage_font_probe
 
 DEFAULT_SLOT_POOLS = (
     {"child": 1, "source": "codeJAP14x14_00_", "target_page": "local/work/tdl_DATA001_0002/0001_codeJAP14x14_00_.bin", "base": 0x0151},
+    {"child": 3, "source": "codeJAP14x14_04_", "target_page": "local/work/tdl_DATA001_0002/0003_codeJAP14x14_04_.bin", "base": 0x0295},
     {"child": 4, "source": "codeJAP14x14_06_", "target_page": "local/work/tdl_DATA001_0002/0004_codeJAP14x14_06_.bin", "base": 0x0337},
     {"child": 5, "source": "codeJAP14x14_08_", "target_page": "local/work/tdl_DATA001_0002/0005_codeJAP14x14_08_.bin", "base": 0x03D9},
     {"child": 6, "source": "codeJAP14x14_10_", "target_page": "local/work/tdl_DATA001_0002/0006_codeJAP14x14_10_.bin", "base": 0x042A},
     {"child": 7, "source": "codeJAP14x14_12_", "target_page": "local/work/tdl_DATA001_0002/0007_codeJAP14x14_12_.bin", "base": 0x04CC},
     {"child": 8, "source": "codeJAP14x14_14_", "target_page": "local/work/tdl_DATA001_0002/0008_codeJAP14x14_14_.bin", "base": 0x05BF},
+    {"child": 9, "source": "codeJAP14x14_16_", "target_page": "local/work/tdl_DATA001_0002/0009_codeJAP14x14_16_.bin", "base": 0x0610},
+    {"child": 10, "source": "codeJAP14x14_18_", "target_page": "local/work/tdl_DATA001_0002/0010_codeJAP14x14_18_.bin", "base": 0x0703},
 )
 
 PINNED_ASSIGNMENTS = {
