@@ -4,3 +4,5 @@ code,char,archive,entry,child,source,cell,runtime_texture,verification,notes
 0x042e,方,DATA001,0002,6,codeJAP14x14_10_,4,0x040e8800,confirmed,"GE/exported cell check: local/work/glyph_cells/0006_codeJAP14x14_10_/cell_004_r00_c04.png; p1p3 probe boxes title position 3."
 0x033f,動,DATA001,0002,4,codeJAP14x14_06_,8,0x040e4600,confirmed,"GE inspection of 0F movement tutorial title: first row ninth column, cell 8."
 0x05ca,法,DATA001,0002,8,codeJAP14x14_14_,11,0x040eca00,confirmed,"GE inspection of 0F movement tutorial title: cell 11."
+0x021b,る,DATA001,0002,2,codeJAP14x14_02_,40,0x040e0400,confirmed,"Overlay/body page-base probe: B2 row rendered 021B=る; GE cell 40 on local/work/dumped_textures/040e040028998f6f134f822a.png. Context-specific observation, not title path."
+0x023c,ス,DATA001,0002,3,codeJAP14x14_04_,73,0x040e2500,confirmed,"Overlay/body page-base probe: B2 row rendered 023C=ス; GE cell 73 on local/work/dumped_textures/040e2500676a3b4e3748fa38.png. Context-specific observation, not title path."
