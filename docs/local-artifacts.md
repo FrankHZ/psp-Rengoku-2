@@ -25,12 +25,15 @@ These folders are useful local evidence or inputs for the current workflow:
 | `local/work/equipment_chs_v2/` | Expanded melee equipment sheet and summary. |
 | `local/work/tutorial_chs_full_v1/` | Full tutorial sheet, stage config, and glyph assignments. |
 | `local/work/combined_chs_v1_0008_0015_0016/` | Combined tutorial/equipment/UI build metadata. |
+| `local/work/combined_chs_v2_0008_0015_0016_0017/` | Combined tutorial/equipment/UI/help build metadata using expanded runtime slot pools. |
 | `local/work/font_compare/` | SimSun/local-font comparison report and contact sheet. |
 | `local/work/font_level_analysis/` | Original font palette/index-level analysis. |
 | `local/work/page_base_candidates/` | Unknown JP code scan and static MIG candidate matches. |
-| `local/work/page_base_probe_v1/` | Multi-base probe manifest, stage config, and marker previews. |
+| `local/work/page_base_probe_v*/` | Multi-base probe manifests, stage configs, and marker previews. |
+| `samples/runtime_kana_map.csv` | Generated full kana runtime map with seeded consistency checks. |
 | `local/rebuilt/combined_chs_v1_0008_0015_0016_extracted/` | Current large PPSSPP-ready build. |
-| `local/rebuilt/page_base_probe_v1_extracted/` | Multi-base PPSSPP probe build. |
+| `local/rebuilt/combined_chs_v2_0008_0015_0016_0017_extracted/` | Current larger PPSSPP-ready build with help/manual rows included. |
+| `local/rebuilt/page_base_probe_v*_extracted/` | Multi-base PPSSPP probe builds. |
 | `local/rebuilt/equipment_chs_v1_extracted/` | First equipment screenshot-slice build. |
 | `local/rebuilt/equipment_chs_v1_generic_extracted/` | Same equipment slice through the generic builder. |
 | `local/rebuilt/equipment_chs_v2_extracted/` | Expanded melee equipment build. |

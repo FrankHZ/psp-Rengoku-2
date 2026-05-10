@@ -1,0 +1,170 @@
+code,char,block,index,child,source,cell,runtime_texture,base,confidence,notes
+0x01d1,ぁ,hiragana,0,2,codeJAP14x14_02_,47,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01d2,あ,hiragana,1,2,codeJAP14x14_02_,48,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01d3,ぃ,hiragana,2,2,codeJAP14x14_02_,49,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01d4,い,hiragana,3,2,codeJAP14x14_02_,50,0x040e0400,0x01a2,seeded,matches existing seed point
+0x01d5,ぅ,hiragana,4,2,codeJAP14x14_02_,51,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01d6,う,hiragana,5,2,codeJAP14x14_02_,52,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01d7,ぇ,hiragana,6,2,codeJAP14x14_02_,53,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01d8,え,hiragana,7,2,codeJAP14x14_02_,54,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01d9,ぉ,hiragana,8,2,codeJAP14x14_02_,55,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01da,お,hiragana,9,2,codeJAP14x14_02_,56,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01db,か,hiragana,10,2,codeJAP14x14_02_,57,0x040e0400,0x01a2,seeded,matches existing seed point
+0x01dc,が,hiragana,11,2,codeJAP14x14_02_,58,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01dd,き,hiragana,12,2,codeJAP14x14_02_,59,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01de,ぎ,hiragana,13,2,codeJAP14x14_02_,60,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01df,く,hiragana,14,2,codeJAP14x14_02_,61,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01e0,ぐ,hiragana,15,2,codeJAP14x14_02_,62,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01e1,け,hiragana,16,2,codeJAP14x14_02_,63,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01e2,げ,hiragana,17,2,codeJAP14x14_02_,64,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01e3,こ,hiragana,18,2,codeJAP14x14_02_,65,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01e4,ご,hiragana,19,2,codeJAP14x14_02_,66,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01e5,さ,hiragana,20,2,codeJAP14x14_02_,67,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01e6,ざ,hiragana,21,2,codeJAP14x14_02_,68,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01e7,し,hiragana,22,2,codeJAP14x14_02_,69,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01e8,じ,hiragana,23,2,codeJAP14x14_02_,70,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01e9,す,hiragana,24,2,codeJAP14x14_02_,71,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01ea,ず,hiragana,25,2,codeJAP14x14_02_,72,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01eb,せ,hiragana,26,2,codeJAP14x14_02_,73,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01ec,ぜ,hiragana,27,2,codeJAP14x14_02_,74,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01ed,そ,hiragana,28,2,codeJAP14x14_02_,75,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01ee,ぞ,hiragana,29,2,codeJAP14x14_02_,76,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01ef,た,hiragana,30,2,codeJAP14x14_02_,77,0x040e0400,0x01a2,seeded,matches existing seed point
+0x01f0,だ,hiragana,31,2,codeJAP14x14_02_,78,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01f1,ち,hiragana,32,2,codeJAP14x14_02_,79,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01f2,ぢ,hiragana,33,2,codeJAP14x14_02_,80,0x040e0400,0x01a2,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01f3,っ,hiragana,34,2,codeJAP14x14_02_,0,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01f4,つ,hiragana,35,2,codeJAP14x14_02_,1,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01f5,づ,hiragana,36,2,codeJAP14x14_02_,2,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01f6,て,hiragana,37,2,codeJAP14x14_02_,3,0x040e0400,0x01f3,seeded,matches existing seed point
+0x01f7,で,hiragana,38,2,codeJAP14x14_02_,4,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01f8,と,hiragana,39,2,codeJAP14x14_02_,5,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01f9,ど,hiragana,40,2,codeJAP14x14_02_,6,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01fa,な,hiragana,41,2,codeJAP14x14_02_,7,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01fb,に,hiragana,42,2,codeJAP14x14_02_,8,0x040e0400,0x01f3,seeded,matches existing seed point
+0x01fc,ぬ,hiragana,43,2,codeJAP14x14_02_,9,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01fd,ね,hiragana,44,2,codeJAP14x14_02_,10,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x01fe,の,hiragana,45,2,codeJAP14x14_02_,11,0x040e0400,0x01f3,seeded,matches existing seed point
+0x01ff,は,hiragana,46,2,codeJAP14x14_02_,12,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0200,ば,hiragana,47,2,codeJAP14x14_02_,13,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0201,ぱ,hiragana,48,2,codeJAP14x14_02_,14,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0202,ひ,hiragana,49,2,codeJAP14x14_02_,15,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0203,び,hiragana,50,2,codeJAP14x14_02_,16,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0204,ぴ,hiragana,51,2,codeJAP14x14_02_,17,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0205,ふ,hiragana,52,2,codeJAP14x14_02_,18,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0206,ぶ,hiragana,53,2,codeJAP14x14_02_,19,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0207,ぷ,hiragana,54,2,codeJAP14x14_02_,20,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0208,へ,hiragana,55,2,codeJAP14x14_02_,21,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0209,べ,hiragana,56,2,codeJAP14x14_02_,22,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x020a,ぺ,hiragana,57,2,codeJAP14x14_02_,23,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x020b,ほ,hiragana,58,2,codeJAP14x14_02_,24,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x020c,ぼ,hiragana,59,2,codeJAP14x14_02_,25,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x020d,ぽ,hiragana,60,2,codeJAP14x14_02_,26,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x020e,ま,hiragana,61,2,codeJAP14x14_02_,27,0x040e0400,0x01f3,seeded,matches existing seed point
+0x020f,み,hiragana,62,2,codeJAP14x14_02_,28,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0210,む,hiragana,63,2,codeJAP14x14_02_,29,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0211,め,hiragana,64,2,codeJAP14x14_02_,30,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0212,も,hiragana,65,2,codeJAP14x14_02_,31,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0213,ゃ,hiragana,66,2,codeJAP14x14_02_,32,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0214,や,hiragana,67,2,codeJAP14x14_02_,33,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0215,ゅ,hiragana,68,2,codeJAP14x14_02_,34,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0216,ゆ,hiragana,69,2,codeJAP14x14_02_,35,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0217,ょ,hiragana,70,2,codeJAP14x14_02_,36,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0218,よ,hiragana,71,2,codeJAP14x14_02_,37,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0219,ら,hiragana,72,2,codeJAP14x14_02_,38,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x021a,り,hiragana,73,2,codeJAP14x14_02_,39,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x021b,る,hiragana,74,2,codeJAP14x14_02_,40,0x040e0400,0x01f3,seeded,matches existing seed point
+0x021c,れ,hiragana,75,2,codeJAP14x14_02_,41,0x040e0400,0x01f3,seeded,matches existing seed point
+0x021d,ろ,hiragana,76,2,codeJAP14x14_02_,42,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x021e,ゎ,hiragana,77,2,codeJAP14x14_02_,43,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x021f,わ,hiragana,78,2,codeJAP14x14_02_,44,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0220,ゐ,hiragana,79,2,codeJAP14x14_02_,45,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0221,ゑ,hiragana,80,2,codeJAP14x14_02_,46,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0222,を,hiragana,81,2,codeJAP14x14_02_,47,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0223,ん,hiragana,82,2,codeJAP14x14_02_,48,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0224,ァ,katakana,0,2,codeJAP14x14_02_,49,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0225,ア,katakana,1,2,codeJAP14x14_02_,50,0x040e0400,0x01f3,seeded,matches existing seed point
+0x0226,ィ,katakana,2,2,codeJAP14x14_02_,51,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0227,イ,katakana,3,2,codeJAP14x14_02_,52,0x040e0400,0x01f3,seeded,matches existing seed point
+0x0228,ゥ,katakana,4,2,codeJAP14x14_02_,53,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0229,ウ,katakana,5,2,codeJAP14x14_02_,54,0x040e0400,0x01f3,seeded,matches existing seed point
+0x022a,ェ,katakana,6,2,codeJAP14x14_02_,55,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x022b,エ,katakana,7,2,codeJAP14x14_02_,56,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x022c,ォ,katakana,8,2,codeJAP14x14_02_,57,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x022d,オ,katakana,9,2,codeJAP14x14_02_,58,0x040e0400,0x01f3,seeded,matches existing seed point
+0x022e,カ,katakana,10,2,codeJAP14x14_02_,59,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x022f,ガ,katakana,11,2,codeJAP14x14_02_,60,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0230,キ,katakana,12,2,codeJAP14x14_02_,61,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0231,ギ,katakana,13,2,codeJAP14x14_02_,62,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0232,ク,katakana,14,2,codeJAP14x14_02_,63,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0233,グ,katakana,15,2,codeJAP14x14_02_,64,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0234,ケ,katakana,16,2,codeJAP14x14_02_,65,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0235,ゲ,katakana,17,2,codeJAP14x14_02_,66,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0236,コ,katakana,18,2,codeJAP14x14_02_,67,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0237,ゴ,katakana,19,2,codeJAP14x14_02_,68,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0238,サ,katakana,20,2,codeJAP14x14_02_,69,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0239,ザ,katakana,21,2,codeJAP14x14_02_,70,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x023a,シ,katakana,22,2,codeJAP14x14_02_,71,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x023b,ジ,katakana,23,2,codeJAP14x14_02_,72,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x023c,ス,katakana,24,2,codeJAP14x14_02_,73,0x040e0400,0x01f3,seeded,matches existing seed point
+0x023d,ズ,katakana,25,2,codeJAP14x14_02_,74,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x023e,セ,katakana,26,2,codeJAP14x14_02_,75,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x023f,ゼ,katakana,27,2,codeJAP14x14_02_,76,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0240,ソ,katakana,28,2,codeJAP14x14_02_,77,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0241,ゾ,katakana,29,2,codeJAP14x14_02_,78,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0242,タ,katakana,30,2,codeJAP14x14_02_,79,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0243,ダ,katakana,31,2,codeJAP14x14_02_,80,0x040e0400,0x01f3,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0244,チ,katakana,32,3,codeJAP14x14_04_,0,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0245,ヂ,katakana,33,3,codeJAP14x14_04_,1,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0246,ッ,katakana,34,3,codeJAP14x14_04_,2,0x040e2500,0x0244,seeded,matches existing seed point
+0x0247,ツ,katakana,35,3,codeJAP14x14_04_,3,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0248,ヅ,katakana,36,3,codeJAP14x14_04_,4,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0249,テ,katakana,37,3,codeJAP14x14_04_,5,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x024a,デ,katakana,38,3,codeJAP14x14_04_,6,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x024b,ト,katakana,39,3,codeJAP14x14_04_,7,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x024c,ド,katakana,40,3,codeJAP14x14_04_,8,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x024d,ナ,katakana,41,3,codeJAP14x14_04_,9,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x024e,ニ,katakana,42,3,codeJAP14x14_04_,10,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x024f,ヌ,katakana,43,3,codeJAP14x14_04_,11,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0250,ネ,katakana,44,3,codeJAP14x14_04_,12,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0251,ノ,katakana,45,3,codeJAP14x14_04_,13,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0252,ハ,katakana,46,3,codeJAP14x14_04_,14,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0253,バ,katakana,47,3,codeJAP14x14_04_,15,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0254,パ,katakana,48,3,codeJAP14x14_04_,16,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0255,ヒ,katakana,49,3,codeJAP14x14_04_,17,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0256,ビ,katakana,50,3,codeJAP14x14_04_,18,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0257,ピ,katakana,51,3,codeJAP14x14_04_,19,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0258,フ,katakana,52,3,codeJAP14x14_04_,20,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0259,ブ,katakana,53,3,codeJAP14x14_04_,21,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x025a,プ,katakana,54,3,codeJAP14x14_04_,22,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x025b,ヘ,katakana,55,3,codeJAP14x14_04_,23,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x025c,ベ,katakana,56,3,codeJAP14x14_04_,24,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x025d,ペ,katakana,57,3,codeJAP14x14_04_,25,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x025e,ホ,katakana,58,3,codeJAP14x14_04_,26,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x025f,ボ,katakana,59,3,codeJAP14x14_04_,27,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0260,ポ,katakana,60,3,codeJAP14x14_04_,28,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0261,マ,katakana,61,3,codeJAP14x14_04_,29,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0262,ミ,katakana,62,3,codeJAP14x14_04_,30,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0263,ム,katakana,63,3,codeJAP14x14_04_,31,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0264,メ,katakana,64,3,codeJAP14x14_04_,32,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0265,モ,katakana,65,3,codeJAP14x14_04_,33,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0266,ャ,katakana,66,3,codeJAP14x14_04_,34,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0267,ヤ,katakana,67,3,codeJAP14x14_04_,35,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0268,ュ,katakana,68,3,codeJAP14x14_04_,36,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0269,ユ,katakana,69,3,codeJAP14x14_04_,37,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x026a,ョ,katakana,70,3,codeJAP14x14_04_,38,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x026b,ヨ,katakana,71,3,codeJAP14x14_04_,39,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x026c,ラ,katakana,72,3,codeJAP14x14_04_,40,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x026d,リ,katakana,73,3,codeJAP14x14_04_,41,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x026e,ル,katakana,74,3,codeJAP14x14_04_,42,0x040e2500,0x0244,seeded,matches existing seed point
+0x026f,レ,katakana,75,3,codeJAP14x14_04_,43,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0270,ロ,katakana,76,3,codeJAP14x14_04_,44,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0271,ヮ,katakana,77,3,codeJAP14x14_04_,45,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0272,ワ,katakana,78,3,codeJAP14x14_04_,46,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0273,ヰ,katakana,79,3,codeJAP14x14_04_,47,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0274,ヱ,katakana,80,3,codeJAP14x14_04_,48,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0275,ヲ,katakana,81,3,codeJAP14x14_04_,49,0x040e2500,0x0244,seeded,matches existing seed point
+0x0276,ン,katakana,82,3,codeJAP14x14_04_,50,0x040e2500,0x0244,seeded,matches existing seed point
+0x0277,ヴ,katakana,83,3,codeJAP14x14_04_,51,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0278,ヵ,katakana,84,3,codeJAP14x14_04_,52,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges
+0x0279,ヶ,katakana,85,3,codeJAP14x14_04_,53,0x040e2500,0x0244,inferred,inferred from contiguous JIS kana order and confirmed runtime base ranges

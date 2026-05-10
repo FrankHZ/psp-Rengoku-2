@@ -681,7 +681,355 @@ PPSSPP/GE observation from the first probe run:
 - `0x0276` rendered as `ン` in the overlay/body row and is cell `50` on runtime texture `0x040e2500`.
 - The `0x021b`, `0x0222`, and `0x023c` observations give `code - cell = 0x01f3`.
 - The `0x026e` and `0x0276` observations give `code - cell = 0x0244`.
-- Because these came from the overlay/body runtime path, treat `0x01f3` and `0x0244` as overlay-context base observations rather than globally promoted title-page bases.
+- In `page_base_probe_v2`, the `C3` row on runtime texture `0x040e0400` confirmed another shared overlay base:
+
+```text
+0x01e7 し cell 69 -> base 0x01a2
+0x01e9 す cell 71 -> base 0x01a2
+0x01dc が cell 58 -> base 0x01a2
+0x01e3 こ cell 65 -> base 0x01a2
+0x01dd き cell 59 -> base 0x01a2
+```
+
+- Because these came from the overlay/body runtime path, treat `0x01a2`, `0x01f3`, and `0x0244` as overlay-context base observations rather than globally promoted title-page bases.
+
+Post-`0x01a2` scan:
+
+```text
+local/work/page_base_candidates/post_overlay2_unknown_base_scan.md
+```
+
+Current remaining high-weight candidate bases after excluding `0x01a2`,
+`0x01f3`, `0x0244`, `0x0337`, `0x0388`, `0x042a`, and `0x05bf`:
+
+```text
+0x0100 / child 1 / 0x040de300  punctuation-style page100 candidate
+0x00cf / child 2 / 0x040e0400  competing punctuation contiguous candidate
+0x0120 / child 3 / 0x040e2500  ellipsis and early-symbol candidate
+0x0171 / child 4 / 0x040e4600  lower-priority overlay candidate
+0x03a8 / child 11 / 0x040f2d00 lower-priority high-page candidate
+```
+
+Second probe artifact:
+
+```text
+local/rebuilt/page_base_probe_v2_extracted/
+```
+
+Build command:
+
+```powershell
+python tools/build_page_base_probe.py --variant v2 --work-root local/work/page_base_probe_v2 --output-root local/rebuilt/page_base_probe_v2_extracted --overwrite
+```
+
+Probe manifest:
+
+```text
+local/work/page_base_probe_v2/probe_manifest.csv
+```
+
+`page_base_probe_v2` includes:
+
+```text
+record 67: C2 1FE 1FB 1D4 1EF 1F6
+record 69: P0 100 101 102 11B 123
+record 71: C3 1E7 1E9 1DC 1E3 1DD
+```
+
+The C3 row confirmed overlay base `0x01a2`. The P0 row then distinguished
+`0x0100` from the competing `0x00cf` punctuation/control-like route, and
+`0x0123` from the competing child 3 / base `0x0120` route.
+
+The P0 row later confirmed overlay base `0x0100` on runtime texture
+`0x040de300`:
+
+```text
+0x0100    cell  0 -> base 0x0100
+0x0101 、 cell  1 -> base 0x0100
+0x0102 。 cell  2 -> base 0x0100
+0x011b ー cell 27 -> base 0x0100
+0x0123 … cell 35 -> base 0x0100
+```
+
+For this overlay/body path, `0x0100` wins over the competing `0x00cf`
+contiguous candidate, and `0x0123` uses child 1 / base `0x0100` rather than
+child 3 / base `0x0120`.
+
+Post-`0x0100` scan:
+
+```text
+local/work/page_base_candidates/post_overlay3_unknown_base_scan.md
+```
+
+Remaining counts after excluding confirmed overlay/body bases `0x0100`,
+`0x01a2`, `0x01f3`, and `0x0244`, plus the earlier title bases:
+
+```text
+unique unknown codes: 812
+unknown-code occurrences: 7745
+```
+
+The next compact probe is:
+
+```text
+local/rebuilt/page_base_probe_v4_extracted/
+```
+
+Build command:
+
+```powershell
+python tools/build_page_base_probe.py --variant v4 --work-root local/work/page_base_probe_v4 --output-root local/rebuilt/page_base_probe_v4_extracted --overwrite
+```
+
+Probe manifest:
+
+```text
+local/work/page_base_probe_v4/probe_manifest.csv
+```
+
+`page_base_probe_v4` includes:
+
+```text
+record 65: R4  19D 1A0 194 196 1A1   candidate base 0x0171 / child 4
+record 67: H4  428 410 411 424 40D   candidate base 0x0400 / child 4
+record 69: H5  52E 530 523 532 52A   candidate base 0x0500 / child 5
+record 71: H11 3DE 3F1 3E1 3F2       candidate base 0x03a8 / child 11
+```
+
+The v4 marker candidates did not win for H11/H5/H4, but the original glyphs
+visible in the same rows exposed two actual overlay bases:
+
+```text
+H11 0x03de 戦 cell  5 texture 0x040e6700 -> base 0x03d9
+H11 0x03f1 全 cell 24 texture 0x040e6700 -> base 0x03d9
+H11 0x03e1 最 cell  8 texture 0x040e6700 -> base 0x03d9
+H11 0x03f2 目 cell 25 texture 0x040e6700 -> base 0x03d9
+
+H4  0x0428 押 cell 79 texture 0x040e6700 -> base 0x03d9
+H4  0x0410 子 cell 55 texture 0x040e6700 -> base 0x03d9
+H4  0x0411 横 cell 56 texture 0x040e6700 -> base 0x03d9
+H4  0x0424 越 cell 75 texture 0x040e6700 -> base 0x03d9
+H4  0x040d 増 cell 52 texture 0x040e6700 -> base 0x03d9
+
+H5  0x052e 入 cell 17 texture 0x040ea900 -> base 0x051d
+H5  0x0530 戻 cell 19 texture 0x040ea900 -> base 0x051d
+H5  0x0523 選 cell  6 texture 0x040ea900 -> base 0x051d
+H5  0x0532 位 cell 21 texture 0x040ea900 -> base 0x051d
+H5  0x052a 元 cell 13 texture 0x040ea900 -> base 0x051d
+```
+
+These observations mean the static candidate bases `0x03a8`, `0x0400`, and
+`0x0500` did not describe those v4 overlay/body rows. H11/H4 route through
+child 5 / texture `0x040e6700`, while H5 routes through child 7 / texture
+`0x040ea900`.
+
+Post-`0x03d9` and `0x051d` scan:
+
+```text
+local/work/page_base_candidates/post_overlay4_unknown_base_scan.md
+```
+
+Remaining counts after excluding the v4-observed overlay/body bases:
+
+```text
+unique unknown codes: 657
+unknown-code occurrences: 4603
+```
+
+Next probe artifact:
+
+```text
+local/rebuilt/page_base_probe_v5_extracted/
+```
+
+Build command:
+
+```powershell
+python tools/build_page_base_probe.py --variant v5 --work-root local/work/page_base_probe_v5 --output-root local/rebuilt/page_base_probe_v5_extracted --overwrite
+```
+
+Probe manifest:
+
+```text
+local/work/page_base_probe_v5/probe_manifest.csv
+```
+
+`page_base_probe_v5` keeps `R4` visible and adds the next two compact
+families:
+
+```text
+record 67: D3  314 311 310 334       candidates 0x0306/child9 vs 0x0300/child3
+record 69: H5L 508 502 51B 516 51A   candidate 0x0500/child5 for lower 0x05xx
+record 71: R4  19D 1A0 194 196 1A1   candidate 0x0171/child4
+```
+
+The v5 marker candidates did not describe the displayed routes, but the row
+glyphs/GE cells exposed three more overlay bases:
+
+```text
+R4  0x019d A cell 76 texture 0x040de300 -> base 0x0151
+R4  0x01a0 D cell 79 texture 0x040de300 -> base 0x0151
+R4  0x0194 1 cell 67 texture 0x040de300 -> base 0x0151
+R4  0x0196 3 cell 69 texture 0x040de300 -> base 0x0151
+R4  0x01a1 E cell 80 texture 0x040de300 -> base 0x0151
+
+D3  0x0314 一 cell 46 texture 0x040e4600 -> base 0x02e6
+D3  0x0311 練 cell 43 texture 0x040e4600 -> base 0x02e6
+D3  0x0310 熟 cell 42 texture 0x040e4600 -> base 0x02e6
+D3  0x0334 代 cell 78 texture 0x040e4600 -> base 0x02e6
+
+H5L 0x0508 変 cell 60 texture 0x040ea900 -> base 0x04cc
+H5L 0x0502 取 cell 54 texture 0x040ea900 -> base 0x04cc
+H5L 0x051b 形 cell 79 texture 0x040ea900 -> base 0x04cc
+H5L 0x0516 得 cell 74 texture 0x040ea900 -> base 0x04cc
+H5L 0x051a 明 cell 78 texture 0x040ea900 -> base 0x04cc
+```
+
+Post-`0x0151`, `0x02e6`, and `0x04cc` scan:
+
+```text
+local/work/page_base_candidates/post_overlay5_unknown_base_scan.md
+```
+
+Remaining unknown pool:
+
+```text
+unique unknown codes: 518
+unknown-code occurrences: 2508
+```
+
+Next unknown-base probe:
+
+```text
+local/rebuilt/page_base_probe_v6_extracted/
+```
+
+Build command:
+
+```powershell
+python tools/build_page_base_probe.py --variant v6 --work-root local/work/page_base_probe_v6 --output-root local/rebuilt/page_base_probe_v6_extracted --overwrite
+```
+
+Probe manifest:
+
+```text
+local/work/page_base_probe_v6/probe_manifest.csv
+```
+
+`page_base_probe_v6` combines the last clean static candidates with
+observe-only high-frequency leftovers:
+
+```text
+record 65: H6   63B 62E 62C 62D 63A   candidate base 0x0600 / child 6
+record 67: H7   712 72A 72E 74C 705   candidate base 0x0700 / child 7
+record 69: S2   2AE 2AF 2AC 2AD       candidate base 0x0264 / child 7
+record 71: OBS  493 48A 4A5 49D 483   observe-only high 0x04xx leftovers
+record 73: OBS2 485 4A6 496 5AB 599   observe-only 0x04xx/0x05xx leftovers
+```
+
+For `OBS` and `OBS2`, no marker cells are patched. The useful observation is
+the original rendered glyph plus GE cell/texture; derive the base with
+`base = code - cell`, as with H11/H5/H4/H5L.
+
+Help/manual probe alternative:
+
+```text
+local/rebuilt/page_base_probe_help0017_v1_extracted/
+```
+
+Build command:
+
+```powershell
+python tools/build_page_base_probe.py --variant help0017-v1 --work-root local/work/page_base_probe_help0017_v1 --output-root local/rebuilt/page_base_probe_help0017_v1_extracted --overwrite
+```
+
+Probe manifest:
+
+```text
+local/work/page_base_probe_help0017_v1/probe_manifest.csv
+```
+
+This patches `DATA001/0017` help/manual rows instead of the in-stage tutorial
+overlay. The first page/index rows use one code each so they are easy to
+inspect:
+
+```text
+record 1:  A 493=<mark>   candidate base 0x047b / child 6 / cell 24
+record 2:  B 48A=<mark>   candidate base 0x047b / child 6 / cell 15
+record 3:  C 4A5=<mark>   candidate base 0x047b / child 6 / cell 42
+record 4:  D 49D=<mark>   candidate base 0x047b / child 6 / cell 34
+record 5:  E 485=<mark>   candidate base 0x047b / child 6 / cell 10
+record 6:  F 5AB=<mark>   candidate base 0x056e / child 8 / cell 61
+record 7:  G 5B1=<mark>   candidate base 0x056e / child 8 / cell 67
+record 8:  H 599=<mark>   candidate base 0x056e / child 8 / cell 43
+record 9:  I 591=<mark>   candidate base 0x056e / child 8 / cell 35
+record 11: J 5B0=<mark>   candidate base 0x056e / child 8 / cell 66
+record 12: P6 63B 62E 62C 62D 63A   candidate base 0x0600 / child 6
+record 14: P7 712 72A 72E 74C 705   candidate base 0x0700 / child 7
+record 16: S2 2AE 2AF 2AC 2AD       candidate base 0x0264 / child 7
+```
+
+Observation rule: if the marker letter appears after `=`, the candidate base
+for that row is confirmed. If the marker does not appear, record the rendered
+glyph plus GE texture address and highlighted cell number so we can derive the
+actual base.
+
+Observed help/manual probe results:
+
+```text
+0x0493 -> marker A, child 6, cell 24, texture 0x040e8800, base 0x047b
+0x048a -> marker B, child 6, cell 15, texture 0x040e8800, base 0x047b
+0x05b0 -> marker J, child 8, cell 66, texture 0x040eca00, base 0x056e
+0x063b -> 欲, child 9, cell 43, texture 0x040eeb00, base 0x0610
+0x072e -> 脱, child 10, cell 43, texture 0x040f0c00, base 0x0703
+0x02ae -> β, child 3, cell 25, texture 0x040e2500, base 0x0295
+```
+
+Post-help-probe scan:
+
+```text
+local/work/page_base_candidates/post_help0017_v1_unknown_base_scan.md
+```
+
+Remaining unknown pool after excluding the newly observed bases:
+
+```text
+unique unknown codes: 202
+unknown-code occurrences: 423
+```
+
+At this point the unknown-base scan is functionally complete for broad
+translation work. The remaining pool is dominated by low-frequency
+DATA003/DATA002 tails plus tiny punctuation/control candidates; no high-impact
+static candidate base remains in the current evidence set.
+
+## Runtime kana map
+
+The full kana runtime map is generated by:
+
+```powershell
+python tools/build_kana_runtime_map.py --output samples/runtime_kana_map.csv
+```
+
+Output:
+
+```text
+samples/runtime_kana_map.csv
+```
+
+This map currently covers `169` kana rows:
+
+```text
+83 hiragana rows
+86 katakana rows
+18 existing seed points used as consistency checks
+```
+
+The map is inferred from contiguous JIS-style kana order and confirmed
+runtime bases. It should be used as a decoding aid and coverage layer, not as
+a global replacement for context-aware glyph handling. Known guardrail:
+static/manual maps can conflict with runtime/story maps, e.g. a code can be a
+kanji in one static page context and kana in the story/overlay path.
 
 Included:
 
@@ -689,23 +1037,29 @@ Included:
 DATA001/0008 tutorial draft
 DATA001/0015 equipment screenshot slice
 DATA001/0016 drafted UI/menu rows
+DATA001/0017 drafted help/manual rows
 ```
 
 Local build notes:
 
 ```text
-local/work/combined_chs_v1_0008_0015_0016/README.md
+local/work/combined_chs_v2_0008_0015_0016_0017/
 ```
 
 Rebuild command:
 
 ```powershell
-python tools/build_chs_combined_data001.py --target DATA001/0008 local/work/chs_tutorial_draft_DATA001_0008.json --target DATA001/0015 local/work/equipment_chs_v1/DATA001_0015_equipment_slice_70-81_94-97.json --target DATA001/0016 local/work/ui_help_chs_v1/DATA001_0016_ui_sheet.json --work-root local/work/combined_chs_v1_0008_0015_0016 --output-root local/rebuilt/combined_chs_v1_0008_0015_0016_extracted --overwrite
+python tools/build_chs_combined_data001.py --work-root local/work/combined_chs_v2_0008_0015_0016_0017 --output-root local/rebuilt/combined_chs_v2_0008_0015_0016_0017_extracted --overwrite
 ```
 
-Current combined-build blocker:
+Current combined build:
 
-- Adding `DATA001/0017` help/manual drafted rows to the same build requires `262` assigned non-ASCII glyphs.
-- The currently confirmed runtime slot pool covers `243` cells across children `4`, `6`, and `8`.
-- Therefore `0008 + 0015 + 0016 + 0017` is blocked by glyph capacity, not by archive staging.
-- The three-entry build uses `216` assigned glyphs and is structurally verified.
+- The previous capacity blocker is removed by the newly confirmed child 1,
+  child 5, and child 7 overlay slot pools.
+- `0008 + 0015 + 0016 + 0017` now stages successfully and uses `262`
+  assigned non-ASCII glyphs.
+- Assignment distribution in the current build: child 1 / base `0x0151` uses
+  `81` cells, child 4 / base `0x0337` uses `81`, child 5 / base `0x03d9`
+  uses `81`, child 6 / base `0x042a` uses `18`, and child 8 / base `0x05bf`
+  uses `1`.
+- PPSSPP-ready output: `local/rebuilt/combined_chs_v2_0008_0015_0016_0017_extracted/`.
