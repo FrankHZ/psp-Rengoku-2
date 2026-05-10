@@ -21,6 +21,7 @@ PAGE_SOURCES = {
     7: ("codeJAP14x14_12_", "local/work/tdl_DATA001_0002/0007_codeJAP14x14_12_.bin"),
     8: ("codeJAP14x14_14_", "local/work/tdl_DATA001_0002/0008_codeJAP14x14_14_.bin"),
     9: ("codeJAP14x14_16_", "local/work/tdl_DATA001_0002/0009_codeJAP14x14_16_.bin"),
+    10: ("codeJAP14x14_18_", "local/work/tdl_DATA001_0002/0010_codeJAP14x14_18_.bin"),
     11: ("codeJAP14x14_20_", "local/work/tdl_DATA001_0002/0011_codeJAP14x14_20_.bin"),
 }
 
@@ -689,6 +690,150 @@ PROBES_HELP_0017_V1 = (
     },
 )
 
+PROBES_HELP_0017_GAP66_V1 = (
+    {
+        "id": "gap66-first-0689",
+        "label": "689",
+        "code": 0x0689,
+        "candidates": (
+            {"marker": "A", "child": 10, "cell": 40, "base": 0x0661, "formula": "gap-first-page"},
+            {"marker": "B", "child": 10, "cell": 37, "base": 0x0664, "formula": "gap-first-page"},
+        ),
+    },
+    {
+        "id": "gap66-first-06a5",
+        "label": "6A5",
+        "code": 0x06A5,
+        "candidates": (
+            {"marker": "C", "child": 10, "cell": 68, "base": 0x0661, "formula": "gap-first-page"},
+            {"marker": "D", "child": 10, "cell": 65, "base": 0x0664, "formula": "gap-first-page"},
+        ),
+    },
+    {
+        "id": "gap66-first-06b4",
+        "label": "6B4",
+        "code": 0x06B4,
+        "candidates": ({"marker": "E", "child": 10, "cell": 80, "base": 0x0664, "formula": "gap-first-page"},),
+    },
+    {
+        "id": "gap66-second-06bc",
+        "label": "6BC",
+        "code": 0x06BC,
+        "candidates": (
+            {"marker": "F", "child": 11, "cell": 10, "base": 0x06B2, "formula": "gap-second-page"},
+            {"marker": "G", "child": 11, "cell": 7, "base": 0x06B5, "formula": "gap-second-page"},
+        ),
+    },
+    {
+        "id": "gap66-second-06c2",
+        "label": "6C2",
+        "code": 0x06C2,
+        "candidates": (
+            {"marker": "H", "child": 11, "cell": 16, "base": 0x06B2, "formula": "gap-second-page"},
+            {"marker": "I", "child": 11, "cell": 13, "base": 0x06B5, "formula": "gap-second-page"},
+        ),
+    },
+    {
+        "id": "gap66-second-06e4",
+        "label": "6E4",
+        "code": 0x06E4,
+        "candidates": (
+            {"marker": "J", "child": 11, "cell": 50, "base": 0x06B2, "formula": "gap-second-page"},
+            {"marker": "K", "child": 11, "cell": 47, "base": 0x06B5, "formula": "gap-second-page"},
+        ),
+    },
+    {
+        "id": "pre-0703-0700",
+        "label": "700",
+        "code": 0x0700,
+        "candidates": ({"marker": "L", "child": 10, "cell": 0, "base": 0x0700, "formula": "pre-confirmed-0703"},),
+    },
+    {
+        "id": "pre-0703-0701",
+        "label": "701",
+        "code": 0x0701,
+        "candidates": ({"marker": "M", "child": 10, "cell": 1, "base": 0x0700, "formula": "pre-confirmed-0703"},),
+    },
+    {
+        "id": "pre-0703-0702",
+        "label": "702",
+        "code": 0x0702,
+        "candidates": ({"marker": "N", "child": 10, "cell": 2, "base": 0x0700, "formula": "pre-confirmed-0703"},),
+    },
+)
+
+PROBES_HELP_0017_GAP66_V2 = (
+    {
+        "id": "gap66-child9-06a5",
+        "label": "6A5",
+        "code": 0x06A5,
+        "candidates": ({"marker": "A", "child": 9, "cell": 68, "base": 0x0661, "formula": "gap-child9-confirm"},),
+    },
+    {
+        "id": "gap66-child9-06b1",
+        "label": "6B1",
+        "code": 0x06B1,
+        "candidates": ({"marker": "B", "child": 9, "cell": 80, "base": 0x0661, "formula": "gap-child9-confirm"},),
+    },
+    {
+        "id": "gap66-child10-06b2",
+        "label": "6B2",
+        "code": 0x06B2,
+        "candidates": ({"marker": "C", "child": 10, "cell": 0, "base": 0x06B2, "formula": "gap-child10-boundary"},),
+    },
+    {
+        "id": "gap66-child10-06b4",
+        "label": "6B4",
+        "code": 0x06B4,
+        "candidates": ({"marker": "D", "child": 10, "cell": 2, "base": 0x06B2, "formula": "gap-child10-boundary"},),
+    },
+    {
+        "id": "gap66-child10-06bc",
+        "label": "6BC",
+        "code": 0x06BC,
+        "candidates": ({"marker": "E", "child": 10, "cell": 10, "base": 0x06B2, "formula": "gap-child10-boundary"},),
+    },
+    {
+        "id": "gap66-child10-06c2",
+        "label": "6C2",
+        "code": 0x06C2,
+        "candidates": ({"marker": "F", "child": 10, "cell": 16, "base": 0x06B2, "formula": "gap-child10-boundary"},),
+    },
+    {
+        "id": "gap66-child10-06e4",
+        "label": "6E4",
+        "code": 0x06E4,
+        "candidates": ({"marker": "G", "child": 10, "cell": 50, "base": 0x06B2, "formula": "gap-child10-boundary"},),
+    },
+    {
+        "id": "gap66-child10-0700",
+        "label": "700",
+        "code": 0x0700,
+        "candidates": (
+            {"marker": "H", "child": 10, "cell": 78, "base": 0x06B2, "formula": "gap-child10-boundary"},
+            {"marker": "K", "child": 10, "cell": 0, "base": 0x0700, "formula": "pre-confirmed-0703"},
+        ),
+    },
+    {
+        "id": "gap66-child10-0701",
+        "label": "701",
+        "code": 0x0701,
+        "candidates": (
+            {"marker": "I", "child": 10, "cell": 79, "base": 0x06B2, "formula": "gap-child10-boundary"},
+            {"marker": "L", "child": 10, "cell": 1, "base": 0x0700, "formula": "pre-confirmed-0703"},
+        ),
+    },
+    {
+        "id": "gap66-child10-0702",
+        "label": "702",
+        "code": 0x0702,
+        "candidates": (
+            {"marker": "J", "child": 10, "cell": 80, "base": 0x06B2, "formula": "gap-child10-boundary"},
+            {"marker": "M", "child": 10, "cell": 2, "base": 0x0700, "formula": "pre-confirmed-0703"},
+        ),
+    },
+)
+
 ROWS_V1 = (
     (10, "BASE PROBE"),
     (11, "LOOK AT BODY ROWS"),
@@ -756,6 +901,35 @@ ROWS_HELP_0017_V1 = (
     (16, "S2", PROBES_HELP_0017_V1[20:]),
 )
 
+ROWS_HELP_0017_GAP66_V1 = (
+    (1, "G66"),
+    (2, "MARK"),
+    (3, "A", PROBES_HELP_0017_GAP66_V1[0:1]),
+    (4, "B", PROBES_HELP_0017_GAP66_V1[1:2]),
+    (5, "C", PROBES_HELP_0017_GAP66_V1[2:3]),
+    (6, "D", PROBES_HELP_0017_GAP66_V1[3:4]),
+    (7, "E", PROBES_HELP_0017_GAP66_V1[4:5]),
+    (8, "F", PROBES_HELP_0017_GAP66_V1[5:6]),
+    (9, "G", PROBES_HELP_0017_GAP66_V1[6:7]),
+    (11, "H", PROBES_HELP_0017_GAP66_V1[7:8]),
+    (12, "I", PROBES_HELP_0017_GAP66_V1[8:9]),
+)
+
+ROWS_HELP_0017_GAP66_V2 = (
+    (1, "G66B"),
+    (2, "MARK"),
+    (3, "A", PROBES_HELP_0017_GAP66_V2[0:1]),
+    (4, "B", PROBES_HELP_0017_GAP66_V2[1:2]),
+    (5, "C", PROBES_HELP_0017_GAP66_V2[2:3]),
+    (6, "D", PROBES_HELP_0017_GAP66_V2[3:4]),
+    (7, "E", PROBES_HELP_0017_GAP66_V2[4:5]),
+    (8, "F", PROBES_HELP_0017_GAP66_V2[5:6]),
+    (9, "G", PROBES_HELP_0017_GAP66_V2[6:7]),
+    (11, "H", PROBES_HELP_0017_GAP66_V2[7:8]),
+    (12, "I", PROBES_HELP_0017_GAP66_V2[8:9]),
+    (14, "J", PROBES_HELP_0017_GAP66_V2[9:10]),
+)
+
 VARIANTS = {
     "v1": {"probes": PROBES_V1, "rows": ROWS_V1},
     "v2": {"probes": PROBES_V2, "rows": ROWS_V2},
@@ -766,6 +940,18 @@ VARIANTS = {
     "help0017-v1": {
         "probes": PROBES_HELP_0017_V1,
         "rows": ROWS_HELP_0017_V1,
+        "entry_id": 17,
+        "source_entry": "local/work/mcd3_entries/DATA001/0017_bin.bin",
+    },
+    "help0017-gap66-v1": {
+        "probes": PROBES_HELP_0017_GAP66_V1,
+        "rows": ROWS_HELP_0017_GAP66_V1,
+        "entry_id": 17,
+        "source_entry": "local/work/mcd3_entries/DATA001/0017_bin.bin",
+    },
+    "help0017-gap66-v2": {
+        "probes": PROBES_HELP_0017_GAP66_V2,
+        "rows": ROWS_HELP_0017_GAP66_V2,
         "entry_id": 17,
         "source_entry": "local/work/mcd3_entries/DATA001/0017_bin.bin",
     },

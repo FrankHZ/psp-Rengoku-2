@@ -70,3 +70,6 @@ code,char,archive,entry,child,source,cell,runtime_texture,verification,notes
 0x02af,γ,DATA001,0002,3,codeJAP14x14_04_,26,0x040e2500,confirmed,"Help/manual page-base probe help0017-v1 S2 row rendered 2AF=γ; inferred cell 26 from shared base 0x0295."
 0x02ac,Ω,DATA001,0002,3,codeJAP14x14_04_,23,0x040e2500,confirmed,"Help/manual page-base probe help0017-v1 S2 row rendered 2AC=Ω; inferred cell 23 from shared base 0x0295."
 0x02ad,α,DATA001,0002,3,codeJAP14x14_04_,24,0x040e2500,confirmed,"Help/manual page-base probe help0017-v1 S2 row rendered 2AD=α; inferred cell 24 from shared base 0x0295."
+0x0689,暗,DATA001,0017,9,codeJAP14x14_16_,40,0x040eeb00,confirmed,"Help/manual page-base probe help0017-gap66-v1 rendered 689=暗 at cell 40 on texture 0x040eeb00; actual base is 0x0661 on child 9, not the child 10 probe candidate."
+0x06b2,L,DATA001,0017,10,codeJAP14x14_18_,0,0x040f0c00,confirmed,"Help/manual page-base probe help0017-gap66-v1 observed the child 10 cell 0 marker on the 0x06b2 base route; confirms child 10 base 0x06b2."
+0x0702,E,DATA001,0017,10,codeJAP14x14_18_,80,0x040f0c00,confirmed,"Help/manual page-base probe help0017-gap66-v1 rendered 702=E at cell 80 on texture 0x040f0c00; confirms code 0x0702 is on child 10 base 0x06b2."

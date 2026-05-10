@@ -1,12 +1,12 @@
 # Local Artifacts
 
-Everything under `local/` is ignored by git. This file records which ignored
-outputs are useful to keep around during the Chinese patch workflow and which
-ones are disposable scratch.
+Everything under `local/` is ignored by git. Keep ignored outputs only when
+they are current evidence, current build inputs, or PPSSPP-ready deliverables.
+Remove superseded builds after their results are copied into tracked docs.
 
 ## Preserve
 
-These folders are useful local evidence or inputs for the current workflow:
+Current source/extraction inputs:
 
 | Path | Purpose |
 | --- | --- |
@@ -16,56 +16,58 @@ These folders are useful local evidence or inputs for the current workflow:
 | `local/work/glyph_cells/` | Exported font cell crops and manifest for page/cell reasoning. |
 | `local/work/rendered_mig_pages/` | Baseline rendered MIG pages for font comparison. |
 | `local/work/dumped_textures/` | Runtime texture dumps used to compare static and in-game font pages. |
-| `local/work/global_text_inventory/` | Current table inventory and translation queue. |
+
+Current inventories and translator sheets:
+
+| Path | Purpose |
+| --- | --- |
+| `local/work/global_text_inventory/` | Table inventory and translation queue. |
 | `local/work/equipment_catalog_inventory/` | Equipment/catalog inventory report. |
-| `local/work/story_chs_v1/` | Story readiness sheets and glyph-gap report. |
-| `local/work/ui_help_chs_v1/` | Draft UI/help translation sheets. |
-| `local/work/ui_help_chs_build_v1/` | UI/help selected build sheets and summary. |
-| `local/work/equipment_chs_v1/` | Screenshot equipment slice sheets and summary. |
-| `local/work/equipment_chs_v2/` | Expanded melee equipment sheet and summary. |
-| `local/work/equipment_chs_v3/` | Merged equipment v1+v2 sheet for combined builds. |
-| `local/work/equipment_chs_full/` | Full equipment/catalog CHS sheet for all detected DATA001/0015 rows. |
-| `local/work/equipment_chs_full_buildfit/` | Full equipment sheet adjusted for build glyph capacity. |
-| `local/work/story_chs_full/` | Full aligned story CHS sheets and reports. |
+| `local/work/equipment_chs_full/` | Full equipment/catalog CHS draft. |
+| `local/work/equipment_chs_full_buildfit/` | Full equipment sheet adjusted for glyph capacity. |
+| `local/work/story_chs_full/` | Full aligned story sheets and reports. |
 | `local/work/tutorial_chs_full_v1/` | Full tutorial sheet, stage config, and glyph assignments. |
-| `local/work/combined_chs_v1_0008_0015_0016/` | Combined tutorial/equipment/UI build metadata. |
-| `local/work/combined_chs_v2_0008_0015_0016_0017/` | Combined tutorial/equipment/UI/help build metadata using expanded runtime slot pools. |
-| `local/work/combined_chs_v5_0008_0015merged_0016_0017_expanded/` | Current broad combined build metadata with merged equipment and expanded UI/help drafts. |
+| `local/work/ui_help_chs_v1/` | Current UI/help translator sheets. |
 | `local/work/font_compare/` | SimSun/local-font comparison report and contact sheet. |
 | `local/work/font_level_analysis/` | Original font palette/index-level analysis. |
-| `local/work/page_base_candidates/` | Unknown JP code scan and static MIG candidate matches. |
-| `local/work/page_base_probe_v*/` | Multi-base probe manifests, stage configs, and marker previews. |
-| `samples/runtime_kana_map.csv` | Generated full kana runtime map with seeded consistency checks. |
-| `local/rebuilt/combined_chs_v1_0008_0015_0016_extracted/` | Current large PPSSPP-ready build. |
-| `local/rebuilt/combined_chs_v2_0008_0015_0016_0017_extracted/` | Current larger PPSSPP-ready build with help/manual rows included. |
-| `local/rebuilt/page_base_probe_v*_extracted/` | Multi-base PPSSPP probe builds. |
-| `local/rebuilt/equipment_chs_v1_extracted/` | First equipment screenshot-slice build. |
-| `local/rebuilt/equipment_chs_v1_generic_extracted/` | Same equipment slice through the generic builder. |
-| `local/rebuilt/equipment_chs_v2_extracted/` | Expanded melee equipment build. |
-| `local/rebuilt/combined_chs_v5_0008_0015merged_0016_0017_expanded_extracted/` | Current broad PPSSPP-ready build with 504 translated rows. |
-| `local/rebuilt/combined_chs_v8_0003_0008_0012anchored_0015full_0016full_0017full_extracted/` | Full catalog/UI/help PPSSPP build with 1113 translated rows. |
-| `local/rebuilt/combined_chs_story_full_v1_0003_0008_0012full_extracted/` | Full aligned story PPSSPP build. |
-| `local/rebuilt/tutorial_chs_full_v1_extracted/` | Full tutorial CHS build. |
-| `local/rebuilt/ui_help_chs_v1_DATA001_0016_extracted/` | UI build probe. |
-| `local/rebuilt/ui_help_chs_v1_DATA001_0017_extracted/` | Help/manual build probe. |
+| `local/work/page_base_candidates/` | Unknown JP code scans and static MIG candidate matches. |
 
-## Disposable
+Current PPSSPP artifacts and their work roots:
 
-These are scratch outputs that can be removed after the information has been
-copied into tracked docs or superseded by a current build:
+| Path | Purpose |
+| --- | --- |
+| `local/work/combined_chs_v12_manual_skillpoints_0003_0008_0012anchored_0015full_0016full_0017full/` | Current broad catalog/UI/help build metadata. |
+| `local/rebuilt/combined_chs_v12_manual_skillpoints_0003_0008_0012anchored_0015full_0016full_0017full_extracted/` | Current broad PPSSPP-ready build. |
+| `local/work/combined_chs_story_full_v1_0003_0008_0012full/` | Current full story build metadata. |
+| `local/rebuilt/combined_chs_story_full_v1_0003_0008_0012full_extracted/` | Current full story PPSSPP-ready build. |
+| `local/work/page_base_probe_help0017_gap66_v2/` | Clean page-base boundary probe for child 9 / `0x0661` and child 10 / `0x06b2`. |
+| `local/rebuilt/page_base_probe_help0017_gap66_v2_extracted/` | PPSSPP-ready copy of the current page-base boundary probe. |
+| `local/rebuilt/tutorial_chs_full_v1_extracted/` | Full tutorial CHS build, retained as a small known-good artifact. |
 
-- `local/work/archives_*`
-- `local/work/verify_plus_entries/`
-- `local/work/decode_offsets/`
-- `local/work/decode_variants/`
-- `local/work/dumped_textures_scaled_grid/`
-- `local/work/rendered_mig_pages_abgr/`
-- `local/work/rendered_mig_pages_bgra/`
-- `local/work/rendered_mig_pages_contrast/`
-- `local/work/rendered_mig_pages_rgba/`
-- `local/work/rendered_mig_pages_scaled/`
-- nested build/stage copies under current work roots, once their summary
-  JSON/CSV files and `local/rebuilt/*_extracted/` outputs are preserved.
+Tracked generated references:
 
-If PPSSPP is open, it may lock old `DATA*.BIN` scratch copies. Close PPSSPP
-before removing locked ignored folders.
+| Path | Purpose |
+| --- | --- |
+| `samples/runtime_glyph_map_seed.csv` | Runtime glyph observations and inferred base seeds. |
+| `samples/runtime_kana_map.csv` | Generated kana runtime map with seeded consistency checks. |
+
+## Removed
+
+The stale combined/probe generations below were removed during cleanup because
+they are superseded by v12 and gap66-v2:
+
+```text
+local/work/combined_chs_v1_* through combined_chs_v11_*
+local/rebuilt/combined_chs_v1_* through combined_chs_v11_*
+local/work/page_base_probe_v1 through page_base_probe_v6
+local/rebuilt/page_base_probe_v1_extracted through page_base_probe_v6_extracted
+local/work/page_base_probe_help0017_v1
+local/work/page_base_probe_help0017_gap66_v1
+local/rebuilt/page_base_probe_help0017_v1_extracted
+local/rebuilt/page_base_probe_help0017_gap66_v1_extracted
+```
+
+## Rule
+
+When creating a new ignored local output, either add it to this file with a
+one-line purpose or delete it after copying useful findings into tracked docs.
