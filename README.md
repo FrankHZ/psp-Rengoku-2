@@ -42,7 +42,7 @@ local/
   rebuilt/
 ```
 
-Everything under `local/` is ignored by git. Keep pristine original ROMs outside this repository, currently under `K:\Codes-roms\psp-roms`. Use `local/extracted/` for unpacked ISO contents, `local/work/` for modified file copies, `local/rebuilt/` for rebuild staging, and `local/roms/` only for rebuilt test images. Keep local helper programs such as PPSSPP and UMDGen under `local/emulators/` or `local/tools/`.
+Everything under `local/` is ignored by git. Keep pristine original ROMs outside this repository, currently under `K:\Codes-roms\psp-roms`. Use `local/extracted/` for unpacked ISO contents, `local/work/` for modified file copies, `local/rebuilt/` for rebuild staging, and `local/roms/` only for rebuilt test images. Keep local helper programs such as PPSSPP and UMDGen under `local/emulators/` or `local/tools/`. See `docs/local-artifacts.md` for the current keep/remove policy for generated local artifacts.
 
 ## Tools
 

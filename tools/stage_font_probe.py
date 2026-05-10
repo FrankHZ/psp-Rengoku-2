@@ -10,6 +10,7 @@ from typing import Any
 from copy_mig_font_cell import copy_font_cell
 from import_text import import_text
 from patch_mig_font_cell import patch_font_cells, parse_cell_range
+from render_mig_font_cell import render_font_cell
 from replace_mcd3_entry import replace_mcd3_entry
 from tdl import replace_tdl_children
 
@@ -60,17 +61,20 @@ def stage_font_probe(config: dict[str, Any]) -> None:
         name = f"DATA00{archive_index}.BIN"
         shutil.copy2(data_root / name, archives_dir / name)
 
-    text_entry = config.get("text_patch")
-    if text_entry:
+    text_patches = list(config.get("text_patches") or [])
+    if config.get("text_patch"):
+        text_patches.append(config["text_patch"])
+
+    final_archive = archives_dir / "DATA001.BIN"
+    for patch_index, text_entry in enumerate(text_patches):
         source_entry = Path(text_entry["source_entry"])
         text_json = Path(text_entry["json"])
-        patched_text = work_root / "patched_text_entry.bin"
-        patched_combined_archive = work_root / "DATA001_font_and_text_patched.BIN"
+        entry_id = int(text_entry["entry_id"])
+        patched_text = work_root / f"patched_text_entry_{entry_id:04d}.bin"
+        patched_combined_archive = work_root / f"DATA001_font_and_text_patch_{patch_index:03d}_{entry_id:04d}.BIN"
         import_text(source_entry, text_json, patched_text)
-        replace_mcd3_entry(index_path, archives_dir, int(text_entry["entry_id"]), patched_text, patched_combined_archive)
-        final_archive = patched_combined_archive
-    else:
-        final_archive = patched_font_archive
+        replace_mcd3_entry(index_path, archives_dir, entry_id, patched_text, patched_combined_archive)
+        shutil.copy2(patched_combined_archive, final_archive)
 
     if not output_root.exists():
         shutil.copytree(extracted_root, output_root)
@@ -115,6 +119,28 @@ def apply_font_patch(font: dict[str, Any], target_page: Path, output_path: Path)
             target_page,
             target_cells[0],
             output_path,
+        )
+        return
+
+    if mode == "render":
+        if len(target_cells) != 1:
+            raise ValueError("render mode requires exactly one target cell")
+        render_font_cell(
+            target_page,
+            output_path,
+            cell_index=target_cells[0],
+            char=str(font["char"]),
+            font_path=Path(font["font"]),
+            font_index=int(font.get("font_index", 0)),
+            font_size=int(font.get("font_size", 14)),
+            ink_index=int(font.get("ink_index", 15)),
+            x_offset=int(font.get("x_offset", 0)),
+            y_offset=int(font.get("y_offset", 0)),
+            threshold=int(font.get("threshold", 0)),
+            gray_threshold=int(font.get("gray_threshold", 176)),
+            render_mode=str(font.get("render_mode", "grayscale")),
+            stroke_radius=int(font.get("stroke_radius", 0)),
+            preview_path=Path(font["preview"]) if font.get("preview") else None,
         )
         return
 

@@ -1,3 +1,2 @@
 # Development dependencies for the Rengoku 2 translation workspace.
-# Currently empty: the tools and tests use only the Python standard library.
-# Add pinned dev/test dependencies here when they become necessary.
+Pillow==12.2.0

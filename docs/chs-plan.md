@@ -357,6 +357,19 @@ GE draw-order evidence for the unmodified 0F movement tutorial title:
 
 This explains why child-5-only title probes did not hit: child `5` is valid for forced code `0x03c9`, but the original title draws from children `4`, `6`, and `8`.
 
+GE cell inspection is sufficient for the remaining original title glyphs, so no additional PPSSPP range probes are needed for `移動方法`:
+
+- `動`: `0x033f -> DATA001/0002 child 4, cell 8`, first row ninth column on `0x040e4600`.
+- `法`: `0x05ca -> DATA001/0002 child 8, cell 11`, on `0x040eca00`.
+
+These derive the current runtime page bases:
+
+```text
+child 4 base = 0x033f -  8 = 0x0337
+child 6 base = 0x0465 - 59 = 0x042a
+child 8 base = 0x05ca - 11 = 0x05bf
+```
+
 Focused title-page probes now patch only children `4`, `6`, and `8`:
 
 ```text
@@ -427,3 +440,209 @@ local/rebuilt/font_child6_cells04_59_title_probe_extracted/
 ```
 
 This patches child `6`, cells `4` and `59`, while displaying the four original title codes.
+
+Current first-deliverable target:
+
+- Stage a PPSSPP-testable extracted-folder build with selected `DATA001/0008` tutorial text replaced by Simplified Chinese.
+- Use the confirmed original title mappings as the first controlled route:
+
+```text
+移 0x0465 -> child 6 cell 59, base 0x042a
+動 0x033f -> child 4 cell  8, base 0x0337
+方 0x042e -> child 6 cell  4, base 0x042a
+法 0x05ca -> child 8 cell 11, base 0x05bf
+```
+
+- Reuse existing glyphs where acceptable, then patch new CHS-only glyphs into known cells and encode tutorial rows with the confirmed runtime codes.
+
+Homebrew rendered-title workflow:
+
+- `tools/render_mig_font_cell.py` renders a TrueType/OpenType glyph into one 4bpp MIG font cell.
+- `tools/stage_font_probe.py` supports `font_patches[].mode = "render"` for staging real CHS glyph patches alongside text-code replacements.
+- `tools/build_chs_tutorial.py` generates a full `DATA001/0008` tutorial build from the CHS draft, assigns CHS characters to known runtime slots, writes exact `translation_codes`, and stages the extracted-folder artifact.
+- `requirements-dev.txt` now includes Pillow for glyph rendering.
+- Small-font quality note: the low-level renderer still defaults to grayscale antialiasing for compatibility, but accepts `render_mode`, `threshold`, `gray_threshold`, `stroke_radius`, and `font_index` in render patch JSON. The full tutorial builder now defaults to `C:/Windows/Fonts/simsun.ttc --font-index 0 --render-mode palette3 --threshold 64 --gray-threshold 176 --stroke-radius 0`, which is closer to the PSP-era small CJK UI look than the first antialiased Noto Sans SC prototype. If a chosen font is too thin, try `--stroke-radius 1`; if strokes fill in, raise `--threshold`.
+- Original font level analysis:
+
+```powershell
+python tools/analyze_font_levels.py
+```
+
+This writes a local report under:
+
+```text
+local/work/font_level_analysis/
+```
+
+Current result: the font pages are 4bpp and original glyph cells use indices across `1..15`, but the CLUT repeats only three visible colors: black, gray, and white. So the atlas is not literally 2bpp, but it behaves like a tiny effective palette. For CHS rendering, `palette3` keeps output in original-style gray/white classes while preserving the existing 4bpp container path. Use `binary` only as a maximum-crispness comparison mode.
+- Local font comparison helper:
+
+```powershell
+python tools/compare_chs_fonts.py
+```
+
+This writes local previews and a report under:
+
+```text
+local/work/font_compare/
+```
+
+Current local comparison result: `SimSun` / `NSimSun` are the best first candidates for the tutorial font. `NotoSansSC-VF.ttf` remains a readable sans fallback, but its default face renders much thinner and less like the original game UI at 14x14. Japanese gothic/mincho fonts are useful stylistic references but miss several Simplified glyphs in the current tutorial sample.
+
+First local rendered-title artifact:
+
+```text
+local/rebuilt/tutorial_chs_v1_extracted/
+```
+
+This build changes `DATA001/0008` record `70` from the original visual title `移動方法` to homebrew-rendered `移动方式` by reusing the same four runtime text codes and replacing all four glyph cells:
+
+```text
+移 -> 0x0465 -> child 6 cell 59
+动 -> 0x033f -> child 4 cell  8
+方 -> 0x042e -> child 6 cell  4
+式 -> 0x05ca -> child 8 cell 11
+```
+
+The first staged build uses `C:/Windows/Fonts/NotoSansSC-VF.ttf` at 13px for these 14x14 cells.
+
+Local build inputs:
+
+```text
+local/work/tutorial_chs_v1/stage_move_method_chs.json
+local/work/tutorial_chs_v1/DATA001_0008_title_move_method.json
+local/work/tutorial_chs_v1/runtime_glyph_assignments.csv
+```
+
+Local structural verification:
+
+- Rebuilt `DATA001.BIN` stays `21016576` bytes.
+- Patched font child pages stay `8464` bytes each.
+- Extracted rebuilt `DATA001/0008` record `70` contains `0x0465 0x033f 0x042e 0x05ca`.
+
+First local full-tutorial artifact:
+
+```text
+local/rebuilt/tutorial_chs_full_v1_extracted/
+```
+
+This build translates the currently drafted `DATA001/0008` tutorial records:
+
+```text
+10, 11, 66, 67, 68, 69, 70, 71
+```
+
+The generated build uses:
+
+```text
+local/work/chs_tutorial_draft_DATA001_0008.json
+local/work/tutorial_chs_full_v1/DATA001_0008_chs_full.json
+local/work/tutorial_chs_full_v1/runtime_glyph_assignments.csv
+local/work/tutorial_chs_full_v1/stage_chs_full.json
+```
+
+Rebuild with the current crisp preset:
+
+```powershell
+python tools/build_chs_tutorial.py --overwrite
+```
+
+To compare against the original antialiased prototype:
+
+```powershell
+python tools/build_chs_tutorial.py --render-mode grayscale --threshold 0 --overwrite
+```
+
+To compare against full-white binary rendering:
+
+```powershell
+python tools/build_chs_tutorial.py --render-mode binary --threshold 64 --overwrite
+```
+
+To force the previous Noto Sans SC font:
+
+```powershell
+python tools/build_chs_tutorial.py --font C:/Windows/Fonts/NotoSansSC-VF.ttf --font-index 0 --overwrite
+```
+
+Local structural verification:
+
+- Rebuilt `DATA001.BIN` stays `21016576` bytes.
+- Generated 84 CHS/non-ASCII glyph assignments into confirmed runtime slot pools on children `4`, `6`, and `8`.
+- Re-extracted rebuilt `DATA001/0008` records match generated `translation_codes`:
+
+```text
+record 10:  9/21 code units
+record 11:  9/21 code units
+record 66:  2/4 code units
+record 67: 53/112 code units
+record 68:  2/5 code units
+record 69: 49/124 code units
+record 70:  4/4 code units
+record 71: 43/121 code units
+```
+
+First local equipment-slice artifact:
+
+```text
+local/rebuilt/equipment_chs_v1_extracted/
+```
+
+Generic-builder verification artifact:
+
+```text
+local/rebuilt/equipment_chs_v1_generic_extracted/
+```
+
+Both were confirmed in PPSSPP. The slice patches `DATA001/0015` records `70-81` and `94-97`, covering the screenshot-visible equipment family around `C-K.O.D.`, `Gladiator`, `Dante`, chainsaws, `SAA Magnum 88`, and `D Dragoon`.
+
+Local source sheets:
+
+```text
+local/work/equipment_chs_v1/DATA001_0015_equipment_slice_70-81_94-97.csv
+local/work/equipment_chs_v1/DATA001_0015_equipment_slice_70-81_94-97.json
+```
+
+Build commands:
+
+```powershell
+python tools/build_chs_equipment_slice.py --overwrite
+python tools/build_chs_offset_table.py --table DATA001/0015 --sheet local/work/equipment_chs_v1/DATA001_0015_equipment_slice_70-81_94-97.json --work-root local/work/equipment_chs_v1/build_generic --output-root local/rebuilt/equipment_chs_v1_generic_extracted --overwrite
+```
+
+`K.O.D.` / `C-K.O.D.` preserve the punctuation dots and match the aligned English names.
+
+First combined DATA001 artifact:
+
+```text
+local/rebuilt/combined_chs_v1_0008_0015_0016_extracted/
+```
+
+This build patches one shared `DATA001/0002` font archive, then applies multiple same-size text entry replacements into the same `DATA001.BIN`.
+
+Included:
+
+```text
+DATA001/0008 tutorial draft
+DATA001/0015 equipment screenshot slice
+DATA001/0016 drafted UI/menu rows
+```
+
+Local build notes:
+
+```text
+local/work/combined_chs_v1_0008_0015_0016/README.md
+```
+
+Rebuild command:
+
+```powershell
+python tools/build_chs_combined_data001.py --target DATA001/0008 local/work/chs_tutorial_draft_DATA001_0008.json --target DATA001/0015 local/work/equipment_chs_v1/DATA001_0015_equipment_slice_70-81_94-97.json --target DATA001/0016 local/work/ui_help_chs_v1/DATA001_0016_ui_sheet.json --work-root local/work/combined_chs_v1_0008_0015_0016 --output-root local/rebuilt/combined_chs_v1_0008_0015_0016_extracted --overwrite
+```
+
+Current combined-build blocker:
+
+- Adding `DATA001/0017` help/manual drafted rows to the same build requires `262` assigned non-ASCII glyphs.
+- The currently confirmed runtime slot pool covers `243` cells across children `4`, `6`, and `8`.
+- Therefore `0008 + 0015 + 0016 + 0017` is blocked by glyph capacity, not by archive staging.
+- The three-entry build uses `216` assigned glyphs and is structurally verified.

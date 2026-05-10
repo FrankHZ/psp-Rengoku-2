@@ -2,3 +2,5 @@ code,char,archive,entry,child,source,cell,runtime_texture,verification,notes
 0x03c9,欠,DATA001,0002,5,codeJAP14x14_08_,65,0x040e6700,confirmed,"0F tutorial title probe: replacing record 70 with 0x03c9 renders 欠; patching child 5 cell 65 changes it in PPSSPP."
 0x0465,移,DATA001,0002,6,codeJAP14x14_10_,59,0x040e8800,confirmed,"GE title draw plus exported cell: local/work/glyph_cells/0006_codeJAP14x14_10_/cell_059_r06_c05.png."
 0x042e,方,DATA001,0002,6,codeJAP14x14_10_,4,0x040e8800,confirmed,"GE/exported cell check: local/work/glyph_cells/0006_codeJAP14x14_10_/cell_004_r00_c04.png; p1p3 probe boxes title position 3."
+0x033f,動,DATA001,0002,4,codeJAP14x14_06_,8,0x040e4600,confirmed,"GE inspection of 0F movement tutorial title: first row ninth column, cell 8."
+0x05ca,法,DATA001,0002,8,codeJAP14x14_14_,11,0x040eca00,confirmed,"GE inspection of 0F movement tutorial title: cell 11."

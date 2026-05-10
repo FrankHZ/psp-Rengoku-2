@@ -19,6 +19,7 @@ from import_text import import_text
 from replace_mcd3_entry import replace_mcd3_entry
 from analyze_font_grid import cell_has_ink, parse_cell_size
 from align_reference_text import align_reference_text
+from build_chs_tutorial import assign_chars, encode_translation
 from decode_offset_table_text import decode_values
 from extract_offset_table_runs import classify_run, decode_ascii_run, parse_record_runs
 from export_glyph_cells import crop_rgba, glyph_id_contiguous, glyph_id_page100
@@ -37,6 +38,7 @@ from mig import (
 from map_runtime_font_pages import map_runtime_pages, parse_dump_address
 from patch_mig_font_cell import parse_cell_range, patch_font_cell, patch_font_cells
 from png_rgba import read_png_rgba
+from render_mig_font_cell import has_pillow, mask_to_indices, render_font_cell
 from search_encoded_text import search_phrase
 from stage_font_probe import apply_font_patch, parse_cells
 from mscr import read_mscr
@@ -338,6 +340,53 @@ class Mcd3Tests(unittest.TestCase):
 
             _, _, indices = decode_mig_indices(output)
             self.assertTrue(cell_has_ink(indices, image_width=128, x=42, y=0, width=14, height=14))
+
+    def test_mask_to_indices_preserves_antialias_levels(self) -> None:
+        self.assertEqual(mask_to_indices(bytes([0, 1, 128, 255]), ink_index=15, threshold=0), bytes([0, 1, 8, 15]))
+        self.assertEqual(mask_to_indices(bytes([3, 4]), ink_index=15, threshold=3), bytes([0, 1]))
+
+    def test_render_font_cell_writes_glyph_into_requested_cell(self) -> None:
+        if not has_pillow():
+            self.skipTest("Pillow is not available")
+        font_path = Path("C:/Windows/Fonts/msyh.ttc")
+        if not font_path.exists():
+            self.skipTest("Microsoft YaHei font is not available")
+
+        with self.make_temp_dir() as temp_dir:
+            temp = Path(temp_dir)
+            source = temp / "0001_codeJAP14x14_00_.bin"
+            output = temp / "patched.bin"
+            preview = temp / "preview.png"
+            data = bytearray(0x2110)
+            data[0:11] = b"MIG.00.1PSP"
+            struct.pack_into("<HH", data, 0xD8, 128, 128)
+            source.write_bytes(data)
+
+            render_font_cell(source, output, cell_index=8, char="动", font_path=font_path, preview_path=preview)
+
+            _, _, indices = decode_mig_indices(output)
+            self.assertTrue(cell_has_ink(indices, image_width=128, x=112, y=0, width=14, height=14))
+            self.assertFalse(cell_has_ink(indices, image_width=128, x=0, y=0, width=14, height=14))
+            self.assertTrue(preview.exists())
+
+    def test_build_chs_tutorial_pins_known_title_assignments(self) -> None:
+        assignments = assign_chars([{"chs_translation": "移动方式"}])
+
+        self.assertEqual(assignments["移"]["child"], 6)
+        self.assertEqual(assignments["移"]["cell"], 59)
+        self.assertEqual(assignments["动"]["child"], 4)
+        self.assertEqual(assignments["动"]["cell"], 8)
+        self.assertEqual(assignments["方"]["child"], 6)
+        self.assertEqual(assignments["方"]["cell"], 4)
+        self.assertEqual(assignments["式"]["child"], 8)
+        self.assertEqual(assignments["式"]["cell"], 11)
+        self.assertEqual(encode_translation("移动方式", assignments), [0x0465, 0x033F, 0x042E, 0x05CA])
+
+    def test_build_chs_tutorial_encodes_ascii_and_newlines_directly(self) -> None:
+        assignments = assign_chars([{"chs_translation": "按X键\n1F"}])
+
+        self.assertEqual(encode_translation("X\n1F", assignments), [ord("X"), 0x000A, ord("1"), ord("F")])
+        self.assertNotEqual(assignments["按"]["cell"], assignments["键"]["cell"])
 
     def test_copy_font_cell_between_pages(self) -> None:
         with self.make_temp_dir() as temp_dir:
