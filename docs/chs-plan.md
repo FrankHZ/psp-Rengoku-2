@@ -1092,3 +1092,61 @@ pool now includes child 3 / base `0x0295`, child 9 / base `0x0610`, and child
 capacity is no longer the immediate blocker. Remaining untranslated help rows
 are mostly long manual prose that need careful compression rather than more
 glyph capacity.
+
+Full translation milestone:
+
+```text
+local/work/equipment_chs_full/
+local/work/ui_help_chs_v1/
+local/work/story_chs_full/
+```
+
+As of the full-sheet pass:
+
+```text
+DATA001/0015 equipment/catalog: 672 / 672 rows drafted or intentionally marked
+DATA001/0016 UI/menu:           297 / 297 rows drafted
+DATA001/0017 help/manual:       103 / 103 rows drafted
+DATA001/0012 story alignment:   226 / 226 aligned rows drafted
+```
+
+A literal all-in-one DATA001 build requires `1018` unique assigned glyphs, so
+it exceeds the current slot pool even with the provisional child 11 page. The
+practical PPSSPP deliverables are split.
+
+Full catalog/UI/help build:
+
+```text
+local/rebuilt/combined_chs_v8_0003_0008_0012anchored_0015full_0016full_0017full_extracted/
+```
+
+Included rows:
+
+```text
+DATA001/0003:  14 boot/init rows
+DATA001/0008:   8 tutorial rows
+DATA001/0012:  19 anchored story rows
+DATA001/0015: 672 full equipment/catalog rows
+DATA001/0016: 297 full UI/menu rows
+DATA001/0017: 103 full help/manual rows
+total:       1113 translated rows
+```
+
+This build uses `849` assigned glyphs. The final `39` assignments are placed
+on the provisional child 11 / base `0x0754` pool; if PPSSPP shows rare
+missing/wrong glyphs, verify that page first.
+
+Full story build:
+
+```text
+local/rebuilt/combined_chs_story_full_v1_0003_0008_0012full_extracted/
+```
+
+Included rows:
+
+```text
+DATA001/0003:  14 boot/init rows
+DATA001/0008:   8 tutorial rows
+DATA001/0012: 226 full aligned story rows
+total:        248 translated rows
+```

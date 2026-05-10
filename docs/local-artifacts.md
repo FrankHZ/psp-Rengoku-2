@@ -24,6 +24,9 @@ These folders are useful local evidence or inputs for the current workflow:
 | `local/work/equipment_chs_v1/` | Screenshot equipment slice sheets and summary. |
 | `local/work/equipment_chs_v2/` | Expanded melee equipment sheet and summary. |
 | `local/work/equipment_chs_v3/` | Merged equipment v1+v2 sheet for combined builds. |
+| `local/work/equipment_chs_full/` | Full equipment/catalog CHS sheet for all detected DATA001/0015 rows. |
+| `local/work/equipment_chs_full_buildfit/` | Full equipment sheet adjusted for build glyph capacity. |
+| `local/work/story_chs_full/` | Full aligned story CHS sheets and reports. |
 | `local/work/tutorial_chs_full_v1/` | Full tutorial sheet, stage config, and glyph assignments. |
 | `local/work/combined_chs_v1_0008_0015_0016/` | Combined tutorial/equipment/UI build metadata. |
 | `local/work/combined_chs_v2_0008_0015_0016_0017/` | Combined tutorial/equipment/UI/help build metadata using expanded runtime slot pools. |
@@ -40,6 +43,8 @@ These folders are useful local evidence or inputs for the current workflow:
 | `local/rebuilt/equipment_chs_v1_generic_extracted/` | Same equipment slice through the generic builder. |
 | `local/rebuilt/equipment_chs_v2_extracted/` | Expanded melee equipment build. |
 | `local/rebuilt/combined_chs_v5_0008_0015merged_0016_0017_expanded_extracted/` | Current broad PPSSPP-ready build with 504 translated rows. |
+| `local/rebuilt/combined_chs_v8_0003_0008_0012anchored_0015full_0016full_0017full_extracted/` | Full catalog/UI/help PPSSPP build with 1113 translated rows. |
+| `local/rebuilt/combined_chs_story_full_v1_0003_0008_0012full_extracted/` | Full aligned story PPSSPP build. |
 | `local/rebuilt/tutorial_chs_full_v1_extracted/` | Full tutorial CHS build. |
 | `local/rebuilt/ui_help_chs_v1_DATA001_0016_extracted/` | UI build probe. |
 | `local/rebuilt/ui_help_chs_v1_DATA001_0017_extracted/` | Help/manual build probe. |
