@@ -666,17 +666,22 @@ Candidate interpretation:
 01FB: H = child 5 cell 57 base 0x01c2
 01D4: I = child 5 cell 18 base 0x01c2
 021B: J = child 2 cell 40 base 0x01f3; K = child 2 cell 27 base 0x0200
-0222: L = child 6 cell 15 base 0x0213; M = child 2 cell 34 base 0x0200
+0222: L = observed cell 47 base 0x01f3; M = child 2 cell 34 base 0x0200
 023C: N = child 3 cell 73 base 0x01f3; O = child 2 cell 60 base 0x0200
-0276: P = child 7 cell 18 base 0x0264
-026E: Q = child 7 cell 10 base 0x0264
+0276: P = observed cell 50 base 0x0244
+026E: Q = observed cell 42 base 0x0244
 ```
 
 PPSSPP/GE observation from the first probe run:
 
 - `0x021b` rendered as `る` in the overlay/body row and is cell `40` on runtime texture `local/work/dumped_textures/040e040028998f6f134f822a.png`.
 - `0x023c` rendered as `ス` in the overlay/body row and is cell `73` on runtime texture `local/work/dumped_textures/040e2500676a3b4e3748fa38.png`.
-- Both observations give `code - cell = 0x01f3`, but because they came from the overlay/body runtime path and use two texture pages, treat this as an overlay-context mapping observation rather than a globally promoted title-page base.
+- `0x0222` rendered as `を` in the overlay/body row and is cell `47`.
+- `0x026e` rendered as `ル` in the overlay/body row and is cell `42`.
+- `0x0276` rendered as `ン` in the overlay/body row and is cell `50`.
+- The `0x021b`, `0x0222`, and `0x023c` observations give `code - cell = 0x01f3`.
+- The `0x026e` and `0x0276` observations give `code - cell = 0x0244`.
+- Because these came from the overlay/body runtime path, treat `0x01f3` and `0x0244` as overlay-context base observations rather than globally promoted title-page bases.
 
 Included:
 
