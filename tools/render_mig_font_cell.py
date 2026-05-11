@@ -77,6 +77,67 @@ def render_font_cell(
         write_png_rgba(preview_path, cell_w, cell_h, indices_to_preview_rgba(glyph_indices))
 
 
+def render_font_cell_bitplane(
+    source_path: Path,
+    output_path: Path,
+    cell_index: int,
+    char: str,
+    font_path: Path,
+    layer: str,
+    font_index: int = 0,
+    font_size: int = 14,
+    x_offset: int = 0,
+    y_offset: int = 0,
+    threshold: int = 0,
+    gray_threshold: int = 176,
+    render_mode: str = "palette3",
+    stroke_radius: int = 0,
+    preview_path: Path | None = None,
+) -> None:
+    if len(char) != 1:
+        raise ValueError("char must be exactly one Unicode character")
+    if layer not in {"low", "high"}:
+        raise ValueError("layer must be 'low' or 'high'")
+    if threshold < 0 or threshold > 255:
+        raise ValueError("threshold must be in range 0..255")
+    if gray_threshold < 0 or gray_threshold > 255:
+        raise ValueError("gray threshold must be in range 0..255")
+    if render_mode not in {"binary", "palette3"}:
+        raise ValueError("render mode must be 'binary' or 'palette3'")
+    if stroke_radius < 0 or stroke_radius > 3:
+        raise ValueError("stroke radius must be in range 0..3")
+
+    cell_w, cell_h = parse_cell_size(source_path.stem)
+    image_w, image_h, original = decode_mig_indices(source_path)
+    cols = image_w // cell_w
+    capacity = cols * (image_h // cell_h)
+    if cell_index < 0 or cell_index >= capacity:
+        raise ValueError(f"cell index {cell_index} is outside page capacity {capacity}")
+
+    mask = render_glyph_mask(char, font_path, font_index, font_size, cell_w, cell_h, x_offset, y_offset, stroke_radius)
+    glyph_indices = mask_to_two_bit_indices(mask, threshold, render_mode, gray_threshold)
+
+    indices = bytearray(original)
+    x0 = (cell_index % cols) * cell_w
+    y0 = (cell_index // cols) * cell_h
+    for y in range(cell_h):
+        source_start = y * cell_w
+        target_start = (y0 + y) * image_w + x0
+        for x, value in enumerate(glyph_indices[source_start : source_start + cell_w]):
+            target = target_start + x
+            if layer == "low":
+                indices[target] = (indices[target] & 0x0C) | value
+            else:
+                indices[target] = (indices[target] & 0x03) | (value << 2)
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    replace_mig_indices(source_path, bytes(indices), output_path)
+
+    if preview_path is not None:
+        preview_path.parent.mkdir(parents=True, exist_ok=True)
+        write_png_rgba(preview_path, cell_w, cell_h, indices_to_preview_rgba(glyph_indices))
+
+
 def render_glyph_mask(
     char: str,
     font_path: Path,
@@ -125,6 +186,30 @@ def mask_to_indices(
             indices.append(14 if value <= gray_threshold else 15)
         else:
             indices.append(max(1, round(value * ink_index / 255)))
+    return bytes(indices)
+
+
+def mask_to_two_bit_indices(
+    mask: bytes,
+    threshold: int,
+    render_mode: str = "palette3",
+    gray_threshold: int = 176,
+) -> bytes:
+    if render_mode not in {"binary", "palette3"}:
+        raise ValueError("render mode must be 'binary' or 'palette3'")
+    if threshold < 0 or threshold > 255:
+        raise ValueError("threshold must be in range 0..255")
+    if gray_threshold < 0 or gray_threshold > 255:
+        raise ValueError("gray threshold must be in range 0..255")
+
+    indices = bytearray()
+    for value in mask:
+        if value <= threshold:
+            indices.append(0)
+        elif render_mode == "binary":
+            indices.append(3)
+        else:
+            indices.append(2 if value <= gray_threshold else 3)
     return bytes(indices)
 
 

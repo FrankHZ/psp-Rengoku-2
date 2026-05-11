@@ -8,6 +8,8 @@ Purpose: identify the Japanese text record/table candidates that are already vis
 
 Patch target is the Japanese dump. USA data and wiki material are reference/alignment sources only.
 
+Optional future lore/dialogue reference: the Japanese Rengoku 2 atwiki (`https://w.atwiki.jp/rengoku2/`) includes boss-event dialogue pages such as `pages/11.html`. Use it only for future translation improvement/cross-checking, not as the current translation source.
+
 Generated extraction, alignment, and rebuilt artifacts remain under ignored `local/` paths. The repo-safe tracking layer should be docs, tools, tests, and small hand-built mapping seeds.
 
 ## Candidate Tables
@@ -40,7 +42,12 @@ The following local alignments exist and should drive translator-facing sheets. 
 | `DATA001/0016` | `DATA001/0027` | 297 | 145 | 152 | `local/work/align_JP0016_USA0027_ui.json` |
 | `DATA001/0017` | `DATA001/0028` | 103 | 14 | 89 | `local/work/align_JP0017_USA0028_help.json` |
 
-There is no current USA alignment report for `DATA002/0065` or `DATA003/1089`. Treat `DATA002/0065` as a UI table that needs more ownership probes and/or manual reference mapping. Treat `DATA003/1089` as script/control context rather than the primary prose table.
+Current update: `DATA002/0065` aligns strongly to USA `DATA002/0066`, and
+`DATA003/1089` has a readable USA extraction with 1175 rows. Treat
+`DATA002/0065` as a mixed multiplayer/gallery UI table with some control rows.
+Treat `DATA003/1089` as a visible script/story candidate bank with command rows
+mixed in; it is not part of v19, but it is counted in
+`local/work/actual_cjk_requirement_v1/`.
 
 ## Runtime-Confirmed Ownership
 
@@ -54,7 +61,7 @@ These records have direct runtime evidence from PPSSPP marker probes or complete
 | `DATA001/0012` | `140`-`143`, `160`-`174` anchored by the 4F boss scene | Primary story/prose table | Needs broader glyph map and line-budget planning |
 | `DATA001/0003` | `0` | Init/loading UI before title | Small but visible UI target |
 | `DATA002/0065` | `82`, `84` | New-game player-name input screen markers | Needs classification before broad translation |
-| `DATA003/1089` | Script sections are readable by `#start` records and command rows | Contains scene/script commands and glyph rows | Use to understand flow, not as first prose source |
+| `DATA003/1089` | Script sections are readable by `#start` records and command rows | Contains scene/script commands and visible story rows | Count visible non-command rows in full CJK requirement; build separately until patch safety is proven |
 
 ## Item, Equipment, And Attack-Name Candidates
 
@@ -182,7 +189,10 @@ Local planning inputs:
 - `local/work/align_JP0012_USA0022_story.json`
 - `samples/story_glyph_map_seed.csv`
 
-Recommended next action: build a scene-index report from `DATA001/0012` plus `DATA003/1089` script sections. Do not attempt full-story CHS until the font/glyph assignment workflow can handle much larger unique-character sets.
+Recommended next action: build a scene-index report from `DATA001/0012` plus
+`DATA003/1089` script sections, then decide whether `DATA003/1089` should be a
+separate story-script deliverable. The current actual requirement report already
+counts 851 visible non-command `DATA003/1089` rows.
 
 ### `DATA001/0015` - Equipment/Item Catalog
 
@@ -254,13 +264,13 @@ Recommended next action: use it to generate a scene/context index for translator
 3. `DATA001/0017`: help/manual pages, after terminology stabilizes from menu/UI and equipment work.
 4. `DATA001/0003` and `DATA002/0065`: small boot/name-input UI targets, batched with UI terminology.
 5. `DATA001/0012`: story/dialogue, once font quality and glyph-budget strategy are stronger.
-6. `DATA003/1089`: build translator context/scene ordering; avoid prose replacement here until its ownership relationship with `DATA001/0012` is proven.
+6. `DATA003/1089`: treat as a separate visible script/story candidate bank; build a dedicated scene/script deliverable before mixing it into the broad UI/catalog artifact.
 
 ## Open Planning Questions
 
 - Which `DATA001/0015` catalog records correspond to each visible equipment-list category and sort order?
 - Does `DATA002/0065` have a USA counterpart hidden outside the current alignment set, or should it be mapped by runtime probes/manual screenshots?
-- How should `DATA003/1089` script sections be joined to `DATA001/0012` dialogue records for translator context?
+- How should `DATA003/1089` script sections be joined to `DATA001/0012` dialogue records for final story presentation and patch packaging?
 - When full-length CHS exceeds the current same-size run budget, should the project prioritize concise writing or table/archive resizing?
 - How many Japanese glyph cells can be reclaimed safely once a target table is fully translated?
 

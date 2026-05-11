@@ -9,8 +9,9 @@ from typing import Any
 
 from copy_mig_font_cell import copy_font_cell
 from import_text import import_text
+from mcd3 import read_mcd3
 from patch_mig_font_cell import patch_font_cells, parse_cell_range
-from render_mig_font_cell import render_font_cell
+from render_mig_font_cell import render_font_cell, render_font_cell_bitplane
 from replace_mcd3_entry import replace_mcd3_entry
 from tdl import replace_tdl_children
 
@@ -22,6 +23,7 @@ def stage_font_probe(config: dict[str, Any]) -> None:
     work_root = Path(config.get("work_root", output_root.parent / "_probe_work"))
     data_root = extracted_root / "PSP_GAME" / "USRDIR"
     index_path = data_root / "DATA000.BIN"
+    index = read_mcd3(index_path)
 
     if output_root.exists():
         if not config.get("overwrite", False):
@@ -65,20 +67,21 @@ def stage_font_probe(config: dict[str, Any]) -> None:
     if config.get("text_patch"):
         text_patches.append(config["text_patch"])
 
-    final_archive = archives_dir / "DATA001.BIN"
     for patch_index, text_entry in enumerate(text_patches):
         source_entry = Path(text_entry["source_entry"])
         text_json = Path(text_entry["json"])
         entry_id = int(text_entry["entry_id"])
+        archive_name = archive_name_for_entry(index, entry_id)
         patched_text = work_root / f"patched_text_entry_{entry_id:04d}.bin"
-        patched_combined_archive = work_root / f"DATA001_font_and_text_patch_{patch_index:03d}_{entry_id:04d}.BIN"
+        patched_combined_archive = work_root / f"{archive_name}_text_patch_{patch_index:03d}_{entry_id:04d}.BIN"
         import_text(source_entry, text_json, patched_text)
         replace_mcd3_entry(index_path, archives_dir, entry_id, patched_text, patched_combined_archive)
-        shutil.copy2(patched_combined_archive, final_archive)
+        shutil.copy2(patched_combined_archive, archives_dir / archive_name)
 
     if not output_root.exists():
         shutil.copytree(extracted_root, output_root)
-    shutil.copy2(final_archive, output_root / "PSP_GAME" / "USRDIR" / "DATA001.BIN")
+    for archive in archives_dir.glob("DATA*.BIN"):
+        shutil.copy2(archive, output_root / "PSP_GAME" / "USRDIR" / archive.name)
 
 
 def remove_tree(path: Path) -> None:
@@ -87,6 +90,15 @@ def remove_tree(path: Path) -> None:
         function(value)
 
     shutil.rmtree(path, onerror=on_error)
+
+
+def archive_name_for_entry(index: Any, entry_id: int) -> str:
+    if entry_id < 0 or entry_id >= len(index.entries):
+        raise ValueError(f"entry id {entry_id} is outside the MCD3 index")
+    entry = index.entries[entry_id]
+    if entry.is_empty or entry.archive_name is None:
+        raise ValueError(f"entry id {entry_id} is empty")
+    return str(entry.archive_name)
 
 
 def parse_cells(font: dict[str, Any]) -> list[int]:
@@ -139,6 +151,28 @@ def apply_font_patch(font: dict[str, Any], target_page: Path, output_path: Path)
             threshold=int(font.get("threshold", 0)),
             gray_threshold=int(font.get("gray_threshold", 176)),
             render_mode=str(font.get("render_mode", "grayscale")),
+            stroke_radius=int(font.get("stroke_radius", 0)),
+            preview_path=Path(font["preview"]) if font.get("preview") else None,
+        )
+        return
+
+    if mode == "render_bitplane":
+        if len(target_cells) != 1:
+            raise ValueError("render_bitplane mode requires exactly one target cell")
+        render_font_cell_bitplane(
+            target_page,
+            output_path,
+            cell_index=target_cells[0],
+            char=str(font["char"]),
+            font_path=Path(font["font"]),
+            layer=str(font["layer"]),
+            font_index=int(font.get("font_index", 0)),
+            font_size=int(font.get("font_size", 14)),
+            x_offset=int(font.get("x_offset", 0)),
+            y_offset=int(font.get("y_offset", 0)),
+            threshold=int(font.get("threshold", 0)),
+            gray_threshold=int(font.get("gray_threshold", 176)),
+            render_mode=str(font.get("render_mode", "palette3")),
             stroke_radius=int(font.get("stroke_radius", 0)),
             preview_path=Path(font["preview"]) if font.get("preview") else None,
         )

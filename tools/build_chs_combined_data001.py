@@ -14,6 +14,8 @@ from build_chs_offset_table import (
     parse_table_id,
 )
 from build_chs_tutorial import DEFAULT_SLOT_POOLS, assign_chars, build_font_patches, needs_glyph_assignment, write_assignments_csv
+from build_chs_tutorial import BITPLANE_SLOT_POOLS, assign_chars_bitplane
+from build_chs_tutorial import visible_translation_chars
 from stage_font_probe import stage_font_probe
 
 
@@ -26,7 +28,7 @@ DEFAULT_TARGETS = (
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Build a combined DATA001 CHS artifact with one font patch pass.")
+    parser = argparse.ArgumentParser(description="Build a combined CHS artifact with one font patch pass.")
     parser.add_argument(
         "--target",
         action="append",
@@ -43,6 +45,12 @@ def main() -> int:
     parser.add_argument("--threshold", type=int, default=64)
     parser.add_argument("--gray-threshold", type=int, default=176)
     parser.add_argument("--stroke-radius", type=int, default=0)
+    parser.add_argument(
+        "--assignment-model",
+        choices=("single", "bitplane"),
+        default="bitplane",
+        help="Use the legacy one-glyph-per-physical-cell model or the confirmed low/high bitplane model.",
+    )
     parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
 
@@ -58,6 +66,7 @@ def main() -> int:
         threshold=args.threshold,
         gray_threshold=args.gray_threshold,
         stroke_radius=args.stroke_radius,
+        assignment_model=args.assignment_model,
         overwrite=args.overwrite,
     )
     print(f"staged {args.output_root}")
@@ -75,19 +84,26 @@ def build_combined_data001(
     threshold: int = 64,
     gray_threshold: int = 176,
     stroke_radius: int = 0,
+    assignment_model: str = "bitplane",
     overwrite: bool = False,
 ) -> None:
     targets = load_targets(target_specs)
     all_rows = [row for target in targets for row in target["rows"]]
     required_chars = required_assigned_chars(all_rows)
-    slot_capacity = sum(81 for _ in DEFAULT_SLOT_POOLS)
+    if assignment_model == "single":
+        slot_capacity = sum(81 for _ in DEFAULT_SLOT_POOLS)
+        assignments = assign_chars(all_rows)
+    elif assignment_model == "bitplane":
+        slot_capacity = sum(81 for _ in BITPLANE_SLOT_POOLS)
+        assignments = assign_chars_bitplane(all_rows)
+    else:
+        raise ValueError(f"unsupported assignment model: {assignment_model!r}")
     if len(required_chars) > slot_capacity:
         raise ValueError(
             f"combined build needs {len(required_chars)} assigned glyphs, "
             f"but only {slot_capacity} confirmed runtime slots are available; "
             "reduce drafted rows or add another confirmed slot pool"
         )
-    assignments = assign_chars(all_rows)
 
     work_root.mkdir(parents=True, exist_ok=True)
     write_assignments_csv(work_root / "runtime_glyph_assignments.csv", assignments)
@@ -106,8 +122,6 @@ def build_combined_data001(
     text_patches = []
     for target in targets:
         archive, entry_id = target["table"]
-        if archive != "DATA001":
-            raise ValueError(f"combined DATA001 build cannot patch {archive}/{entry_id:04d}")
         source_export = json.loads(target["source_export"].read_text(encoding="utf-8"))
         source_by_record = {(entry["record"], entry["run"]): entry for entry in source_export["entries"]}
         text_payload = build_offset_table_payload(
@@ -148,8 +162,6 @@ def load_targets(target_specs: tuple[tuple[str, Path], ...]) -> list[dict[str, A
     for table_text, sheet_path in target_specs:
         table = parse_table_id(table_text)
         archive, entry_id = table
-        if archive != "DATA001":
-            raise ValueError(f"unsupported combined target {table_text!r}; expected DATA001/<entry>")
         rows = load_translator_sheet(sheet_path, table=f"{archive}/{entry_id:04d}")
         targets.append(
             {
@@ -169,7 +181,7 @@ def required_assigned_chars(rows: list[dict[str, Any]]) -> set[str]:
     return {
         char
         for row in rows
-        for char in str(row["chs_translation"])
+        for char in visible_translation_chars(str(row["chs_translation"]))
         if needs_glyph_assignment(char)
     }
 

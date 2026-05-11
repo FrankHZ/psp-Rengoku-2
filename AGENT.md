@@ -30,17 +30,8 @@ Keep `docs/chs-plan.md` short and current. Detailed historical observations
 belong in targeted docs, seed CSVs, local summary JSON/CSV files, or git
 history.
 
-Useful current references:
-
-```text
-docs/chs-plan.md
-docs/chs-strategy.md
-docs/chs-layout-rules.md
-docs/local-artifacts.md
-docs/runtime-observations.md
-samples/runtime_glyph_map_seed.csv
-samples/runtime_kana_map.csv
-```
+Keep the full documentation map in `README.md`; keep this file focused on agent
+operating rules and documentation discipline.
 
 ## Mutable Project Rules
 

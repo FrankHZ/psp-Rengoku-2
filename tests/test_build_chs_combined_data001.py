@@ -11,7 +11,7 @@ TOOLS = ROOT / "tools"
 sys.path.insert(0, str(TOOLS))
 
 from build_chs_combined_data001 import load_targets, required_assigned_chars
-from build_chs_tutorial import assign_chars, encode_translation
+from build_chs_tutorial import assign_chars, assign_chars_bitplane, encode_translation
 
 
 class BuildChsCombinedData001Tests(unittest.TestCase):
@@ -50,10 +50,34 @@ class BuildChsCombinedData001Tests(unittest.TestCase):
         self.assertEqual(encode_translation("移动方式", assignments), [0x0465, 0x033F, 0x042E, 0x05CA])
         self.assertEqual(encode_translation("移动", assignments), [0x0465, 0x033F])
 
+    def test_bitplane_assignments_can_share_physical_cells(self) -> None:
+        text = "".join(chr(0x4E00 + index) for index in range(90))
+        rows = [{"record": 70, "run": 0, "chs_translation": text}]
+
+        assignments = assign_chars_bitplane(rows)
+        physical_slots = [(slot["child"], slot["cell"]) for slot in assignments.values()]
+        logical_slots = [(slot["child"], slot["cell"], slot["layer"]) for slot in assignments.values()]
+
+        self.assertLess(len(set(physical_slots)), len(set(logical_slots)))
+        self.assertEqual(len(set(logical_slots)), 90)
+
     def test_required_assigned_chars_ignores_ascii_and_newlines(self) -> None:
         rows = [{"chs_translation": "C-K.O.D\n移动"}]
 
         self.assertEqual(required_assigned_chars(rows), {"移", "动"})
+
+    def test_load_targets_accepts_non_data001_text_sheet(self) -> None:
+        with self.make_temp_dir() as temp_dir:
+            sheet = Path(temp_dir) / "0065.json"
+            sheet.write_text(
+                json.dumps({"entries": [{"record": 82, "run": 0, "chs_draft": "用此名吗？"}]}, ensure_ascii=False),
+                encoding="utf-8",
+            )
+
+            targets = load_targets((("DATA002/0065", sheet),))
+
+            self.assertEqual(targets[0]["table"], ("DATA002", 65))
+            self.assertEqual(targets[0]["source_export"], Path("local/work/extract_text_DATA002_0065_seeded.json"))
 
 
 if __name__ == "__main__":

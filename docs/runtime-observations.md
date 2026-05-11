@@ -88,7 +88,14 @@ Use this reproducible report to map dumped PPSSPP texture addresses back to rend
 .\.venv\Scripts\python.exe tools/map_runtime_font_pages.py local/work/dumped_textures local/work/rendered_mig_pages
 ```
 
-Current mapping:
+Use this report when the goal is to find distinct rendered pages rather than
+address slots:
+
+```powershell
+.\.venv\Scripts\python.exe tools/report_runtime_font_pages.py local/work/dumped_textures --output-dir local/work/runtime_font_page_scan_v1
+```
+
+Current address/stride mapping:
 
 | Runtime address | Page | Static page |
 | --- | ---: | --- |
@@ -101,8 +108,9 @@ Current mapping:
 | `0x040e8800` | 6 | `0006_codeJAP14x14_10_.png` |
 | `0x040ea900` | 7 | `0007_codeJAP14x14_12_.png` |
 | `0x040eca00` | 8 | `0008_codeJAP14x14_14_.png` |
+| `0x040eeb00` | 9 | `0009_codeJAP14x14_16_.png` |
 
-Some runtime addresses have two dumped PNG variants with different filename hashes. These appear to be different palette/CLUT or render-state variants of the same page. Use address stride for page identity first; pixel comparison is secondary evidence.
+Important: do not collapse dumped texture PNGs by address alone. PPSSPP names include the texture address plus CLUT/texture hashes, and same-address pairs in `local/work/dumped_textures/` have visibly different glyph rows. They share the same address stride, but the different CLUT hash can reveal a different rendered glyph page from the same indexed texture data.
 
 ## Interpretation
 
@@ -116,7 +124,110 @@ Runtime texture size: 128x128 CLUT4
 Static MIG survey result: 128x128 4bpp paletted texture
 ```
 
-The observed base address for the captured range is `0x040dc200`. Only 9 of 12 sequential page addresses were captured, so the remaining pages are inferred but not runtime-confirmed yet.
+The observed base address for the captured range is `0x040dc200`. Current `local/work/dumped_textures/` contains 18 rendered PNG files across 10 texture addresses: page 0 plus JP address slots 1-9. Treat the 18 PNGs as distinct rendered observations. The same-address pairs must be compared by pixels/rows and filename CLUT hash, not merged by address. The old address-only mapper hid these pages and was wrong for this purpose.
+
+Current distinct-page scan:
+
+```text
+artifact: local/work/runtime_font_page_scan_v1/
+dumped PNG observations:          18
+unique full RGBA pages:           18
+unique first-row fingerprints:    18
+runtime address slots:            10
+```
+
+Important capture hygiene: `local/work/dumped_textures/` is currently treated as
+the only clean original PPSSPP font-texture baseline. Later dumps may contain
+font pages already modified by CHS experiments, so do not merge them into this
+baseline unless they are archived separately before patch testing.
+
+Current routing survey:
+
+```text
+artifact: local/work/font_routing_survey_v1/
+archive MIG resources surveyed:   138
+code/font-named MIG resources:      13
+same-size 0x2110 MIG resources:     19
+unique glyph codes used:          1429
+unmapped non-ASCII/control codes:  522
+```
+
+Forced render of every archive MIG resource with the known font-page size
+`0x2110`:
+
+```text
+artifact: local/work/rendered_mig_candidates_v1/
+debug artifact: local/work/rendered_mig_candidates_v1_debug/
+same-size candidates rendered:     19
+code/font-named candidates:        12
+```
+
+The forced render confirms that the 12 `DATA001/0002` children are the obvious
+font/code pages: `codeANK9x14_00_0` plus `codeJAP14x14_00_` through
+`codeJAP14x14_20_`. The other same-size resources (`camp_2`, `camp_5`,
+`frame_01`, `heat_01a`, `line_01`, `heat_01b`, `windframe`) render as UI/frame
+textures rather than 9x9 glyph grids. They remain possible future routing-hack
+targets, but they are not currently known font pages.
+
+Breaking palette/layer finding:
+
+```text
+artifact: local/work/mig_index_layers_v1/
+focused artifact: local/work/mig_index_layers_codejap00_v1/
+```
+
+The debug-contrast render is not merely recoloring the normal font page. It
+reveals that the 4bpp MIG font textures contain multiple nonzero palette-index
+layers. Normal palette rendering hides or downplays many of those layers, while
+PPSSPP CLUT variants can expose different visible glyph rows from the same
+texture address/hash. This explains why same-address dumped PNGs can be
+visually distinct.
+
+Treat this as a routing/layer opportunity, not as proven extra physical storage
+yet. Each texture pixel still stores one 4-bit index value, so patching one
+layer may affect other CLUT views of the same physical cell. The next experiment
+must patch controlled marker cells with specific palette-index values and
+observe which CLUT/runtime page exposes them.
+
+Bitplane/CLUT inference:
+
+```text
+artifact: local/work/runtime_clut_layer_inference_v1/
+```
+
+The clean original PPSSPP dumps match the static MIG bitplanes exactly:
+
+```text
+CLUT 676a3b4e -> low2_nonzero  -> index & 0x03 != 0
+CLUT 28998f6f -> high2_nonzero -> index & 0x0c != 0
+```
+
+Every scored runtime PNG matched one of those two groups with `diff_pixels = 0`.
+This explains the even `codeJAP14x14_00_`, `02_`, `04_` naming: each physical
+MIG page appears to pack two logical glyph pages, one in the low two bits and
+one in the high two bits.
+
+Capacity implication: the 11 JP physical pages can plausibly provide up to
+`11 * 81 * 2 = 1782` logical 14x14 glyph cells. This is enough in principle for
+the current full detected requirement of about 1452 non-ASCII glyphs. It is not
+yet a drop-in build strategy because the CHS renderer must compose low/high
+2-bit glyph planes into one 4bpp index texture without destroying the other
+logical page, and we still need runtime code-window/base routing for the high
+logical pages.
+
+Bitplane marker probe result:
+
+```text
+artifact: local/rebuilt/bitplane_probe_v1_extracted/
+P1 ABCDEF confirmed
+P2 GHIJKL confirmed
+P3 MNOP confirmed
+```
+
+This confirms the sampled paired code windows can display two different marker
+glyphs from the same physical cell. Future visual probes should prefer a help
+manual page with enough room, such as A1, rather than DATA001/0008 tutorial
+rows; the tutorial page order is reversed in-game and slower to check.
 
 Static export notes:
 

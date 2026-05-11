@@ -65,8 +65,6 @@ def build_chs_offset_table(
     overwrite: bool = False,
 ) -> None:
     archive, entry_id = table
-    if archive != "DATA001":
-        raise ValueError("stage_font_probe currently supports text replacement in DATA001 only")
 
     rows = load_translator_sheet(sheet_path, table=f"{archive}/{entry_id:04d}")
     source_export = json.loads(source_export_path.read_text(encoding="utf-8"))

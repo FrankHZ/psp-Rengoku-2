@@ -4,6 +4,7 @@ import argparse
 import csv
 import json
 from pathlib import Path
+import re
 from typing import Any
 
 from stage_font_probe import stage_font_probe
@@ -22,6 +23,38 @@ DEFAULT_SLOT_POOLS = (
     {"child": 10, "source": "codeJAP14x14_18_", "target_page": "local/work/tdl_DATA001_0002/0010_codeJAP14x14_18_.bin", "base": 0x0703},
     {"child": 11, "source": "codeJAP14x14_20_", "target_page": "local/work/tdl_DATA001_0002/0011_codeJAP14x14_20_.bin", "base": 0x0754},
 )
+BITPLANE_SLOT_POOLS = (
+    {"child": 1, "source": "codeJAP14x14_00_", "target_page": "local/work/tdl_DATA001_0002/0001_codeJAP14x14_00_.bin", "base": 0x0100, "layer": "low"},
+    {"child": 1, "source": "codeJAP14x14_00_", "target_page": "local/work/tdl_DATA001_0002/0001_codeJAP14x14_00_.bin", "base": 0x0151, "layer": "high"},
+    {"child": 2, "source": "codeJAP14x14_02_", "target_page": "local/work/tdl_DATA001_0002/0002_codeJAP14x14_02_.bin", "base": 0x01A2, "layer": "low"},
+    {"child": 2, "source": "codeJAP14x14_02_", "target_page": "local/work/tdl_DATA001_0002/0002_codeJAP14x14_02_.bin", "base": 0x01F3, "layer": "high"},
+    {"child": 3, "source": "codeJAP14x14_04_", "target_page": "local/work/tdl_DATA001_0002/0003_codeJAP14x14_04_.bin", "base": 0x0244, "layer": "low"},
+    {"child": 3, "source": "codeJAP14x14_04_", "target_page": "local/work/tdl_DATA001_0002/0003_codeJAP14x14_04_.bin", "base": 0x0295, "layer": "high"},
+    {"child": 4, "source": "codeJAP14x14_06_", "target_page": "local/work/tdl_DATA001_0002/0004_codeJAP14x14_06_.bin", "base": 0x02E6, "layer": "low"},
+    {"child": 4, "source": "codeJAP14x14_06_", "target_page": "local/work/tdl_DATA001_0002/0004_codeJAP14x14_06_.bin", "base": 0x0337, "layer": "high"},
+    {"child": 5, "source": "codeJAP14x14_08_", "target_page": "local/work/tdl_DATA001_0002/0005_codeJAP14x14_08_.bin", "base": 0x0388, "layer": "low"},
+    {"child": 5, "source": "codeJAP14x14_08_", "target_page": "local/work/tdl_DATA001_0002/0005_codeJAP14x14_08_.bin", "base": 0x03D9, "layer": "high"},
+    {"child": 6, "source": "codeJAP14x14_10_", "target_page": "local/work/tdl_DATA001_0002/0006_codeJAP14x14_10_.bin", "base": 0x042A, "layer": "low"},
+    {"child": 6, "source": "codeJAP14x14_10_", "target_page": "local/work/tdl_DATA001_0002/0006_codeJAP14x14_10_.bin", "base": 0x047B, "layer": "high"},
+    {"child": 7, "source": "codeJAP14x14_12_", "target_page": "local/work/tdl_DATA001_0002/0007_codeJAP14x14_12_.bin", "base": 0x04CC, "layer": "low"},
+    {"child": 7, "source": "codeJAP14x14_12_", "target_page": "local/work/tdl_DATA001_0002/0007_codeJAP14x14_12_.bin", "base": 0x051D, "layer": "high"},
+    {"child": 8, "source": "codeJAP14x14_14_", "target_page": "local/work/tdl_DATA001_0002/0008_codeJAP14x14_14_.bin", "base": 0x056E, "layer": "low"},
+    {"child": 8, "source": "codeJAP14x14_14_", "target_page": "local/work/tdl_DATA001_0002/0008_codeJAP14x14_14_.bin", "base": 0x05BF, "layer": "high"},
+    {"child": 9, "source": "codeJAP14x14_16_", "target_page": "local/work/tdl_DATA001_0002/0009_codeJAP14x14_16_.bin", "base": 0x0610, "layer": "low"},
+    {"child": 9, "source": "codeJAP14x14_16_", "target_page": "local/work/tdl_DATA001_0002/0009_codeJAP14x14_16_.bin", "base": 0x0661, "layer": "high"},
+    {"child": 10, "source": "codeJAP14x14_18_", "target_page": "local/work/tdl_DATA001_0002/0010_codeJAP14x14_18_.bin", "base": 0x06B2, "layer": "low"},
+    {"child": 10, "source": "codeJAP14x14_18_", "target_page": "local/work/tdl_DATA001_0002/0010_codeJAP14x14_18_.bin", "base": 0x0703, "layer": "high"},
+    {"child": 11, "source": "codeJAP14x14_20_", "target_page": "local/work/tdl_DATA001_0002/0011_codeJAP14x14_20_.bin", "base": 0x0754, "layer": "low"},
+)
+RESERVED_SOURCE_ICON_CELLS = {
+    (1, 9),   # 0x015a / confirm-style key icon
+    (1, 14),  # 0x015f / square-style attack key icon
+    (1, 16),  # 0x0161 / triangle-style attack key icon
+    (1, 26),  # 0x011a via alternate child-1 code window
+    (1, 62),  # 0x013e via alternate child-1 code window
+    (2, 6),   # 0x01a8 / L button icon
+    (2, 12),  # 0x01ae / R button icon
+}
 
 PINNED_ASSIGNMENTS = {
     "移": {"child": 6, "source": "codeJAP14x14_10_", "target_page": "local/work/tdl_DATA001_0002/0006_codeJAP14x14_10_.bin", "base": 0x042A, "cell": 59},
@@ -29,6 +62,7 @@ PINNED_ASSIGNMENTS = {
     "方": {"child": 6, "source": "codeJAP14x14_10_", "target_page": "local/work/tdl_DATA001_0002/0006_codeJAP14x14_10_.bin", "base": 0x042A, "cell": 4},
     "式": {"child": 8, "source": "codeJAP14x14_14_", "target_page": "local/work/tdl_DATA001_0002/0008_codeJAP14x14_14_.bin", "base": 0x05BF, "cell": 11},
 }
+INLINE_CODE_RE = re.compile(r"<(?:icon|code):0x?([0-9a-fA-F]{1,4})>")
 
 
 def main() -> int:
@@ -124,17 +158,37 @@ def build_chs_tutorial(
 
 
 def assign_chars(translations: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    return assign_chars_from_pools(translations, DEFAULT_SLOT_POOLS, use_bitplanes=False)
+
+
+def assign_chars_bitplane(translations: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    return assign_chars_from_pools(translations, BITPLANE_SLOT_POOLS, use_bitplanes=True)
+
+
+def assign_chars_from_pools(
+    translations: list[dict[str, Any]],
+    slot_pools: tuple[dict[str, Any], ...],
+    use_bitplanes: bool,
+) -> dict[str, dict[str, Any]]:
     chars = sorted(
         {
             char
             for entry in translations
-            for char in str(entry["chs_translation"])
+            for char in visible_translation_chars(str(entry["chs_translation"]))
             if needs_glyph_assignment(char)
         }
     )
-    assignments = {char: dict(value) for char, value in PINNED_ASSIGNMENTS.items() if char in chars}
-    used_slots = {(value["child"], value["cell"]) for value in assignments.values()}
-    slots = available_slots(used_slots)
+    assignments = {
+        char: normalize_assignment_for_pools(value, slot_pools)
+        for char, value in PINNED_ASSIGNMENTS.items()
+        if char in chars
+    }
+    if use_bitplanes:
+        used_slots = {(value["child"], value["cell"], value.get("layer", "low")) for value in assignments.values()}
+        slots = available_bitplane_slots(used_slots, RESERVED_SOURCE_ICON_CELLS, slot_pools)
+    else:
+        used_slots = RESERVED_SOURCE_ICON_CELLS | {(value["child"], value["cell"]) for value in assignments.values()}
+        slots = available_slots(used_slots, slot_pools)
 
     for char in chars:
         if char in assignments:
@@ -146,10 +200,37 @@ def assign_chars(translations: list[dict[str, Any]]) -> dict[str, dict[str, Any]
     return assignments
 
 
-def available_slots(used_slots: set[tuple[int, int]]):
-    for pool in DEFAULT_SLOT_POOLS:
+def normalize_assignment_for_pools(slot: dict[str, Any], slot_pools: tuple[dict[str, Any], ...]) -> dict[str, Any]:
+    for pool in slot_pools:
+        if int(pool["child"]) == int(slot["child"]) and int(pool["base"]) == int(slot["base"]):
+            normalized = dict(pool)
+            normalized["cell"] = int(slot["cell"])
+            return normalized
+    return dict(slot)
+
+
+def available_slots(used_slots: set[tuple[int, int]], slot_pools: tuple[dict[str, Any], ...] = DEFAULT_SLOT_POOLS):
+    for pool in slot_pools:
         for cell in range(81):
             if (int(pool["child"]), cell) in used_slots:
+                continue
+            slot = dict(pool)
+            slot["cell"] = cell
+            yield slot
+
+
+def available_bitplane_slots(
+    used_slots: set[tuple[int, int, str]],
+    reserved_physical_cells: set[tuple[int, int]],
+    slot_pools: tuple[dict[str, Any], ...] = BITPLANE_SLOT_POOLS,
+):
+    for pool in slot_pools:
+        child = int(pool["child"])
+        layer = str(pool.get("layer", "low"))
+        for cell in range(81):
+            if (child, cell) in reserved_physical_cells:
+                continue
+            if (child, cell, layer) in used_slots:
                 continue
             slot = dict(pool)
             slot["cell"] = cell
@@ -200,7 +281,11 @@ def build_text_payload(
 
 def encode_translation(text: str, assignments: dict[str, dict[str, Any]]) -> list[int]:
     codes = []
-    for char in text:
+    for token in iter_translation_tokens(text):
+        if isinstance(token, int):
+            codes.append(token)
+            continue
+        char = token
         if char == "\n":
             codes.append(0x000A)
         elif not needs_glyph_assignment(char):
@@ -209,6 +294,19 @@ def encode_translation(text: str, assignments: dict[str, dict[str, Any]]) -> lis
             slot = assignments[char]
             codes.append(int(slot["base"]) + int(slot["cell"]))
     return codes
+
+
+def iter_translation_tokens(text: str):
+    cursor = 0
+    for match in INLINE_CODE_RE.finditer(text):
+        yield from text[cursor : match.start()]
+        yield int(match.group(1), 16)
+        cursor = match.end()
+    yield from text[cursor:]
+
+
+def visible_translation_chars(text: str) -> list[str]:
+    return [token for token in iter_translation_tokens(text) if isinstance(token, str)]
 
 
 def build_font_patches(
@@ -224,21 +322,26 @@ def build_font_patches(
 ) -> list[dict[str, Any]]:
     patches = []
     for char, slot in sorted(assignments.items(), key=lambda item: (item[1]["child"], item[1]["cell"], item[0])):
+        mode = "render_bitplane" if "layer" in slot else "render"
         patches.append(
             {
-                "mode": "render",
+                "mode": mode,
                 "target_page": slot["target_page"],
                 "target_child": slot["child"],
                 "target_cell": slot["cell"],
+                **({"layer": slot["layer"]} if "layer" in slot else {}),
                 "char": char,
                 "font": str(font_path),
                 "font_index": font_index,
                 "font_size": font_size,
-                "render_mode": render_mode,
+                "render_mode": "palette3" if mode == "render_bitplane" and render_mode == "grayscale" else render_mode,
                 "threshold": threshold,
                 "gray_threshold": gray_threshold,
                 "stroke_radius": stroke_radius,
-                "preview": str(preview_dir / f"child{slot['child']}_cell{slot['cell']:02d}_{ord(char):04x}.png"),
+                "preview": str(
+                    preview_dir
+                    / f"child{slot['child']}_cell{slot['cell']:02d}_{slot.get('layer', 'full')}_{ord(char):04x}.png"
+                ),
             }
         )
     return patches
@@ -265,7 +368,7 @@ def write_assignments_csv(path: Path, assignments: dict[str, dict[str, Any]]) ->
                     "cell": slot["cell"],
                     "runtime_texture": runtime_texture_for_child(int(slot["child"])),
                     "base": f"0x{int(slot['base']):04x}",
-                    "notes": "generated CHS tutorial assignment",
+                    "notes": f"generated CHS tutorial assignment; layer={slot.get('layer', 'full')}",
                 }
             )
 

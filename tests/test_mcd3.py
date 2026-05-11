@@ -38,7 +38,8 @@ from mig import (
 from map_runtime_font_pages import map_runtime_pages, parse_dump_address
 from patch_mig_font_cell import parse_cell_range, patch_font_cell, patch_font_cells
 from png_rgba import read_png_rgba
-from render_mig_font_cell import has_pillow, mask_to_indices, render_font_cell
+from report_runtime_font_pages import scan_runtime_font_pages
+from render_mig_font_cell import has_pillow, mask_to_indices, mask_to_two_bit_indices, render_font_cell, render_font_cell_bitplane
 from search_encoded_text import search_phrase
 from stage_font_probe import apply_font_patch, parse_cells
 from mscr import read_mscr
@@ -345,6 +346,13 @@ class Mcd3Tests(unittest.TestCase):
         self.assertEqual(mask_to_indices(bytes([0, 1, 128, 255]), ink_index=15, threshold=0), bytes([0, 1, 8, 15]))
         self.assertEqual(mask_to_indices(bytes([3, 4]), ink_index=15, threshold=3), bytes([0, 1]))
 
+    def test_mask_to_two_bit_indices_quantizes_for_split_layers(self) -> None:
+        self.assertEqual(mask_to_two_bit_indices(bytes([0, 100, 200]), threshold=64), bytes([0, 2, 3]))
+        self.assertEqual(
+            mask_to_two_bit_indices(bytes([0, 100, 200]), threshold=64, render_mode="binary"),
+            bytes([0, 3, 3]),
+        )
+
     def test_render_font_cell_writes_glyph_into_requested_cell(self) -> None:
         if not has_pillow():
             self.skipTest("Pillow is not available")
@@ -368,6 +376,56 @@ class Mcd3Tests(unittest.TestCase):
             self.assertTrue(cell_has_ink(indices, image_width=128, x=112, y=0, width=14, height=14))
             self.assertFalse(cell_has_ink(indices, image_width=128, x=0, y=0, width=14, height=14))
             self.assertTrue(preview.exists())
+
+    def test_render_font_cell_bitplane_preserves_other_layer(self) -> None:
+        if not has_pillow():
+            self.skipTest("Pillow is not available")
+        font_path = Path("C:/Windows/Fonts/msyh.ttc")
+        if not font_path.exists():
+            self.skipTest("Microsoft YaHei font is not available")
+
+        with self.make_temp_dir() as temp_dir:
+            temp = Path(temp_dir)
+            source_low = temp / "0001_codeJAP14x14_00_.bin"
+            output_low = temp / "patched_low.bin"
+            source_high = temp / "0001_codeJAP14x14_00_high.bin"
+            output_high = temp / "patched_high.bin"
+            data = bytearray(0x2110)
+            data[0:11] = b"MIG.00.1PSP"
+            struct.pack_into("<HH", data, 0xD8, 128, 128)
+            source_low.write_bytes(data)
+            source_high.write_bytes(data)
+            replace_mig_indices(source_low, bytes([0x0C]) * (128 * 128), source_low)
+            replace_mig_indices(source_high, bytes([0x03]) * (128 * 128), source_high)
+
+            render_font_cell_bitplane(
+                source_low,
+                output_low,
+                cell_index=8,
+                char="动",
+                font_path=font_path,
+                layer="low",
+                render_mode="binary",
+                threshold=64,
+            )
+            render_font_cell_bitplane(
+                source_high,
+                output_high,
+                cell_index=8,
+                char="动",
+                font_path=font_path,
+                layer="high",
+                render_mode="binary",
+                threshold=64,
+            )
+
+            _, _, low_indices = decode_mig_indices(output_low)
+            _, _, high_indices = decode_mig_indices(output_high)
+            target_offsets = [(y * 128) + 112 + x for y in range(14) for x in range(14)]
+            self.assertTrue(any(low_indices[offset] & 0x03 for offset in target_offsets))
+            self.assertTrue(all((low_indices[offset] & 0x0C) == 0x0C for offset in target_offsets))
+            self.assertTrue(any(high_indices[offset] & 0x0C for offset in target_offsets))
+            self.assertTrue(all((high_indices[offset] & 0x03) == 0x03 for offset in target_offsets))
 
     def test_build_chs_tutorial_pins_known_title_assignments(self) -> None:
         assignments = assign_chars([{"chs_translation": "移动方式"}])
@@ -432,20 +490,52 @@ class Mcd3Tests(unittest.TestCase):
 
             write_png_rgba(runtime_dir / "040dc200aaaaaaaaaaaaaaaa.png", 1, 1, rgba)
             write_png_rgba(runtime_dir / "040de300bbbbbbbbbbbbbbbb.png", 1, 1, rgba)
+            write_png_rgba(runtime_dir / "040de300ccccccccbbbbbbbb.png", 1, 1, rgba)
             write_png_rgba(static_dir / "0000_codeANK9x14_00_0.png", 1, 1, rgba)
             write_png_rgba(static_dir / "0001_codeJAP14x14_00_.png", 1, 1, rgba)
 
             rows = map_runtime_pages(runtime_dir, static_dir)
 
+            self.assertEqual(len(rows), 3)
             self.assertEqual(rows[0]["page_index"], 0)
             self.assertEqual(rows[0]["static_page"], "0000_codeANK9x14_00_0.png")
             self.assertEqual(rows[1]["page_index"], 1)
             self.assertEqual(rows[1]["static_page"], "0001_codeJAP14x14_00_.png")
+            self.assertEqual(rows[1]["clut_hash"], "bbbbbbbb")
+            self.assertEqual(rows[2]["page_index"], 1)
+            self.assertEqual(rows[2]["clut_hash"], "cccccccc")
 
     def test_parse_dump_address_requires_hex_prefix(self) -> None:
         self.assertEqual(parse_dump_address(Path("040e8800676a3b4eaa72713b.png")), 0x040E8800)
         with self.assertRaises(ValueError):
             parse_dump_address(Path("texture.png"))
+
+    def test_scan_runtime_font_pages_keeps_same_address_clut_variants(self) -> None:
+        from mig import write_png_rgba
+
+        with self.make_temp_dir() as temp_dir:
+            runtime_dir = Path(temp_dir) / "runtime"
+            runtime_dir.mkdir()
+            write_png_rgba(
+                runtime_dir / "040de300aaaaaaaa11111111.png",
+                2,
+                1,
+                bytes([255, 255, 255, 255, 0, 0, 0, 0]),
+            )
+            write_png_rgba(
+                runtime_dir / "040de300bbbbbbbb11111111.png",
+                2,
+                1,
+                bytes([0, 0, 0, 0, 255, 255, 255, 255]),
+            )
+
+            rows = scan_runtime_font_pages(runtime_dir, cell_width=1, cell_height=1, columns=2, rows=1)
+
+            self.assertEqual(len(rows), 2)
+            self.assertEqual({row["address"] for row in rows}, {"0x040de300"})
+            self.assertEqual([row["clut_hash"] for row in rows], ["aaaaaaaa", "bbbbbbbb"])
+            self.assertEqual(len({row["pixel_group"] for row in rows}), 2)
+            self.assertEqual(len({row["first_row_group"] for row in rows}), 2)
 
     def test_parse_cell_size_from_font_name(self) -> None:
         self.assertEqual(parse_cell_size("0000_codeANK9x14_00_0"), (9, 14))
