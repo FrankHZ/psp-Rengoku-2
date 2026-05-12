@@ -19,6 +19,7 @@ an old experiment must be reconstructed.
 | `tools/export_translation_review_pack.py` | Exports JSON review files with CHS text and alignment context when a fresh reviewer pack is needed. |
 | `tools/format_chs_manual_layout.py` | Applies manual/help layout overrides and key-token cleanup. Retained for future manual edits. |
 | `tools/make_chs_name_input_sheet.py` | Creates DATA002/0065 name-input confirmation rows 82-84 when that sheet is regenerated. |
+| `tools/make_equipment_jp_first_layers.py` | Builds layered DATA001/0015 equipment sheets with `chs_unshrunk` for review and `chs_shrunk` for runtime fitting. |
 | `tools/compare_chs_fonts.py` | Compares candidate CHS font rendering. |
 
 Current broad-build command shape:
@@ -28,7 +29,7 @@ Current broad-build command shape:
   --target DATA001/0003 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0003_full_current_target_sheet.json `
   --target DATA001/0008 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0008_full_current_target_sheet.json `
   --target DATA001/0012 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0012_full_current_target_sheet.json `
-  --target DATA001/0015 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0015_full_current_target_sheet.json `
+  --target DATA001/0015 local/work/translation_refine_v1/merged_target_sheets_v38_equipment_jp_first/DATA001_0015_full_current_target_sheet.json `
   --target DATA001/0016 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0016_full_current_target_sheet.json `
   --target DATA001/0017 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0017_full_current_target_sheet.json `
   --target DATA002/0065 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA002_0065_full_current_target_sheet.json `

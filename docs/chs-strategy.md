@@ -8,12 +8,12 @@ workflow evolves.
 Treat this as the baseline until tester/reviewer feedback says otherwise:
 
 ```text
-local/rebuilt/combined_chs_v37_jp_story_data003_extracted/
+local/rebuilt/combined_chs_v38_jp_equipment_story_extracted/
 ```
 
-The current build keeps all 1637 v35 parsed target rows and adds all 855
-reviewed DATA003/1089 story-script glyph rows. Glyph capacity is not the active
-blocker after the confirmed low/high bitplane packing model.
+The current build keeps the v37 JP-first DATA003/1089 story pass and replaces
+DATA001/0015 equipment descriptions with a layered JP-first pass. Glyph capacity
+is not the active blocker after the confirmed low/high bitplane packing model.
 
 Current build policy:
 
@@ -24,6 +24,7 @@ reserve source cells for every reused symbol code
 preserve explicit paragraph/list hard breaks
 let tooling add soft visual wraps for long Chinese lines
 use reviewed JP as primary source for DATA003/1089 story text
+separate full review translation from fitted build text for equipment descriptions
 ```
 
 Do not assume alternate runtime bases add storage. Bases like child 9 /
@@ -43,6 +44,13 @@ preserve equipment function, construction, behavior, and gameplay effect
 avoid opaque consonant-code abbreviations
 keep English only for actual proper nouns/model names/stylized names when readable
 compress only after the core meaning is intact
+```
+
+For cramped equipment descriptions, maintain two layers:
+
+```text
+chs_unshrunk: JP-first full-meaning translation for reviewer quality checks
+chs_shrunk: fitted runtime string derived from the full layer and source slot budget
 ```
 
 Examples:
@@ -78,7 +86,7 @@ logical layers:           2
 logical capacity:      1782
 ```
 
-Current v37 usage:
+Current v38 usage:
 
 ```text
 assigned CJK glyphs:                   1498
@@ -106,7 +114,7 @@ unique non-ASCII required:            1452
 ```
 
 The full candidate-bank number remains useful for planning. The current broad
-build needs 1498 assigned CJK glyphs after the JP-first DATA003 story pass.
+build needs 1498 assigned CJK glyphs after the JP-first story and equipment passes.
 
 ## JP Glyph Table Backup
 
@@ -140,6 +148,10 @@ total built rows: 1637
 fields: id, category, chs, jp, en
 changed from v4: 116 rows
 
+local/work/translation_review_slim_v8_equipment_jp_first/
+DATA001/0015 equipment rows: 672
+fields: id, category, jp, en, current_chs, chs_unshrunk, chs_shrunk, max_units, fit_note
+
 local/work/translation_review_slim_v7_story_jp_first/
 DATA003/1089 story rows: 855
 fields: id, category, chs, jp, en, fit_note
@@ -163,10 +175,20 @@ old USA alignment retained only as reviewer reference context
 rows are fitted to JP source slot budgets
 ```
 
+v38 equipment pass:
+
+```text
+DATA001/0015: JP-first equipment description layer split
+336 names and 336 descriptions exported
+313 unique JP description clauses covered
+unknown JP clauses: 0
+runtime build uses chs_shrunk; reviewer pack keeps chs_unshrunk
+```
+
 Recommended next loop:
 
 ```text
-1. Collect reviewer corrections against translation_review_slim_v5 and translation_review_slim_v7_story_jp_first.
+1. Collect reviewer corrections against translation_review_slim_v8_equipment_jp_first and translation_review_slim_v7_story_jp_first.
 2. Promote corrections into translation_refine_v1 target sheets.
 3. Run coverage and CJK requirement reports.
 4. Build a new PPSSPP artifact only after enough corrections accumulate.

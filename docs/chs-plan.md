@@ -12,13 +12,13 @@ docs/chs-layout-rules.md
 Current PPSSPP-ready broad build:
 
 ```text
-local/rebuilt/combined_chs_v37_jp_story_data003_extracted/
+local/rebuilt/combined_chs_v38_jp_equipment_story_extracted/
 ```
 
 Current work root and coverage:
 
 ```text
-local/work/combined_chs_v37_jp_story_data003/
+local/work/combined_chs_v38_jp_equipment_story/
 local/work/chs_coverage_v35_quality_translation/
 ```
 
@@ -28,7 +28,7 @@ Included targets:
 DATA001/0003 boot/init UI
 DATA001/0008 tutorial/objective overlay
 DATA001/0012 story/local story table slice
-DATA001/0015 equipment/catalog names and descriptions
+DATA001/0015 layered JP-first equipment/catalog names and descriptions
 DATA001/0016 UI/menu table
 DATA001/0017 help/manual table
 DATA002/0065 name-input confirmation rows and related visible rows
@@ -64,6 +64,10 @@ entries: 1637
 fields: id, category, chs, jp, en
 changed from v4: 116 rows
 
+local/work/translation_review_slim_v8_equipment_jp_first/
+entries: 672 DATA001/0015 equipment rows
+fields: id, category, jp, en, current_chs, chs_unshrunk, chs_shrunk, max_units, fit_note
+
 local/work/translation_review_slim_v7_story_jp_first/
 entries: 855 DATA003/1089 story-script rows
 fields: id, category, chs, jp, en, fit_note
@@ -96,20 +100,20 @@ not extra storage.
 ## Active Focus
 
 Glyph capacity is not the active blocker for the current parsed target set.
-v37 keeps the v35 quality pass and adds a full reviewed-JP DATA003/1089
-story-script pass:
+v38 keeps the v37 story pass and adds a layered JP-first DATA001/0015 equipment
+description pass:
 
 ```text
 DATA001/0008 record 64: 熟练 -> 熟练度
-DATA001/0015: 112 equipment name/description rows revised for semantic completeness
+DATA001/0015: review layer separates full JP-first translation from fitted build string
 DATA001/0017: Skill Points wording normalized to 熟练度 in visible status/help text
 DATA003/1089: 855 story glyph rows patched from reviewed JP decode
 source hard paragraph breaks and generated soft wraps preserved
 Latin, punctuation, symbols, and key-icon glyphs still reuse original source cells where known
 ```
 
-DATA003/1089 still needs reviewer/tester pass for prose quality and runtime
-line flow, but v37 no longer depends on the old USA-row split as primary source.
+DATA001/0015 and DATA003/1089 still need reviewer/tester pass for prose quality
+and runtime line flow, but both now expose JP-first review context.
 
 ## Current Local Artifacts
 
