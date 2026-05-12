@@ -16,18 +16,20 @@ generated binary patches. Keep those files under ignored local paths such as
 The current CHS handoff is:
 
 ```text
-local/rebuilt/combined_chs_v35_quality_translation_extracted/
+local/rebuilt/combined_chs_v36_story_data003_extracted/
 ```
 
-The build covers all 1637 parsed target rows, uses the full SemiBold 18px CJK
-font atlas, preserves original Latin/punctuation/symbol glyphs where source
-codes are known, adds source-budget soft wrapping for long Chinese prose, and
-includes the first post-review equipment/terminology quality pass.
+The build keeps the v35 broad translation baseline and adds a first DATA003/1089
+story-script patch pass for reviewer-reported missing story text. It uses the
+full SemiBold 18px CJK font atlas, preserves original Latin/punctuation/symbol
+glyphs where source codes are known, and keeps source-budget wrapping for long
+Chinese prose.
 
 Current text review package:
 
 ```text
 local/work/translation_review_slim_v5/
+local/work/translation_review_slim_v6_story/
 ```
 
 ## Repository Layout
@@ -97,7 +99,7 @@ tools/build_full_jp_texts.py
 ```
 
 `tools/build_chs_combined_data001.py` has a legacy name, but the current staging
-path can include DATA002 text patches as well as DATA001 entries.
+path can include DATA002 and DATA003 text patches as well as DATA001 entries.
 
 ## Testing
 

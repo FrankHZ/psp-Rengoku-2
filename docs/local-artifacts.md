@@ -10,8 +10,8 @@ Current PPSSPP build:
 
 | Path | Purpose |
 | --- | --- |
-| `local/rebuilt/combined_chs_v35_quality_translation_extracted/` | Current PPSSPP-ready broad CHS build. |
-| `local/work/combined_chs_v35_quality_translation/` | Current build metadata, stage config, glyph assignment, and previews. |
+| `local/rebuilt/combined_chs_v36_story_data003_extracted/` | Current PPSSPP-ready broad CHS build plus first DATA003/1089 story patch pass. |
+| `local/work/combined_chs_v36_story_data003/` | Current build metadata, stage config, glyph assignment, text payloads, and previews. |
 | `local/work/chs_coverage_v35_quality_translation/` | Current parsed-row and glyph-headroom coverage report. |
 
 Current text/review inputs:
@@ -27,6 +27,7 @@ Current text/review inputs:
 | `local/work/full_jp_text_decode_v1/` | JP decode output built from the reviewed glyph table. |
 | `local/work/translation_refine_v1/` | Current JP+EN refinement packs and merged target sheets. |
 | `local/work/translation_review_slim_v5/` | Current human review package, one concise JSON per category. |
+| `local/work/translation_review_slim_v6_story/` | Concise DATA003/1089 story-script review pack for the v36 story pass. |
 
 Current font artifacts:
 

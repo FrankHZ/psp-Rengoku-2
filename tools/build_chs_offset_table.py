@@ -130,6 +130,8 @@ def parse_table_id(table: str) -> tuple[str, int]:
 
 def infer_source_export(table: tuple[str, int]) -> Path:
     archive, entry_id = table
+    if archive == "DATA003" and entry_id == 1089:
+        return Path("local/work/script_DATA003_1089_dialogue_seeded.json")
     return Path(f"local/work/extract_text_{archive}_{entry_id:04d}_seeded.json")
 
 

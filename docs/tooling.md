@@ -8,7 +8,7 @@ an old experiment must be reconstructed.
 
 | Script | Purpose |
 | --- | --- |
-| `tools/build_chs_combined_data001.py` | Builds the broad PPSSPP-ready artifact with one shared font assignment pass. Despite the legacy filename, it can include DATA002 text patches. |
+| `tools/build_chs_combined_data001.py` | Builds the broad PPSSPP-ready artifact with one shared font assignment pass. Despite the legacy filename, it can include DATA002 and DATA003 text patches. |
 | `tools/build_chs_tutorial.py` | Shared CHS assignment/layout helper module plus the older focused tutorial builder. Owns bitplane assignment, source-symbol reservation, and source-budget soft wrapping. |
 | `tools/build_chs_offset_table.py` | Builds one translated offset-table target with font patches and source hard-break preservation. |
 | `tools/stage_font_probe.py` | Stages extracted-folder builds by patching font pages and same-size MCD3 text entries. |
@@ -32,6 +32,7 @@ Current broad-build command shape:
   --target DATA001/0016 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0016_full_current_target_sheet.json `
   --target DATA001/0017 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0017_full_current_target_sheet.json `
   --target DATA002/0065 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA002_0065_full_current_target_sheet.json `
+  --target DATA003/1089 local/work/translation_refine_v1/merged_target_sheets_v36_story/DATA003_1089_story_fit_target_sheet.json `
   --work-root local/work/<name> `
   --output-root local/rebuilt/<name>_extracted `
   --font local/fonts/full-semibold-18.fnt `
