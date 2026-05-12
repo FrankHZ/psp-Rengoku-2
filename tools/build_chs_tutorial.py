@@ -66,8 +66,8 @@ PINNED_ASSIGNMENTS = {
 INLINE_CODE_RE = re.compile(r"<(?:icon|code):0x?([0-9a-fA-F]{1,4})>")
 PRESERVED_SOURCE_CODES = {
     "、": 0x0101,
-    "，": 0x0102,
-    "。": 0x0103,
+    "。": 0x0102,
+    "，": 0x0103,
     "．": 0x0104,
     "·": 0x0105,  # Reuse the original JP middle-dot glyph for CHS bullet dots.
     "・": 0x0105,
@@ -78,7 +78,7 @@ PRESERVED_SOURCE_CODES = {
     "＿": 0x0111,
     "々": 0x0118,
     "〇": 0x011A,
-    "○": 0x011A,
+    "○": 0x015A,
     "ー": 0x011B,
     "―": 0x011C,
     "‐": 0x011D,
@@ -270,11 +270,16 @@ def assign_chars_from_pools(
         for char, value in PINNED_ASSIGNMENTS.items()
         if char in chars
     }
+    reserved_logical_slots = preserved_source_logical_slots(slot_pools)
     if use_bitplanes:
         used_slots = {(value["child"], value["cell"], value.get("layer", "low")) for value in assignments.values()}
-        slots = available_bitplane_slots(used_slots, RESERVED_SOURCE_ICON_CELLS, slot_pools)
+        slots = available_bitplane_slots(used_slots, reserved_logical_slots, RESERVED_SOURCE_ICON_CELLS, slot_pools)
     else:
-        used_slots = RESERVED_SOURCE_ICON_CELLS | {(value["child"], value["cell"]) for value in assignments.values()}
+        used_slots = (
+            RESERVED_SOURCE_ICON_CELLS
+            | {(child, cell) for child, cell, _layer in reserved_logical_slots}
+            | {(value["child"], value["cell"]) for value in assignments.values()}
+        )
         slots = available_slots(used_slots, slot_pools)
 
     for char in chars:
@@ -308,6 +313,7 @@ def available_slots(used_slots: set[tuple[int, int]], slot_pools: tuple[dict[str
 
 def available_bitplane_slots(
     used_slots: set[tuple[int, int, str]],
+    reserved_logical_slots: set[tuple[int, int, str]],
     reserved_physical_cells: set[tuple[int, int]],
     slot_pools: tuple[dict[str, Any], ...] = BITPLANE_SLOT_POOLS,
 ):
@@ -317,11 +323,40 @@ def available_bitplane_slots(
         for cell in range(81):
             if (child, cell) in reserved_physical_cells:
                 continue
+            if (child, cell, layer) in reserved_logical_slots:
+                continue
             if (child, cell, layer) in used_slots:
                 continue
             slot = dict(pool)
             slot["cell"] = cell
             yield slot
+
+
+def preserved_source_logical_slots(
+    slot_pools: tuple[dict[str, Any], ...] = BITPLANE_SLOT_POOLS,
+) -> set[tuple[int, int, str]]:
+    slots: set[tuple[int, int, str]] = set()
+    for code in set(PRESERVED_SOURCE_CODES.values()):
+        for pool in slot_pools:
+            base = int(pool["base"])
+            cell = int(code) - base
+            if 0 <= cell < 81:
+                slots.add((int(pool["child"]), cell, str(pool.get("layer", "low"))))
+                break
+    return slots
+
+
+def reserved_runtime_logical_slots(
+    slot_pools: tuple[dict[str, Any], ...] = BITPLANE_SLOT_POOLS,
+) -> set[tuple[int, int, str]]:
+    slots = preserved_source_logical_slots(slot_pools)
+    for pool in slot_pools:
+        child = int(pool["child"])
+        layer = str(pool.get("layer", "low"))
+        for reserved_child, reserved_cell in RESERVED_SOURCE_ICON_CELLS:
+            if child == reserved_child:
+                slots.add((child, reserved_cell, layer))
+    return slots
 
 
 def needs_glyph_assignment(char: str) -> bool:
@@ -400,26 +435,122 @@ def encode_translation(text: str, assignments: dict[str, dict[str, Any]]) -> lis
 
 def apply_source_hard_breaks(text: str, source_codes: list[Any]) -> str:
     source_breaks = count_source_hard_breaks(source_codes)
+    text = normalize_source_control_tokens(text, source_codes)
     if source_breaks <= 0:
         return text
     normalized = text.replace("\r\n", "\n").replace("\r", "\n")
-    if "\n" in normalized:
-        return normalized
     if "*" in normalized:
-        return normalized.replace("*", "\n")
-    return distribute_hard_breaks(normalized, source_breaks)
+        normalized = normalized.replace("*", "\n")
+    if "\n" not in normalized:
+        return distribute_hard_breaks(normalized, source_breaks)
+    return add_soft_line_breaks(normalized, source_codes)
+
+
+def normalize_source_control_tokens(text: str, source_codes: list[Any]) -> str:
+    codes = normalize_source_codes(source_codes)
+    if len(codes) >= 2 and codes[0] == 0x003F and codes[1] == 0x0040 and text.startswith("_`"):
+        return "?@" + text[2:]
+    return text
 
 
 def count_source_hard_breaks(source_codes: list[Any]) -> int:
-    count = 0
+    return sum(1 for code in normalize_source_codes(source_codes) if code == 0x000A)
+
+
+def normalize_source_codes(source_codes: list[Any]) -> list[int]:
+    codes: list[int] = []
     for code in source_codes:
         try:
-            value = int(code, 16 if isinstance(code, str) and code.lower().startswith("0x") else 10)
+            codes.append(parse_code_value(code))
         except (TypeError, ValueError):
             continue
-        if value == 0x000A:
-            count += 1
-    return count
+    return codes
+
+
+def parse_code_value(code: Any) -> int:
+    return int(code, 16 if isinstance(code, str) and code.lower().startswith("0x") else 10)
+
+
+def source_line_lengths(source_codes: list[Any]) -> list[int]:
+    lengths: list[int] = []
+    current = 0
+    for code in normalize_source_codes(source_codes):
+        if code == 0x000A:
+            lengths.append(current)
+            current = 0
+        else:
+            current += 1
+    lengths.append(current)
+    return lengths
+
+
+def add_soft_line_breaks(text: str, source_codes: list[Any]) -> str:
+    break_budget = count_source_hard_breaks(source_codes) - text.count("\n")
+    if break_budget <= 0:
+        return text
+    source_lengths = [length for length in source_line_lengths(source_codes) if length > 0]
+    if not source_lengths:
+        return text
+    max_width = max(source_lengths)
+    if max_width <= 0:
+        return text
+
+    output_lines: list[str] = []
+    for line in text.split("\n"):
+        if break_budget <= 0 or display_width(line) <= max_width:
+            output_lines.append(line)
+            continue
+        wrapped, used = wrap_line_to_width(line, max_width, break_budget)
+        output_lines.extend(wrapped)
+        break_budget -= used
+    return "\n".join(output_lines)
+
+
+def wrap_line_to_width(line: str, max_width: float, break_budget: int) -> tuple[list[str], int]:
+    lines: list[str] = []
+    remaining = line
+    used = 0
+    while break_budget > 0 and display_width(remaining) > max_width:
+        split_at = choose_soft_break(remaining, max_width)
+        if split_at <= 0 or split_at >= len(remaining):
+            break
+        lines.append(remaining[:split_at].rstrip())
+        remaining = remaining[split_at:].lstrip()
+        break_budget -= 1
+        used += 1
+    lines.append(remaining)
+    return lines, used
+
+
+def choose_soft_break(text: str, max_width: float) -> int:
+    width = 0.0
+    last_natural = -1
+    for index, char in enumerate(text):
+        width += char_display_width(char)
+        if char in "，。、；：！？,.!?:;)]）】」』":
+            last_natural = index + 1
+        elif char.isspace():
+            last_natural = index + 1
+        if width > max_width:
+            if last_natural > 0:
+                return last_natural
+            return max(1, index)
+    return len(text)
+
+
+def display_width(text: str) -> float:
+    return sum(char_display_width(char) for char in text)
+
+
+def char_display_width(char: str) -> float:
+    value = ord(char)
+    if char == "\n":
+        return 0.0
+    if value <= 0x007E:
+        return 0.65
+    if 0xFF61 <= value <= 0xFF9F:
+        return 0.65
+    return 1.0
 
 
 def distribute_hard_breaks(text: str, break_count: int) -> str:

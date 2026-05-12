@@ -100,9 +100,12 @@ Current PPSSPP artifacts and their work roots:
 | `local/work/combined_chs_v32_refined_cjk_only_symbols/` | Previous broad build metadata with v32 refinements and CJK-only generated glyph assignment. |
 | `local/rebuilt/combined_chs_v32_refined_cjk_only_symbols_extracted/` | Previous PPSSPP-ready broad build for translation/font testing, superseded for font testing by v33. |
 | `local/work/chs_coverage_v32_refined_cjk_only_symbols/` | Coverage report for v32; zero current parsed rows missing. |
-| `local/work/combined_chs_v33_full_semibold18/` | Current broad build metadata with v32 text refinements, CJK-only generated glyph assignment, and `full-semibold-18.fnt`. |
-| `local/rebuilt/combined_chs_v33_full_semibold18_extracted/` | Current PPSSPP-ready broad build for tester/font review. |
+| `local/work/combined_chs_v33_full_semibold18/` | Previous broad build metadata with v32 text refinements, CJK-only generated glyph assignment, and `full-semibold-18.fnt`. |
+| `local/rebuilt/combined_chs_v33_full_semibold18_extracted/` | Previous PPSSPP-ready broad build for tester/font review, superseded by v34 because preserved punctuation/symbol cells could still be overwritten. |
 | `local/work/chs_coverage_v33_full_semibold18/` | Coverage report for v33; zero current parsed rows missing. |
+| `local/work/combined_chs_v34_symbol_softwrap_fix/` | Current broad build metadata with preserved punctuation/symbol cell reservations and automatic source-budget soft wrapping. |
+| `local/rebuilt/combined_chs_v34_symbol_softwrap_fix_extracted/` | Current PPSSPP-ready build for punctuation/symbol and soft-linebreak testing. |
+| `local/work/chs_coverage_v34_symbol_softwrap_fix/` | Coverage report for v34; zero current parsed rows missing. |
 | `local/work/chs_font_corpus_v3_refined_cjk_only/` | Current CJK-only font corpus for external font generation from v32 plus full candidate-bank reference. |
 | `local/work/page_base_probe_help0017_gap66_v2/` | Clean page-base boundary probe for child 9 / `0x0661` and child 10 / `0x06b2`. |
 | `local/rebuilt/page_base_probe_help0017_gap66_v2_extracted/` | PPSSPP-ready copy of the current page-base boundary probe. |

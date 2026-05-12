@@ -19,7 +19,7 @@ the current CHS build path or mainly for research/probes.
 | `tools/export_translation_review_pack.py` | Exports one local JSON review file per patched bin/table with current CHS text and USA alignment text. | Current combined build root plus local alignment JSON files | `local/work/v*_translation_review_pack/` |
 | `tools/build_chs_combined_data001.py` | Builds the broad PPSSPP-ready artifact with one shared font assignment pass; despite the legacy filename, it can include DATA002 text patches. | Target translator sheets via repeated `--target` | `local/work/combined_chs_*/`, `local/rebuilt/combined_chs_*_extracted/` |
 | `tools/build_chs_offset_table.py` | Builds one translated offset-table target with font patches and preserves source `0x000a` hard-break layout. | A translator sheet plus source export/entry | A single-target work root and rebuilt extracted folder |
-| `tools/build_chs_tutorial.py` | Older focused DATA001/0008 tutorial build helper. | Tutorial draft and source export | `local/work/tutorial_chs_full_v1/`, `local/rebuilt/tutorial_chs_full_v1_extracted/` |
+| `tools/build_chs_tutorial.py` | Older focused DATA001/0008 tutorial build helper; also owns shared CHS glyph assignment, preserved-source-symbol reservations, and source-budget soft wrapping helpers. | Tutorial draft and source export | `local/work/tutorial_chs_full_v1/`, `local/rebuilt/tutorial_chs_full_v1_extracted/` |
 | `tools/build_chs_equipment_slice.py` | Older focused DATA001/0015 equipment-slice build helper. | Equipment slice sheet | A single-target equipment slice build |
 | `tools/stage_font_probe.py` | Stages extracted-folder builds by patching font pages and same-size MCD3 text entries. | JSON stage config | PPSSPP-ready extracted folder |
 

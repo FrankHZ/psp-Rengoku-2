@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from build_chs_tutorial import RESERVED_SOURCE_ICON_CELLS
+from build_chs_tutorial import RESERVED_SOURCE_ICON_CELLS, reserved_runtime_logical_slots
 
 
 DEFAULT_ESTIMATE = Path("local/work/full_translation_glyph_estimate_v1/all_rows_estimate.csv")
@@ -33,7 +33,7 @@ def main() -> int:
     font_summary = summarize_font_patches(font_patches)
     assigned_glyphs = font_summary["logical_assigned_glyphs"]
     reserved_logical_cells = (
-        len(RESERVED_SOURCE_ICON_CELLS) * 2
+        len(reserved_runtime_logical_slots())
         if font_summary["assignment_model"] == "bitplane"
         else len(RESERVED_SOURCE_ICON_CELLS)
     )
@@ -61,7 +61,7 @@ def main() -> int:
         "logical_glyph_capacity": font_summary["logical_glyph_capacity"],
         "physical_glyph_cells": font_summary["physical_glyph_cells"],
         "reserved_source_icon_cells": len(RESERVED_SOURCE_ICON_CELLS),
-        "reserved_source_icon_logical_cells": reserved_logical_cells,
+        "reserved_source_logical_cells": reserved_logical_cells,
         "glyph_headroom": font_summary["logical_glyph_capacity"] - assigned_glyphs if assigned_glyphs else None,
         "usable_chs_glyph_headroom": (
             font_summary["logical_glyph_capacity"] - assigned_glyphs - reserved_logical_cells

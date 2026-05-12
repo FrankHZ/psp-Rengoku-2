@@ -9,7 +9,7 @@ Prioritize PPSSPP-ready builds that validate a broad slice of the game. The
 current broad build should be treated as the baseline until superseded:
 
 ```text
-local/rebuilt/combined_chs_v33_full_semibold18_extracted/
+local/rebuilt/combined_chs_v34_symbol_softwrap_fix_extracted/
 ```
 
 Glyph capacity is no longer the blocker for the current parsed target set after
@@ -23,7 +23,7 @@ When capacity is tight, prefer:
 reuse existing ASCII and preserved button/input symbols
 keep readable equipment names; do not use opaque consonant-code abbreviations
 keep stylized equipment names in English only when the actual name fits
-use shorter Simplified Chinese wording
+use natural Simplified Chinese wording before aggressive compression
 split full-story and full-catalog deliverables when needed
 ```
 
@@ -35,10 +35,27 @@ For equipment names, prefer a hybrid policy:
 
 ```text
 keep actual English proper nouns/model names/stylized names only when they fit
-translate short generic functional names when the glyph cost is reasonable
+translate generic functional names when the glyph cost is reasonable
 prefer readable Chinese names over opaque ASCII abbreviations
-keep descriptions concise and Chinese unless capacity requires an English mode
+keep descriptions semantically complete; only compress after preserving core meaning
 ```
+
+Do not drop meaningful modifiers merely to save characters while the bitplane
+build still has headroom. If the source says `偽竜ファング` / `Faux Dragon Fang`,
+the Chinese name should preserve the faux/fake idea, for example `伪龙牙爪`, not
+just `龙牙爪`. Equipment descriptions should carry the same mechanics and flavor
+as JP/EN alignment: weapon type, notable construction, behavior, and gameplay
+effect. A translation that is much shorter than both JP and EN is a review
+warning unless it is intentionally simplifying repeated boilerplate.
+
+Current terminology correction:
+
+```text
+熟練度 / Skill Points in this game context: 熟练度
+```
+
+Avoid `技能点` for the help/manual status category unless a reviewer explicitly
+decides a specific row is about spendable points rather than proficiency.
 
 Examples that should usually stay English:
 
@@ -107,24 +124,26 @@ observed: 0754=A, 07A5=B, 0755=C, 07A6=D, 0774=E, 07C5=F, 07A4=G, 07F5=H
 ```
 
 The broad CHS composer now has a bitplane assignment model. v20 was PPSSPP
-checked and looked good. The current PPSSPP-ready build is v33, which uses the
+checked and looked good. The current PPSSPP-ready build is v34, which uses the
 multi-page full SemiBold 18px BMFont atlas, restores source `0x000a`
-hard-break layout, reuses original Latin/symbol glyphs, and integrates the
-first JP+EN autonomous translation refinement pass:
+hard-break layout, reserves original Latin/symbol glyph cells, adds soft visual
+wrapping from the JP break budget, and integrates the first JP+EN autonomous
+translation refinement pass:
 
 ```text
-current artifact: local/work/combined_chs_v33_full_semibold18/
+current artifact: local/work/combined_chs_v34_symbol_softwrap_fix/
 logical assigned glyphs:           1084 CJK ideographs
 logical capacity model:            1782
-physical cells used:                561
-low-layer glyphs:                   560
-high-layer glyphs:                  524
-usable logical headroom:            about 684 after reserved icon cells
+physical cells used:                599
+low-layer glyphs:                   531
+high-layer glyphs:                  553
+reserved source logical cells:       91
+usable logical headroom:            about 607 after preserved symbol/key cells
 font:                              local/fonts/full-semibold-18.fnt
 current quantization default:       palette3, threshold 64, gray threshold 176
 2bpp value convention:              0 background, 1 light gray, 2 deep gray, 3 white; source 1..16 is dropped
 hard-break rule:                    source 0x000a count is preserved unless draft has explicit newlines
-symbol rule:                        generated CHS font is CJK-only; Latin/punctuation/symbols reuse source codes
+symbol rule:                        generated CHS font is CJK-only; Latin/punctuation/symbols reuse source codes and reserve their source cells
 ```
 
 Full parsed-target estimate:
@@ -172,7 +191,7 @@ estimate-only rows not built:           0
 Latest full-font coverage check:
 
 ```text
-artifact: local/work/chs_coverage_v33_full_semibold18/
+artifact: local/work/chs_coverage_v34_symbol_softwrap_fix/
 parsed rows:                         1637
 rows in current build:               1637
 rows not in current build:              0
@@ -198,12 +217,15 @@ net changed rows after slot-budget fitting: 519
 Slim human-review packages for the current refinement pass:
 
 ```text
-local/work/translation_review_slim_v1/
-equipment.json:        672 entries
-help_tutorial_ui.json: 147 entries
-story_data002.json:    194 entries
-summary.json:         1013 total entries
+local/work/translation_review_slim_v4/
+total current built rows: 1637
+JP source: reviewed glyph map plus direct ASCII decoding
+DATA002/0065#0085:0 has 7 extended ANK/symbol bytes left for tester context
 ```
+
+The earlier slim v1 package was a refinement-candidate subset, not a complete
+review pack, and v2/v3 had stale or ASCII-misdecoded JP fallbacks. Use v4 for
+human text review until a newer pack is generated.
 
 Tutorial USA alignment:
 
@@ -378,15 +400,16 @@ like `GLDT` or `DNT`.
 
 ## Next Deliverable
 
-Target: keep readable equipment names while deciding how to split or compress
-the 1430-CJK full candidate-bank requirement.
+Target: wait for tester/reviewer feedback on v34 and the v4 review pack before
+starting another broad translation pass. Do not rush a new PPSSPP build unless
+the feedback is a blocking runtime/text correctness bug.
 
 Recommended order:
 
 ```text
-1. PPSSPP-check v23 as the current all-target tutorial-aligned build.
-2. Review estimate rows in controlled batches, starting with DATA002/0065 placeholders.
-3. If USA alignment remains empty, build the JP glyph OCR table and decode those source rows from JP.
-4. Rebuild coverage and actual CJK reports after each promoted batch.
-5. Decide whether DATA003/1089 story text joins the broad build or remains a separate full-story deliverable.
+1. Collect reviewer corrections against translation_review_slim_v4.
+2. Prioritize terminology fixes, especially 熟練度 / Skill Points -> 熟练度.
+3. Rework equipment names/descriptions for semantic completeness, not shortest fit.
+4. Keep v34 as the current PPSSPP probe unless tester feedback requires a targeted fix.
+5. Rebuild coverage and actual CJK reports only after promoted reviewer batches.
 ```

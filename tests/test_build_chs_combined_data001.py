@@ -13,10 +13,13 @@ sys.path.insert(0, str(TOOLS))
 from build_chs_combined_data001 import load_targets, required_assigned_chars
 from build_chs_tutorial import (
     BITPLANE_SLOT_POOLS,
+    add_soft_line_breaks,
     apply_source_hard_breaks,
     assign_chars,
     assign_chars_bitplane,
     encode_translation,
+    preserved_source_logical_slots,
+    reserved_runtime_logical_slots,
 )
 
 
@@ -74,6 +77,18 @@ class BuildChsCombinedData001Tests(unittest.TestCase):
             BITPLANE_SLOT_POOLS,
         )
 
+    def test_preserved_source_symbols_reserve_their_logical_cells(self) -> None:
+        reserved = preserved_source_logical_slots()
+
+        self.assertIn((1, 8, "low"), reserved)  # 0x0108 fullwidth question mark
+        self.assertIn((1, 9, "high"), reserved)  # 0x015a white circle
+
+    def test_runtime_reservations_include_icon_physical_layers(self) -> None:
+        reserved = reserved_runtime_logical_slots()
+
+        self.assertIn((1, 9, "low"), reserved)
+        self.assertIn((1, 9, "high"), reserved)
+
     def test_required_assigned_chars_ignores_ascii_and_newlines(self) -> None:
         rows = [{"chs_translation": "C-K.O.D\n移动，。！？"}]
 
@@ -82,7 +97,7 @@ class BuildChsCombinedData001Tests(unittest.TestCase):
     def test_encode_translation_reuses_original_source_punctuation(self) -> None:
         assignments = assign_chars([{"record": 1, "run": 0, "chs_translation": "移动，。"}])
 
-        self.assertEqual(encode_translation("移动，。", assignments), [0x0465, 0x033F, 0x0102, 0x0103])
+        self.assertEqual(encode_translation("移动，。", assignments), [0x0465, 0x033F, 0x0103, 0x0102])
 
     def test_encode_translation_rejects_unmapped_non_cjk_symbols(self) -> None:
         assignments = assign_chars([{"record": 1, "run": 0, "chs_translation": "移动"}])
@@ -116,6 +131,21 @@ class BuildChsCombinedData001Tests(unittest.TestCase):
         source_codes = ["0x0377", "0x000a", "0x0102"]
 
         self.assertEqual(apply_source_hard_breaks("第一行*第二行", source_codes), "第一行\n第二行")
+
+    def test_source_hard_breaks_normalizes_key_hint_token(self) -> None:
+        source_codes = ["0x003f", "0x0040", "0x025f"]
+
+        self.assertEqual(apply_source_hard_breaks("_`键:前往", source_codes), "?@键:前往")
+
+    def test_soft_line_breaks_use_remaining_source_break_budget(self) -> None:
+        source_codes = ["0x0101"] * 10 + ["0x000a"] + ["0x0101"] * 10 + ["0x000a"] + ["0x0101"] * 10
+        text = "第一段已经手动分段。\n第二段特别长需要继续按原文宽度补入软换行。"
+
+        laid_out = add_soft_line_breaks(text, source_codes)
+
+        self.assertEqual(laid_out.count("\n"), 2)
+        self.assertIn("第二段特别长需要继续", laid_out)
+        self.assertIn("\n按原文宽度补入软换行。", laid_out)
 
 
 if __name__ == "__main__":

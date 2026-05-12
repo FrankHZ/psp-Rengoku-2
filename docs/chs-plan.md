@@ -14,13 +14,13 @@ docs/chs-layout-rules.md
 Current PPSSPP-ready broad build for tester/font review:
 
 ```text
-local/rebuilt/combined_chs_v33_full_semibold18_extracted/
+local/rebuilt/combined_chs_v34_symbol_softwrap_fix_extracted/
 ```
 
 Current work root:
 
 ```text
-local/work/combined_chs_v33_full_semibold18/
+local/work/combined_chs_v34_symbol_softwrap_fix/
 ```
 
 Underlying text baseline remains v23:
@@ -30,9 +30,10 @@ local/work/combined_chs_v23_tutorial_usa_aligned_bitplane/
 local/rebuilt/combined_chs_v23_tutorial_usa_aligned_bitplane_extracted/
 ```
 
-The current v33 test build uses the multi-page full SemiBold 18px BMFont atlas,
-preserves source `0x000a` hard breaks, reuses original Latin/symbol glyphs, and
-integrates the first JP+EN translation refinement pass. It covers:
+The current v34 test build uses the multi-page full SemiBold 18px BMFont atlas,
+preserves source `0x000a` hard breaks, reserves original Latin/symbol glyph
+cells, adds soft visual wrapping from the JP break budget, and integrates the
+first JP+EN translation refinement pass. It covers:
 
 ```text
 DATA001/0003 boot/init UI
@@ -46,9 +47,9 @@ DATA002/0065 name-input confirmation rows 82-84
 
 The build has all 1637 currently parsed target rows and uses 1084 assigned CJK glyphs.
 The confirmed low/high bitplane model provides a logical capacity of about 1782
-14x14 glyph slots across the 11 physical JP font pages. v33 uses 561 physical
-cells: 560 low-layer glyphs and 524 high-layer glyphs. Seven source button-icon
-physical cells remain reserved across both layers, leaving about 684 usable
+14x14 glyph slots across the 11 physical JP font pages. v34 uses 599 physical
+cells: 531 low-layer glyphs and 553 high-layer glyphs. Preserved source
+punctuation/symbol/key cells reserve 91 logical cells, leaving about 607 usable
 logical glyphs of headroom.
 
 Current font/quantizer baseline:
@@ -63,9 +64,9 @@ gray threshold: 176
 Current parsed-row coverage report:
 
 ```text
-local/work/chs_coverage_v33_full_semibold18/
+local/work/chs_coverage_v34_symbol_softwrap_fix/
 parsed rows across current target tables: 1637
-rows in current v33 build:               1637
+rows in current v34 build:               1637
 rows not in current build:                  0
 local draft rows not yet built:             0
 estimate-only rows not yet built:           0
