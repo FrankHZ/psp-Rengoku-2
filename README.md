@@ -16,17 +16,18 @@ generated binary patches. Keep those files under ignored local paths such as
 The current CHS handoff is:
 
 ```text
-local/rebuilt/combined_chs_v34_symbol_softwrap_fix_extracted/
+local/rebuilt/combined_chs_v35_quality_translation_extracted/
 ```
 
 The build covers all 1637 parsed target rows, uses the full SemiBold 18px CJK
 font atlas, preserves original Latin/punctuation/symbol glyphs where source
-codes are known, and adds source-budget soft wrapping for long Chinese prose.
+codes are known, adds source-budget soft wrapping for long Chinese prose, and
+includes the first post-review equipment/terminology quality pass.
 
 Current text review package:
 
 ```text
-local/work/translation_review_slim_v4/
+local/work/translation_review_slim_v5/
 ```
 
 ## Repository Layout

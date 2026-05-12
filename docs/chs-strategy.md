@@ -8,7 +8,7 @@ workflow evolves.
 Treat this as the baseline until tester/reviewer feedback says otherwise:
 
 ```text
-local/rebuilt/combined_chs_v34_symbol_softwrap_fix_extracted/
+local/rebuilt/combined_chs_v35_quality_translation_extracted/
 ```
 
 The current build covers all 1637 parsed target rows. Glyph capacity is not the
@@ -78,15 +78,15 @@ logical layers:           2
 logical capacity:      1782
 ```
 
-Current v34 usage:
+Current v35 usage:
 
 ```text
-assigned CJK glyphs:                   1084
-physical cells used:                    599
-low-layer glyphs:                       531
+assigned CJK glyphs:                   1086
+physical cells used:                    601
+low-layer glyphs:                       533
 high-layer glyphs:                      553
 reserved source logical cells:           91
-usable logical headroom:          about 607
+usable logical headroom:          about 605
 font: local/fonts/full-semibold-18.fnt
 quantization: palette3, threshold 64, gray threshold 176
 2bpp convention: 0 background, 1 light gray, 2 deep gray, 3 white
@@ -135,19 +135,19 @@ current unresolved blank/unknown used cells: 0.
 Current review package:
 
 ```text
-local/work/translation_review_slim_v4/
+local/work/translation_review_slim_v5/
 total built rows: 1637
 fields: id, category, chs, jp, en
+changed from v4: 116 rows
 ```
 
-Known review priorities:
+v35 quality pass:
 
 ```text
-terminology: 熟練度 / Skill Points -> 熟练度
-equipment names: preserve modifiers such as 偽/Faux
-equipment descriptions: avoid overly short summaries
-line breaks: distinguish soft visual wraps from paragraph/list breaks
-symbols: preserve original source glyphs where known
+DATA001/0008 record 64: 熟练度 title correction
+DATA001/0015: 112 equipment name/description revisions
+DATA001/0017: visible Skill Points wording normalized to 熟练度
+review pack v5 regenerated from the v35 build
 ```
 
 Do not rush a new PPSSPP build while reviewer/tester feedback is still pending
@@ -156,7 +156,7 @@ unless the feedback identifies a blocking runtime correctness bug.
 Recommended next loop:
 
 ```text
-1. Collect reviewer corrections against translation_review_slim_v4.
+1. Collect reviewer corrections against translation_review_slim_v5.
 2. Promote corrections into translation_refine_v1 target sheets.
 3. Run coverage and CJK requirement reports.
 4. Build a new PPSSPP artifact only after enough corrections accumulate.

@@ -10,9 +10,9 @@ Current PPSSPP build:
 
 | Path | Purpose |
 | --- | --- |
-| `local/rebuilt/combined_chs_v34_symbol_softwrap_fix_extracted/` | Current PPSSPP-ready broad CHS build. |
-| `local/work/combined_chs_v34_symbol_softwrap_fix/` | Current build metadata, stage config, glyph assignment, and previews. |
-| `local/work/chs_coverage_v34_symbol_softwrap_fix/` | Current parsed-row and glyph-headroom coverage report. |
+| `local/rebuilt/combined_chs_v35_quality_translation_extracted/` | Current PPSSPP-ready broad CHS build. |
+| `local/work/combined_chs_v35_quality_translation/` | Current build metadata, stage config, glyph assignment, and previews. |
+| `local/work/chs_coverage_v35_quality_translation/` | Current parsed-row and glyph-headroom coverage report. |
 
 Current text/review inputs:
 
@@ -26,7 +26,7 @@ Current text/review inputs:
 | `local/work/actual_cjk_requirement_v1/` | Actual translated/candidate-bank CJK requirement report. |
 | `local/work/full_jp_text_decode_v1/` | JP decode output built from the reviewed glyph table. |
 | `local/work/translation_refine_v1/` | Current JP+EN refinement packs and merged target sheets. |
-| `local/work/translation_review_slim_v4/` | Current human review package, one concise JSON per category. |
+| `local/work/translation_review_slim_v5/` | Current human review package, one concise JSON per category. |
 
 Current font artifacts:
 

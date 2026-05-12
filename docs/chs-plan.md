@@ -12,14 +12,14 @@ docs/chs-layout-rules.md
 Current PPSSPP-ready broad build:
 
 ```text
-local/rebuilt/combined_chs_v34_symbol_softwrap_fix_extracted/
+local/rebuilt/combined_chs_v35_quality_translation_extracted/
 ```
 
 Current work root and coverage:
 
 ```text
-local/work/combined_chs_v34_symbol_softwrap_fix/
-local/work/chs_coverage_v34_symbol_softwrap_fix/
+local/work/combined_chs_v35_quality_translation/
+local/work/chs_coverage_v35_quality_translation/
 ```
 
 Included targets:
@@ -38,14 +38,14 @@ Current coverage:
 
 ```text
 parsed rows across current target tables: 1637
-rows in current v34 build:               1637
+rows in current v35 build:               1637
 rows not in current build:                  0
 local draft rows not yet built:             0
 estimate-only rows not yet built:           0
-assigned CJK glyphs:                     1084
-physical cells used:                      599
+assigned CJK glyphs:                     1086
+physical cells used:                      601
 reserved source logical cells:             91
-usable logical headroom:            about 607
+usable logical headroom:            about 605
 ```
 
 Current font/quantizer baseline:
@@ -60,9 +60,10 @@ gray threshold: 176
 Current human review package:
 
 ```text
-local/work/translation_review_slim_v4/
+local/work/translation_review_slim_v5/
 entries: 1637
 fields: id, category, chs, jp, en
+changed from v4: 116 rows
 ```
 
 ## Confirmed Runtime Model
@@ -92,14 +93,14 @@ not extra storage.
 ## Active Focus
 
 Glyph capacity is no longer the active blocker for the current parsed target
-set. The active focus is reviewer-driven text quality:
+set. v35 applies the first post-review quality pass:
 
 ```text
-use 熟练度 for 熟練度 / Skill Points context
-preserve equipment-name modifiers such as 偽 / Faux
-keep equipment descriptions semantically complete
-preserve source hard paragraph breaks and generate soft wraps with tooling
-reuse original Latin, punctuation, symbols, and key-icon glyphs when known
+DATA001/0008 record 64: 熟练 -> 熟练度
+DATA001/0015: 112 equipment name/description rows revised for semantic completeness
+DATA001/0017: Skill Points wording normalized to 熟练度 in visible status/help text
+source hard paragraph breaks and generated soft wraps preserved
+Latin, punctuation, symbols, and key-icon glyphs still reuse original source cells where known
 ```
 
 Do not rush another broad build while reviewer/tester feedback is still pending
