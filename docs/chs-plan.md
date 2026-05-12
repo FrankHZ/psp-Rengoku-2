@@ -12,13 +12,13 @@ docs/chs-layout-rules.md
 Current PPSSPP-ready broad build:
 
 ```text
-local/rebuilt/combined_chs_v36_story_data003_extracted/
+local/rebuilt/combined_chs_v37_jp_story_data003_extracted/
 ```
 
 Current work root and coverage:
 
 ```text
-local/work/combined_chs_v36_story_data003/
+local/work/combined_chs_v37_jp_story_data003/
 local/work/chs_coverage_v35_quality_translation/
 ```
 
@@ -32,19 +32,19 @@ DATA001/0015 equipment/catalog names and descriptions
 DATA001/0016 UI/menu table
 DATA001/0017 help/manual table
 DATA002/0065 name-input confirmation rows and related visible rows
-DATA003/1089 first story-script patch pass
+DATA003/1089 JP-first story-script pass
 ```
 
 Current coverage:
 
 ```text
 parsed rows across v35 target tables:    1637
-DATA003/1089 story glyph rows patched:    610
-total current text patch rows:           2247
-assigned CJK glyphs:                     1361
-physical cells used:                      721
+DATA003/1089 story glyph rows patched:    855
+total current text patch rows:           2492
+assigned CJK glyphs:                     1498
+physical cells used:                      800
 reserved source logical cells:             91
-logical headroom before source reserves:  421
+logical headroom before source reserves:  284
 ```
 
 Current font/quantizer baseline:
@@ -64,8 +64,8 @@ entries: 1637
 fields: id, category, chs, jp, en
 changed from v4: 116 rows
 
-local/work/translation_review_slim_v6_story/
-entries: 610 DATA003/1089 story-script rows
+local/work/translation_review_slim_v7_story_jp_first/
+entries: 855 DATA003/1089 story-script rows
 fields: id, category, chs, jp, en, fit_note
 ```
 
@@ -96,22 +96,20 @@ not extra storage.
 ## Active Focus
 
 Glyph capacity is not the active blocker for the current parsed target set.
-v36 keeps the v35 quality pass and adds the first DATA003/1089 story-script
-coverage pass:
+v37 keeps the v35 quality pass and adds a full reviewed-JP DATA003/1089
+story-script pass:
 
 ```text
 DATA001/0008 record 64: 熟练 -> 熟练度
 DATA001/0015: 112 equipment name/description rows revised for semantic completeness
 DATA001/0017: Skill Points wording normalized to 熟练度 in visible status/help text
-DATA003/1089: 610 story glyph rows patched; reported illustrated page translated directly from JP
+DATA003/1089: 855 story glyph rows patched from reviewed JP decode
 source hard paragraph breaks and generated soft wraps preserved
 Latin, punctuation, symbols, and key-icon glyphs still reuse original source cells where known
 ```
 
-DATA003/1089 still needs reviewer/tester pass. Some USA-aligned story chunks do
-not map one-to-one to JP glyph rows, so v36 uses source-budget compression and a
-small direct JP override for the reported page rather than treating the story
-pass as final prose.
+DATA003/1089 still needs reviewer/tester pass for prose quality and runtime
+line flow, but v37 no longer depends on the old USA-row split as primary source.
 
 ## Current Local Artifacts
 

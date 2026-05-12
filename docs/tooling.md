@@ -32,7 +32,7 @@ Current broad-build command shape:
   --target DATA001/0016 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0016_full_current_target_sheet.json `
   --target DATA001/0017 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0017_full_current_target_sheet.json `
   --target DATA002/0065 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA002_0065_full_current_target_sheet.json `
-  --target DATA003/1089 local/work/translation_refine_v1/merged_target_sheets_v36_story/DATA003_1089_story_fit_target_sheet.json `
+  --target DATA003/1089 local/work/translation_refine_v1/merged_target_sheets_v37_jp_story/DATA003_1089_jp_first_target_sheet.json `
   --work-root local/work/<name> `
   --output-root local/rebuilt/<name>_extracted `
   --font local/fonts/full-semibold-18.fnt `

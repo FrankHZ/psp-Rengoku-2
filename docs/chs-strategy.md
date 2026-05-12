@@ -8,12 +8,12 @@ workflow evolves.
 Treat this as the baseline until tester/reviewer feedback says otherwise:
 
 ```text
-local/rebuilt/combined_chs_v36_story_data003_extracted/
+local/rebuilt/combined_chs_v37_jp_story_data003_extracted/
 ```
 
-The current build keeps all 1637 v35 parsed target rows and adds 610
-DATA003/1089 story-script glyph rows. Glyph capacity is not the active blocker
-after the confirmed low/high bitplane packing model.
+The current build keeps all 1637 v35 parsed target rows and adds all 855
+reviewed DATA003/1089 story-script glyph rows. Glyph capacity is not the active
+blocker after the confirmed low/high bitplane packing model.
 
 Current build policy:
 
@@ -23,7 +23,7 @@ reuse source Latin, digits, punctuation, symbols, and key icons when known
 reserve source cells for every reused symbol code
 preserve explicit paragraph/list hard breaks
 let tooling add soft visual wraps for long Chinese lines
-use DATA003/1089 as a probeable story pass, not final story prose
+use reviewed JP as primary source for DATA003/1089 story text
 ```
 
 Do not assume alternate runtime bases add storage. Bases like child 9 /
@@ -78,15 +78,15 @@ logical layers:           2
 logical capacity:      1782
 ```
 
-Current v36 usage:
+Current v37 usage:
 
 ```text
-assigned CJK glyphs:                   1361
-physical cells used:                    721
-low-layer glyphs:                       653
-high-layer glyphs:                      708
+assigned CJK glyphs:                   1498
+physical cells used:                    800
+low-layer glyphs:                       734
+high-layer glyphs:                      764
 reserved source logical cells:           91
-logical headroom before source reserves: 421
+logical headroom before source reserves: 284
 font: local/fonts/full-semibold-18.fnt
 quantization: palette3, threshold 64, gray threshold 176
 2bpp convention: 0 background, 1 light gray, 2 deep gray, 3 white
@@ -106,7 +106,7 @@ unique non-ASCII required:            1452
 ```
 
 The full candidate-bank number remains useful for planning. The current broad
-build needs 1361 assigned CJK glyphs after the first DATA003 story pass.
+build needs 1498 assigned CJK glyphs after the JP-first DATA003 story pass.
 
 ## JP Glyph Table Backup
 
@@ -140,8 +140,8 @@ total built rows: 1637
 fields: id, category, chs, jp, en
 changed from v4: 116 rows
 
-local/work/translation_review_slim_v6_story/
-DATA003/1089 story rows: 610
+local/work/translation_review_slim_v7_story_jp_first/
+DATA003/1089 story rows: 855
 fields: id, category, chs, jp, en, fit_note
 ```
 
@@ -154,19 +154,19 @@ DATA001/0017: visible Skill Points wording normalized to 熟练度
 review pack v5 regenerated from the v35 build
 ```
 
-v36 story pass:
+v37 story pass:
 
 ```text
-DATA003/1089: first story-script patch pass after reviewer reported missing story text
-610 glyph rows patched
-reported illustrated story page translated directly from reviewed JP decode
-USA-aligned rows that exceed JP slot budgets are compressed or marked in fit_note
+DATA003/1089: JP-first story-script pass
+855 reviewed JP glyph rows patched
+old USA alignment retained only as reviewer reference context
+rows are fitted to JP source slot budgets
 ```
 
 Recommended next loop:
 
 ```text
-1. Collect reviewer corrections against translation_review_slim_v5 and translation_review_slim_v6_story.
+1. Collect reviewer corrections against translation_review_slim_v5 and translation_review_slim_v7_story_jp_first.
 2. Promote corrections into translation_refine_v1 target sheets.
 3. Run coverage and CJK requirement reports.
 4. Build a new PPSSPP artifact only after enough corrections accumulate.
