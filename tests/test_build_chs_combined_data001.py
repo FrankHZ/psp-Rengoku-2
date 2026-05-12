@@ -11,7 +11,13 @@ TOOLS = ROOT / "tools"
 sys.path.insert(0, str(TOOLS))
 
 from build_chs_combined_data001 import load_targets, required_assigned_chars
-from build_chs_tutorial import assign_chars, assign_chars_bitplane, encode_translation
+from build_chs_tutorial import (
+    BITPLANE_SLOT_POOLS,
+    apply_source_hard_breaks,
+    assign_chars,
+    assign_chars_bitplane,
+    encode_translation,
+)
 
 
 class BuildChsCombinedData001Tests(unittest.TestCase):
@@ -61,10 +67,28 @@ class BuildChsCombinedData001Tests(unittest.TestCase):
         self.assertLess(len(set(physical_slots)), len(set(logical_slots)))
         self.assertEqual(len(set(logical_slots)), 90)
 
+    def test_bitplane_pool_includes_confirmed_child11_high_window(self) -> None:
+        self.assertEqual(sum(81 for _ in BITPLANE_SLOT_POOLS), 1782)
+        self.assertIn(
+            {"child": 11, "source": "codeJAP14x14_20_", "target_page": "local/work/tdl_DATA001_0002/0011_codeJAP14x14_20_.bin", "base": 0x07A5, "layer": "high"},
+            BITPLANE_SLOT_POOLS,
+        )
+
     def test_required_assigned_chars_ignores_ascii_and_newlines(self) -> None:
-        rows = [{"chs_translation": "C-K.O.D\n移动"}]
+        rows = [{"chs_translation": "C-K.O.D\n移动，。！？"}]
 
         self.assertEqual(required_assigned_chars(rows), {"移", "动"})
+
+    def test_encode_translation_reuses_original_source_punctuation(self) -> None:
+        assignments = assign_chars([{"record": 1, "run": 0, "chs_translation": "移动，。"}])
+
+        self.assertEqual(encode_translation("移动，。", assignments), [0x0465, 0x033F, 0x0102, 0x0103])
+
+    def test_encode_translation_rejects_unmapped_non_cjk_symbols(self) -> None:
+        assignments = assign_chars([{"record": 1, "run": 0, "chs_translation": "移动"}])
+
+        with self.assertRaises(ValueError):
+            encode_translation("移动♪", assignments)
 
     def test_load_targets_accepts_non_data001_text_sheet(self) -> None:
         with self.make_temp_dir() as temp_dir:
@@ -78,6 +102,20 @@ class BuildChsCombinedData001Tests(unittest.TestCase):
 
             self.assertEqual(targets[0]["table"], ("DATA002", 65))
             self.assertEqual(targets[0]["source_export"], Path("local/work/extract_text_DATA002_0065_seeded.json"))
+
+    def test_source_hard_breaks_are_distributed_when_translation_has_none(self) -> None:
+        text = "电磁盾发出沿地脉冲，命中敌人后可短时间麻痹。"
+        source_codes = ["0x0377", "0x000a", "0x0377", "0x000a", "0x0102"]
+
+        laid_out = apply_source_hard_breaks(text, source_codes)
+
+        self.assertEqual(laid_out.count("\n"), 2)
+        self.assertIn("电磁盾发出沿地脉冲，\n", laid_out)
+
+    def test_source_hard_breaks_accept_star_as_manual_break_marker(self) -> None:
+        source_codes = ["0x0377", "0x000a", "0x0102"]
+
+        self.assertEqual(apply_source_hard_breaks("第一行*第二行", source_codes), "第一行\n第二行")
 
 
 if __name__ == "__main__":

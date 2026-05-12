@@ -8,9 +8,9 @@ import sys
 
 from render_mig_font_cell import (
     has_pillow,
-    indices_to_preview_rgba,
-    mask_to_indices,
+    mask_to_two_bit_indices,
     render_glyph_mask,
+    two_bit_indices_to_preview_rgba,
 )
 
 if has_pillow():
@@ -21,6 +21,7 @@ else:  # pragma: no cover - exercised when dependency is missing.
 
 TITLE_SAMPLE = "移动方式"
 DENSE_SAMPLE = "方向键上下左右按住R可保持朝向平移。"
+PUNCT_SAMPLE = "·“”…、。！（），：；？"
 
 
 @dataclass(frozen=True)
@@ -31,6 +32,14 @@ class FontCandidate:
 
 
 DEFAULT_CANDIDATES = (
+    FontCandidate("BMFont-FullSemiBold18", Path("local/fonts/full-semibold-18.fnt"), 0),
+    FontCandidate("BMFont-CorpusSemiBold18", Path("local/fonts/corpus-semibold-18.fnt"), 0),
+    FontCandidate("BMFont-TestRegular18", Path("local/fonts/test-regular-18.fnt"), 0),
+    FontCandidate("BMFont-TestSemiBold18", Path("local/fonts/test-semibold-18.fnt"), 0),
+    FontCandidate("BMFont-TestSemiBold17", Path("local/fonts/test-semibold-17.fnt"), 0),
+    FontCandidate("BMFont-TestSemiBold", Path("local/fonts/test-semibold.fnt"), 0),
+    FontCandidate("BMFont-TestPlus", Path("local/fonts/test_plus.fnt"), 0),
+    FontCandidate("BMFont-Test", Path("local/fonts/test.fnt"), 0),
     FontCandidate("SimSun", Path("C:/Windows/Fonts/simsun.ttc"), 0),
     FontCandidate("NSimSun", Path("C:/Windows/Fonts/simsun.ttc"), 1),
     FontCandidate("SimSun-ExtB", Path("C:/Windows/Fonts/simsunb.ttf"), 0),
@@ -69,9 +78,13 @@ def render_text_strip(
     for index, char in enumerate(text):
         if char == " ":
             continue
-        mask = render_glyph_mask(char, font_path, font_index, font_size, cell_w, cell_h, 0, 0, stroke_radius)
-        indices = mask_to_indices(mask, 15, threshold, render_mode, gray_threshold)
-        cell = Image.frombytes("RGBA", (cell_w, cell_h), indices_to_preview_rgba(indices))
+        try:
+            mask = render_glyph_mask(char, font_path, font_index, font_size, cell_w, cell_h, 0, 0, stroke_radius)
+        except ValueError:
+            mask = render_glyph_mask(char, Path("C:/Windows/Fonts/simsun.ttc"), 0, font_size, cell_w, cell_h, 0, 0, stroke_radius)
+        two_bit_mode = "binary" if render_mode == "binary" else "palette3"
+        indices = mask_to_two_bit_indices(mask, threshold, two_bit_mode, gray_threshold)
+        cell = Image.frombytes("RGBA", (cell_w, cell_h), two_bit_indices_to_preview_rgba(indices))
         strip.paste(cell, (index * cell_w, 0))
     return strip.resize((strip.width * scale, strip.height * scale), Image.Resampling.NEAREST)
 
@@ -115,9 +128,23 @@ def make_contact_sheet(
                 stroke_radius,
                 scale,
             )
-            font = ImageFont.truetype(str(candidate.path), font_size, index=candidate.index)
-            family, style = font.getname()
-            face_name = f"{family} {style}".strip()
+            punctuation = render_text_strip(
+                PUNCT_SAMPLE,
+                candidate.path,
+                candidate.index,
+                font_size,
+                render_mode,
+                threshold,
+                gray_threshold,
+                stroke_radius,
+                scale,
+            )
+            if candidate.path.suffix.lower() == ".fnt":
+                face_name = candidate.path.name
+            else:
+                font = ImageFont.truetype(str(candidate.path), font_size, index=candidate.index)
+                family, style = font.getname()
+                face_name = f"{family} {style}".strip()
         except Exception as error:  # pragma: no cover - protects batch comparison.
             rows.append(
                 {
@@ -127,6 +154,7 @@ def make_contact_sheet(
                     "face_name": "",
                     "title_preview": "",
                     "dense_preview": "",
+                    "punctuation_preview": "",
                     "notes": f"render failed: {error}",
                 }
             )
@@ -134,8 +162,10 @@ def make_contact_sheet(
 
         title_path = output_dir / f"{safe_name(candidate.label)}_title.png"
         dense_path = output_dir / f"{safe_name(candidate.label)}_dense.png"
+        punctuation_path = output_dir / f"{safe_name(candidate.label)}_punctuation.png"
         title.save(title_path)
         dense.save(dense_path)
+        punctuation.save(punctuation_path)
 
         row = {
             "label": candidate.label,
@@ -144,25 +174,29 @@ def make_contact_sheet(
             "face_name": face_name,
             "title_preview": str(title_path),
             "dense_preview": str(dense_path),
+            "punctuation_preview": str(punctuation_path),
             "notes": "",
         }
         rows.append(row)
-        rendered_rows.append((row, title, dense))
+        rendered_rows.append((row, title, dense, punctuation))
 
     if rendered_rows:
         label_w = 180
         gap = 16
-        row_h = max(title.height + dense.height + 14, 84)
-        width = label_w + gap + max(title.width + gap + dense.width for _, title, dense in rendered_rows)
+        row_h = max(title.height + dense.height + 14, 104)
+        width = label_w + gap + max(
+            title.width + gap + dense.width + gap + punctuation.width for _, title, dense, punctuation in rendered_rows
+        )
         sheet = Image.new("RGBA", (width, row_h * len(rendered_rows)), (24, 24, 24, 255))
         draw = ImageDraw.Draw(sheet)
-        for row_index, (row, title, dense) in enumerate(rendered_rows):
+        for row_index, (row, title, dense, punctuation) in enumerate(rendered_rows):
             y = row_index * row_h
             draw.text((8, y + 8), row["label"], fill=(255, 255, 255, 255), font=label_font)
             draw.text((8, y + 24), row["face_name"], fill=(180, 180, 180, 255), font=label_font)
             x = label_w + gap
             sheet.alpha_composite(title, (x, y + 8))
             sheet.alpha_composite(dense, (x + title.width + gap, y + 8))
+            sheet.alpha_composite(punctuation, (x + title.width + gap + dense.width + gap, y + 8))
         sheet.save(output_dir / "contact_sheet.png")
 
     return rows
@@ -173,7 +207,16 @@ def write_report(output_dir: Path, rows: list[dict[str, str]], settings: dict[st
     with csv_path.open("w", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(
             file,
-            fieldnames=["label", "font", "font_index", "face_name", "title_preview", "dense_preview", "notes"],
+            fieldnames=[
+                "label",
+                "font",
+                "font_index",
+                "face_name",
+                "title_preview",
+                "dense_preview",
+                "punctuation_preview",
+                "notes",
+            ],
         )
         writer.writeheader()
         writer.writerows(rows)
@@ -191,9 +234,9 @@ def write_report(output_dir: Path, rows: list[dict[str, str]], settings: dict[st
     lines.extend(["", "## Recommendation", ""])
     lines.extend(
         [
-            "- Start visual QA with `SimSun` / `C:/Windows/Fonts/simsun.ttc` / `font_index=0` at 13px, `palette3`, threshold 64, gray threshold 176.",
-            "- If the title looks too thin in PPSSPP, try the same SimSun face with `--stroke-radius 1` before switching fonts.",
-            "- Keep `NotoSansSC-VF.ttf` as the clean sans fallback; it is readable, but less PSP-era and less close to the original UI texture.",
+            "- Current build default is `BMFont-FullSemiBold18` / `local/fonts/full-semibold-18.fnt` at 13px, `palette3`, threshold 64, gray threshold 176.",
+            "- `BMFont-CorpusSemiBold18` is the smaller same-style corpus font; use it only if the full atlas shows runtime issues.",
+            "- Generated glyph assignment remains CJK-only. Latin, digits, punctuation, key icons, and reviewed symbols should reuse original JP/ANK glyphs.",
         ]
     )
     lines.extend(["", "## Candidates", ""])

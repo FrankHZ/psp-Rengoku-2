@@ -215,19 +215,24 @@ yet a drop-in build strategy because the CHS renderer must compose low/high
 logical page, and we still need runtime code-window/base routing for the high
 logical pages.
 
-Bitplane marker probe result:
+Bitplane marker probe results:
 
 ```text
 artifact: local/rebuilt/bitplane_probe_v1_extracted/
 P1 ABCDEF confirmed
 P2 GHIJKL confirmed
 P3 MNOP confirmed
+
+artifact: local/rebuilt/child11_high_base_probe_v1_extracted/
+help/manual A > 1 confirmed child 11 low/high pair:
+0754=A, 07A5=B, 0755=C, 07A6=D, 0774=E, 07C5=F, 07A4=G, 07F5=H
 ```
 
-This confirms the sampled paired code windows can display two different marker
-glyphs from the same physical cell. Future visual probes should prefer a help
-manual page with enough room, such as A1, rather than DATA001/0008 tutorial
-rows; the tutorial page order is reversed in-game and slower to check.
+This confirms all 11 JP physical pages can display paired low/high code windows
+from the same physical cells, with child 11 high base at `0x07a5`. Future visual
+probes should prefer a help manual page with enough room, such as A1, rather
+than DATA001/0008 tutorial rows; the tutorial page order is reversed in-game and
+slower to check.
 
 Static export notes:
 

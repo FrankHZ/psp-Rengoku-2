@@ -21,16 +21,22 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Summarize CHS parsed-row coverage and current build gaps.")
     parser.add_argument("--estimate-csv", type=Path, default=DEFAULT_ESTIMATE)
     parser.add_argument("--build-root", type=Path, default=DEFAULT_BUILD_ROOT)
-    parser.add_argument("--stage", type=Path, default=DEFAULT_STAGE)
+    parser.add_argument("--stage", type=Path, help="Stage config to summarize. Defaults to BUILD_ROOT/stage_combined_chs.json.")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
 
     rows = read_csv(args.estimate_csv)
     build_keys = read_build_keys(args.build_root)
-    stage = read_json(args.stage) if args.stage.exists() else {}
+    stage_path = args.stage or (args.build_root / "stage_combined_chs.json")
+    stage = read_json(stage_path) if stage_path.exists() else {}
     font_patches = stage.get("font_patches", [])
     font_summary = summarize_font_patches(font_patches)
     assigned_glyphs = font_summary["logical_assigned_glyphs"]
+    reserved_logical_cells = (
+        len(RESERVED_SOURCE_ICON_CELLS) * 2
+        if font_summary["assignment_model"] == "bitplane"
+        else len(RESERVED_SOURCE_ICON_CELLS)
+    )
 
     for row in rows:
         key = row_key(row)
@@ -46,7 +52,7 @@ def main() -> int:
         "artifact": str(args.output),
         "estimate_source": str(args.estimate_csv),
         "current_build_root": str(args.build_root),
-        "current_stage": str(args.stage),
+        "current_stage": str(stage_path),
         "assigned_glyphs_current_build": assigned_glyphs,
         "assignment_model": font_summary["assignment_model"],
         "physical_cells_used": font_summary["physical_cells_used"],
@@ -55,9 +61,10 @@ def main() -> int:
         "logical_glyph_capacity": font_summary["logical_glyph_capacity"],
         "physical_glyph_cells": font_summary["physical_glyph_cells"],
         "reserved_source_icon_cells": len(RESERVED_SOURCE_ICON_CELLS),
+        "reserved_source_icon_logical_cells": reserved_logical_cells,
         "glyph_headroom": font_summary["logical_glyph_capacity"] - assigned_glyphs if assigned_glyphs else None,
         "usable_chs_glyph_headroom": (
-            font_summary["logical_glyph_capacity"] - assigned_glyphs - len(RESERVED_SOURCE_ICON_CELLS)
+            font_summary["logical_glyph_capacity"] - assigned_glyphs - reserved_logical_cells
             if assigned_glyphs
             else None
         ),

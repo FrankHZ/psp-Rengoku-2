@@ -5,7 +5,13 @@ import json
 from pathlib import Path
 from typing import Any
 
-from build_chs_tutorial import assign_chars, build_font_patches, encode_translation, write_assignments_csv
+from build_chs_tutorial import (
+    apply_source_hard_breaks,
+    assign_chars,
+    build_font_patches,
+    encode_translation,
+    write_assignments_csv,
+)
 from stage_font_probe import stage_font_probe
 
 
@@ -197,12 +203,14 @@ def build_offset_table_payload(
 
 def apply_translation_codes(entries: list[dict[str, Any]], assignments: dict[str, dict[str, Any]]) -> None:
     for entry in entries:
-        codes = encode_translation(str(entry["translation"]), assignments)
+        laid_out = apply_source_hard_breaks(str(entry["translation"]), entry.get("codes", []))
+        codes = encode_translation(laid_out, assignments)
         max_units = int(entry["length"])
         if len(codes) > max_units:
             raise ValueError(
                 f"record {entry['record']} run {entry['run']} needs {len(codes)} units, max is {max_units}"
             )
+        entry["translation"] = laid_out
         entry["translation_codes"] = [f"0x{code:04x}" for code in codes]
 
 

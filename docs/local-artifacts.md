@@ -24,6 +24,24 @@ Current source/extraction inputs:
 | `local/work/mig_index_layers_codejap00_v1/` | Focused per-index layer render for `codeJAP14x14_00_`. |
 | `local/work/runtime_clut_layer_inference_v1/` | Clean PPSSPP dump to low/high 2-bit layer inference. |
 | `local/work/bitplane_probe_v1/` | Current split low/high bitplane marker probe metadata, stage config, previews, and manifest. |
+| `local/work/child11_high_base_probe_v1/` | Confirmed help/manual probe for child 11 low base `0x0754` and high base `0x07a5`. |
+| `local/work/jp_glyph_table_v1/` | First-pass full JP logical-cell table: seeded labels, template-OCR guesses, and per-child/layer review contact sheets. |
+| `local/work/jp_glyph_clear_pages_v1/` | Low/high glyph page renders for external OCR/API experiments, plus cell crops, manifest, Google OCR CSV, joined OCR map, and summary. |
+| `local/work/jp_glyph_table_v2/` | Reviewer-oriented glyph map, human-edit CSVs, and text grids; contact sheets use 2bpp page renders and preserve ANK `14x9`/`9x14` geometry separately from JP `9x9`/`14x14` pages. |
+| `local/ocr_reviewed/` | Human-reviewed OCR text grids, one plain text file per low/high page; `□` normally marks unknown/blank except the block08 square-button cell. |
+| `local/work/jp_glyph_usage_research_v1/` | Usage report joining `local/ocr_reviewed` to extracted JP `glyph_codes` records; includes watch-block CSVs and blank/unknown-cell follow-up list. |
+| `local/work/jp_glyph_usage_research_v1/marked_contact_sheets/` | Correct reviewer sheets for unknown/blank glyph cells, using the same 2bpp full-page layout as `jp_glyph_table_v2/contact_sheets/` and red-marking cells to identify. |
+| `local/work/jp_glyph_usage_research_v1/contact_sheets/` | Superseded cropped-cell contact sheets; keep only as a generated intermediate, not as the review source. |
+| `local/work/chs_font_corpus_v1/` | Text corpus for external CHS font generation; main file is `translated_chs_unique_font_chars.txt`. |
+| `local/fonts/test.fnt`, `local/fonts/test_0.png` | External 8-bit BMFont atlas generated from the CHS font corpus. |
+| `local/fonts/test-semibold.fnt`, `local/fonts/test-semibold_0.png` | SemiBold 16px BMFont atlas for font-weight comparison. |
+| `local/fonts/test-semibold-17.fnt`, `local/fonts/test-semibold-17_0.png` | SemiBold 17px BMFont atlas for larger/heavier font comparison. |
+| `local/fonts/test-semibold-18.fnt`, `local/fonts/test-semibold-18_0.png` | SemiBold 18px BMFont atlas for larger/heavier font comparison. |
+| `local/fonts/test-semibold-19.fnt`, `local/fonts/test-semibold-19_0.png` | SemiBold 19px BMFont atlas for larger/heavier font comparison. |
+| `local/fonts/test-regular-18.fnt`, `local/fonts/test-regular-18_0.png` | Regular 18px BMFont atlas for larger font comparison. |
+| `local/fonts/test_plus.fnt`, `local/fonts/test_plus_0.png` | Local completion of `test.fnt` with the 8 chars needed by current v23 build but absent from `test.fnt`: `亢括擒稍符舱译阈`. |
+| `local/fonts/corpus-semibold-18.fnt`, `local/fonts/corpus-semibold-18_0.png` | Current corpus SemiBold 18px BMFont generated from the CHS corpus only; fallback if the larger full atlas has runtime issues. |
+| `local/fonts/full-semibold-18.fnt`, `local/fonts/full-semibold-18_*.png` | Current default SemiBold 18px BMFont with about 20k CJK glyphs across 9 atlas pages; v33 uses this through the multi-page BMFont renderer. |
 
 Current inventories and translator sheets:
 
@@ -53,12 +71,43 @@ Current PPSSPP artifacts and their work roots:
 | `local/work/tutorial_placeholder_investigation_v1/` | First DATA001/0008 tutorial decoding anchor using records 70-71 / Movement page. |
 | `local/work/tutorial_usa_alignment_promotions_v1/` | DATA001/0008 same-record USA alignment promotion sheet and fit report; replaces all 55 previous tutorial placeholders. |
 | `local/work/v23_translation_review_pack/` | Per-bin JSON review pack for testers: current v23 CHS rows plus local USA alignment text and match metadata. |
-| `local/work/combined_chs_v23_tutorial_usa_aligned_bitplane/` | Current broad build metadata with all 1637 current parsed target rows and DATA001/0008 tutorial placeholders promoted; 1033 logical glyphs occupy 554 physical cells. |
-| `local/rebuilt/combined_chs_v23_tutorial_usa_aligned_bitplane_extracted/` | Current broad PPSSPP-ready build. |
-| `local/work/chs_coverage_v23_tutorial_usa_aligned_bitplane/` | Current v23 coverage report; zero rows not in build for the current parsed target set. |
+| `local/work/combined_chs_v23_tutorial_usa_aligned_bitplane/` | Current text baseline metadata with all 1637 parsed target rows and DATA001/0008 tutorial placeholders promoted; 1033 logical glyphs occupy 554 physical cells. |
+| `local/rebuilt/combined_chs_v23_tutorial_usa_aligned_bitplane_extracted/` | PPSSPP-ready v23 text-baseline build, superseded for font testing by v28. |
+| `local/work/chs_coverage_v23_tutorial_usa_aligned_bitplane/` | v23 coverage report; zero rows not in build for the current parsed target set. |
+| `local/work/combined_chs_v24_bmfont_test/` | v24 test build metadata using the BMFont atlas (`test_plus.fnt`) for CHS glyph rendering. |
+| `local/rebuilt/combined_chs_v24_bmfont_test_extracted/` | PPSSPP-ready v24 BMFont test build. |
+| `local/work/chs_coverage_v24_bmfont_test/` | Coverage report for the v24 BMFont test build; zero current parsed rows missing. |
+| `local/work/combined_chs_v25_semibold18_quantizer_test/` | v25 test build metadata using `test-semibold-18.fnt` and the earlier palette3 2bpp quantizer before cutoff tuning. |
+| `local/rebuilt/combined_chs_v25_semibold18_quantizer_test_extracted/` | PPSSPP-ready v25 semibold-18 quantizer test build. |
+| `local/work/chs_coverage_v25_semibold18_quantizer_test/` | Coverage report for the v25 semibold-18 quantizer test build; zero current parsed rows missing. |
+| `local/work/combined_chs_v26_regular18_cutoff_test/` | v26 regular-18 test build metadata using `test-regular-18.fnt` and the 2bpp `1..32 -> 0` cutoff. |
+| `local/rebuilt/combined_chs_v26_regular18_cutoff_test_extracted/` | PPSSPP-ready v26 regular-18 cutoff test build. |
+| `local/work/chs_coverage_v26_regular18_cutoff_test/` | Coverage report for the v26 regular-18 cutoff test build; zero current parsed rows missing. |
+| `local/work/combined_chs_v26_semibold18_cutoff_test/` | v26 semibold-18 test build metadata using `test-semibold-18.fnt` and the 2bpp `1..32 -> 0` cutoff. |
+| `local/rebuilt/combined_chs_v26_semibold18_cutoff_test_extracted/` | PPSSPP-ready v26 semibold-18 cutoff test build. |
+| `local/work/chs_coverage_v26_semibold18_cutoff_test/` | Coverage report for the v26 semibold-18 cutoff test build; zero current parsed rows missing. |
+| `local/work/combined_chs_v27_semibold19_cutoff_test/` | v27 semibold-19 test build metadata using `test-semibold-19.fnt` and the 2bpp `1..32 -> 0` cutoff. |
+| `local/rebuilt/combined_chs_v27_semibold19_cutoff_test_extracted/` | PPSSPP-ready v27 semibold-19 cutoff test build. |
+| `local/work/chs_coverage_v27_semibold19_cutoff_test/` | Coverage report for the v27 semibold-19 cutoff test build; zero current parsed rows missing. |
+| `local/work/combined_chs_v28_semibold18_cutoff16_test/` | Current font baseline build metadata using `test-semibold-18.fnt` and the 2bpp `1..16 -> 0` cutoff. |
+| `local/rebuilt/combined_chs_v28_semibold18_cutoff16_test_extracted/` | Current PPSSPP-ready semibold-18 cutoff16 test build. |
+| `local/work/chs_coverage_v28_semibold18_cutoff16_test/` | Coverage report for the v28 semibold-18 cutoff16 build; zero current parsed rows missing. |
+| `local/work/combined_chs_v29_source_hardbreaks_semibold18/` | Current broad build metadata using semibold-18 and source `0x000a` hard-break preservation. |
+| `local/rebuilt/combined_chs_v29_source_hardbreaks_semibold18_extracted/` | Current PPSSPP-ready broad build for layout regression testing. |
+| `local/work/chs_coverage_v29_source_hardbreaks_semibold18/` | Coverage report for v29; zero current parsed rows missing. |
+| `local/work/translation_refine_v1/` | Autonomous JP+EN translation refinement packs and merged budget-fitted target sheets. |
+| `local/work/translation_review_slim_v1/` | Slim JSON review packages for human reviewers: `id`, `category`, `chs`, `jp`, `en`, plus occasional short review notes. |
+| `local/work/combined_chs_v32_refined_cjk_only_symbols/` | Previous broad build metadata with v32 refinements and CJK-only generated glyph assignment. |
+| `local/rebuilt/combined_chs_v32_refined_cjk_only_symbols_extracted/` | Previous PPSSPP-ready broad build for translation/font testing, superseded for font testing by v33. |
+| `local/work/chs_coverage_v32_refined_cjk_only_symbols/` | Coverage report for v32; zero current parsed rows missing. |
+| `local/work/combined_chs_v33_full_semibold18/` | Current broad build metadata with v32 text refinements, CJK-only generated glyph assignment, and `full-semibold-18.fnt`. |
+| `local/rebuilt/combined_chs_v33_full_semibold18_extracted/` | Current PPSSPP-ready broad build for tester/font review. |
+| `local/work/chs_coverage_v33_full_semibold18/` | Coverage report for v33; zero current parsed rows missing. |
+| `local/work/chs_font_corpus_v3_refined_cjk_only/` | Current CJK-only font corpus for external font generation from v32 plus full candidate-bank reference. |
 | `local/work/page_base_probe_help0017_gap66_v2/` | Clean page-base boundary probe for child 9 / `0x0661` and child 10 / `0x06b2`. |
 | `local/rebuilt/page_base_probe_help0017_gap66_v2_extracted/` | PPSSPP-ready copy of the current page-base boundary probe. |
 | `local/rebuilt/bitplane_probe_v1_extracted/` | PPSSPP-ready split low/high bitplane marker probe. |
+| `local/rebuilt/child11_high_base_probe_v1_extracted/` | PPSSPP-ready child 11 high-base probe, now confirmed in help/manual `A > 1`. |
 | `local/rebuilt/tutorial_chs_full_v1_extracted/` | Full tutorial CHS build, retained as a small known-good artifact. |
 
 Tracked generated references:

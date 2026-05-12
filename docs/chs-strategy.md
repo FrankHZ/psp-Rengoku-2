@@ -9,12 +9,13 @@ Prioritize PPSSPP-ready builds that validate a broad slice of the game. The
 current broad build should be treated as the baseline until superseded:
 
 ```text
-local/rebuilt/combined_chs_v23_tutorial_usa_aligned_bitplane_extracted/
+local/rebuilt/combined_chs_v33_full_semibold18_extracted/
 ```
 
-The main blocker is glyph capacity. Do not assume alternate runtime bases add
-storage; bases like child 9 / `0x0610` and child 9 / `0x0661` are alternate code
-windows over the same physical 81 cells.
+Glyph capacity is no longer the blocker for the current parsed target set after
+bitplane packing. Do not assume alternate runtime bases add storage; bases like
+child 9 / `0x0610` and child 9 / `0x0661` are alternate code windows over the
+same physical 81 cells.
 
 When capacity is tight, prefer:
 
@@ -76,7 +77,7 @@ Packed font-layer finding:
 ```text
 clean runtime observations: 18 distinct rendered pages
 bitplane mapping: CLUT 676a3b4e = low two bits, CLUT 28998f6f = high two bits
-logical capacity hypothesis: 11 JP pages * 81 cells * 2 layers = 1782 cells
+logical capacity: 11 JP pages * 81 cells * 2 layers = 1782 cells
 ```
 
 This likely changes the glyph-capacity strategy. The old 891-cell model is the
@@ -96,18 +97,34 @@ P2 GHIJKL confirmed
 P3 MNOP confirmed
 ```
 
-The broad CHS composer now has a bitplane assignment model. v20 was PPSSPP
-checked and looked good. Current v23 result after packing every current target
-row and promoting DATA001/0008 tutorial placeholders from USA alignment:
+The focused help/manual probe confirmed the remaining child 11 high window:
 
 ```text
-artifact: local/work/combined_chs_v23_tutorial_usa_aligned_bitplane/
-logical assigned glyphs:           1033
-physical cells used:                554
-low-layer glyphs:                   553
-high-layer glyphs:                  480
+local/rebuilt/child11_high_base_probe_v1_extracted/
+low base:  0x0754
+high base: 0x07a5 (= 0x0754 + 0x51)
+observed: 0754=A, 07A5=B, 0755=C, 07A6=D, 0774=E, 07C5=F, 07A4=G, 07F5=H
+```
+
+The broad CHS composer now has a bitplane assignment model. v20 was PPSSPP
+checked and looked good. The current PPSSPP-ready build is v33, which uses the
+multi-page full SemiBold 18px BMFont atlas, restores source `0x000a`
+hard-break layout, reuses original Latin/symbol glyphs, and integrates the
+first JP+EN autonomous translation refinement pass:
+
+```text
+current artifact: local/work/combined_chs_v33_full_semibold18/
+logical assigned glyphs:           1084 CJK ideographs
 logical capacity model:            1782
-usable logical headroom:            about 742 after reserved icon cells
+physical cells used:                561
+low-layer glyphs:                   560
+high-layer glyphs:                  524
+usable logical headroom:            about 684 after reserved icon cells
+font:                              local/fonts/full-semibold-18.fnt
+current quantization default:       palette3, threshold 64, gray threshold 176
+2bpp value convention:              0 background, 1 light gray, 2 deep gray, 3 white; source 1..16 is dropped
+hard-break rule:                    source 0x000a count is preserved unless draft has explicit newlines
+symbol rule:                        generated CHS font is CJK-only; Latin/punctuation/symbols reuse source codes
 ```
 
 Full parsed-target estimate:
@@ -141,15 +158,26 @@ when planning glyph-reduction strategy. `DATA003/1089` remains a script/story
 bank, not part of v19, but it now has readable USA extraction and a local CHS
 translation estimate for visible non-command rows.
 
-Current v23 coverage report:
+Current parsed-row coverage report:
 
 ```text
-artifact: local/work/chs_coverage_v23_tutorial_usa_aligned_bitplane/
+artifact: local/work/chs_coverage_v32_refined_cjk_only_symbols/
 parsed rows:                         1637
 rows in current build:               1637
 rows not in current build:              0
 local draft rows not built:             0
 estimate-only rows not built:           0
+```
+
+Latest full-font coverage check:
+
+```text
+artifact: local/work/chs_coverage_v33_full_semibold18/
+parsed rows:                         1637
+rows in current build:               1637
+rows not in current build:              0
+full BMFont glyph entries:          20971 across 9 pages
+required current-build CJK missing:     0
 ```
 
 Quality caveat: v23 still includes rough rows outside the tutorial table. The
@@ -158,6 +186,23 @@ automatically fitted to original slot budgets, recorded at:
 
 ```text
 local/work/full_current_target_sheets_v2/fit_adjustments.csv
+```
+
+The first autonomous JP+EN refinement pass is merged into v33 through:
+
+```text
+local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/
+net changed rows after slot-budget fitting: 519
+```
+
+Slim human-review packages for the current refinement pass:
+
+```text
+local/work/translation_review_slim_v1/
+equipment.json:        672 entries
+help_tutorial_ui.json: 147 entries
+story_data002.json:    194 entries
+summary.json:         1013 total entries
 ```
 
 Tutorial USA alignment:
@@ -207,6 +252,111 @@ This is slower than alignment, but it is now practical because the physical page
 set, low/high layers, and sampled base windows are confirmed. Treat OCR output
 as evidence requiring review, not as an automatically trusted translation
 source.
+
+First-pass artifact:
+
+```text
+local/work/jp_glyph_table_v1/
+logical cells exported: 1782
+seeded labels: 246
+inferred punctuation/Latin sequence labels: 144
+template-OCR guesses: review only, not confirmed
+contact sheets: local/work/jp_glyph_table_v1/contact_sheets/
+```
+
+The local template OCR uses Windows bitmap/font rendering as a rough recognizer.
+It is useful for triage and contact-sheet review, but several seeded
+punctuation/kana cells score poorly or receive wrong guesses, so only
+`status=seeded` rows should be treated as confirmed. `status=inferred_sequence`
+rows are low-risk punctuation/Latin sequence labels, but remain distinct from
+PPSSPP-confirmed seeds until visual review promotes them.
+
+External OCR pass:
+
+```text
+local/work/jp_glyph_clear_pages_v1/ocr.csv
+local/work/jp_glyph_clear_pages_v1/ocr_joined_map.csv
+local/work/jp_glyph_clear_pages_v1/ocr_reviewed_map.csv
+local/work/jp_glyph_clear_pages_v1/ocr_summary.json
+```
+
+The Google OCR block output is useful, especially for full 81-cell kanji
+blocks, but it is not uniformly cell-aligned: some symbol/kana blocks omit or
+insert glyphs, causing downstream shifts. Use `ocr_joined_map.csv` together
+with `seed_match` and the block length fields before promoting OCR results into
+the trusted glyph map.
+
+`ocr_reviewed_map.csv` is the safer working file. It fills 1423 coded cells and
+keeps review status separate:
+
+```text
+confirmed_seed:              246
+reviewed_ocr_full_block:     671
+reviewed_ocr_partial_block:   33
+ocr_prefix_candidate:        376
+inferred_sequence:            97
+needs_alignment_review:      482
+blank_or_missing_ocr:        129
+```
+
+Use `confirmed_seed`, `reviewed_ocr_full_block`, and
+`reviewed_ocr_partial_block` first. Treat `ocr_prefix_candidate` as useful but
+not final, and do not promote `needs_alignment_review` without per-cell visual
+alignment.
+
+Reviewer package:
+
+```text
+local/work/jp_glyph_table_v2/
+local/work/jp_glyph_table_v2/human_review/
+```
+
+Human reviewers should edit `reviewer_char` and leave `final_char` untouched so
+their corrections can be merged cleanly. The package includes priority CSVs and
+one CSV plus one plain text grid per page/block. The ANK page is explicitly
+marked as `14 x 9` cells of `9x14` pixels; JP pages are `9 x 9` cells of
+`14x14` pixels. Contact sheets use the `original_pages_2bpp/` renders as the
+default visual source.
+
+Human-reviewed OCR text grids are now available at:
+
+```text
+local/ocr_reviewed/
+```
+
+Current usage research output:
+
+```text
+local/work/jp_glyph_usage_research_v1/
+```
+
+High-confidence usage counts in that report come from extracted JP
+`glyph_codes` records only. Raw little-endian u16 sightings are included for
+context but are noisy, especially for low ASCII/ANK codes. Current watch-block
+findings:
+
+```text
+block01_child00_codeANK9x14_00_0_high: no confirmed runtime code window; no extracted usage.
+block02_child00_codeANK9x14_00_0_low: reviewed against Windows-1252-style symbols; remaining blank cells are confirmed intentional blank/control cells, not glyph-ID work.
+block03_child01_codeJAP14x14_00__high: reviewed against the JIS-style symbol table; 0x0166 is confirmed blank/reserved, while 0x015f is a literal white square and 0x0161 is a literal white triangle.
+block08_child03_codeJAP14x14_04__low: row 8 contains reusable original key glyphs at 0x0283-0x028a (L/L/R/R/O/X/triangle/square); keep those cells reserved even though the extracted records do not currently reference them directly.
+block12_child05_codeJAP14x14_08__low: 0x03b6 is U+339C `㎜` and is used in extracted glyph-code records.
+block23_child11_codeJAP14x14_20__high and block24_child11_codeJAP14x14_20__low: blank/unknown cells are currently classified as unused.
+current unresolved blank/unknown used cells: 0.
+```
+
+The follow-up special-symbol contact sheets in
+`local/work/jp_glyph_usage_research_v1/marked_contact_sheets_next_v2/` were
+human-confirmed. The confirmed used symbols are:
+
+```text
+0x011e ／  0x013b ＋  0x013c −  0x013e ×
+0x02ac Ω   0x02ad α   0x02ae β   0x02af γ
+0x027a ™   0x027b “   0x027c ”   0x0282 €
+0x0327 Ⅱ   0x0328 Ⅲ   0x0329 Ⅳ   0x032a Ⅴ
+0x032c Ⅶ   0x032d Ⅷ   0x032e Ⅸ   0x032f Ⅹ
+0x03b6 ㎜
+```
 
 Equipment-name result:
 

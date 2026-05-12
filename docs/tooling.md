@@ -18,7 +18,7 @@ the current CHS build path or mainly for research/probes.
 | `tools/promote_tutorial_usa_alignments.py` | Promotes DATA001/0008 tutorial placeholders from same-record USA DATA001/0017 alignment and writes a fit report. | `local/work/full_current_target_sheets_v2/DATA001_0008_full_current_target_sheet.json`, `local/work/align_JP0008_USA0017_tutorial_full_v1.json` | `local/work/tutorial_usa_alignment_promotions_v*/` |
 | `tools/export_translation_review_pack.py` | Exports one local JSON review file per patched bin/table with current CHS text and USA alignment text. | Current combined build root plus local alignment JSON files | `local/work/v*_translation_review_pack/` |
 | `tools/build_chs_combined_data001.py` | Builds the broad PPSSPP-ready artifact with one shared font assignment pass; despite the legacy filename, it can include DATA002 text patches. | Target translator sheets via repeated `--target` | `local/work/combined_chs_*/`, `local/rebuilt/combined_chs_*_extracted/` |
-| `tools/build_chs_offset_table.py` | Builds one translated offset-table target with font patches. | A translator sheet plus source export/entry | A single-target work root and rebuilt extracted folder |
+| `tools/build_chs_offset_table.py` | Builds one translated offset-table target with font patches and preserves source `0x000a` hard-break layout. | A translator sheet plus source export/entry | A single-target work root and rebuilt extracted folder |
 | `tools/build_chs_tutorial.py` | Older focused DATA001/0008 tutorial build helper. | Tutorial draft and source export | `local/work/tutorial_chs_full_v1/`, `local/rebuilt/tutorial_chs_full_v1_extracted/` |
 | `tools/build_chs_equipment_slice.py` | Older focused DATA001/0015 equipment-slice build helper. | Equipment slice sheet | A single-target equipment slice build |
 | `tools/stage_font_probe.py` | Stages extracted-folder builds by patching font pages and same-size MCD3 text entries. | JSON stage config | PPSSPP-ready extracted folder |
@@ -27,15 +27,21 @@ Current broad build command shape:
 
 ```powershell
 .\.venv\Scripts\python.exe tools/build_chs_combined_data001.py `
-  --target DATA001/0003 <sheet> `
-  --target DATA001/0008 <sheet> `
-  --target DATA001/0012 <sheet> `
-  --target DATA001/0015 local/work/equipment_chs_name_english_v1/DATA001_0015_equipment_name_english.json `
-  --target DATA001/0016 local/work/ui_help_chs_v1/DATA001_0016_ui_sheet.json `
-  --target DATA001/0017 local/work/ui_help_chs_v1/DATA001_0017_help_sheet.json `
-  --target DATA002/0065 local/work/name_input_chs_v1/DATA002_0065_name_input_chs.json `
+  --target DATA001/0003 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0003_full_current_target_sheet.json `
+  --target DATA001/0008 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0008_full_current_target_sheet.json `
+  --target DATA001/0012 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0012_full_current_target_sheet.json `
+  --target DATA001/0015 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0015_full_current_target_sheet.json `
+  --target DATA001/0016 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0016_full_current_target_sheet.json `
+  --target DATA001/0017 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0017_full_current_target_sheet.json `
+  --target DATA002/0065 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA002_0065_full_current_target_sheet.json `
   --work-root local/work/<name> `
   --output-root local/rebuilt/<name>_extracted `
+  --font local/fonts/full-semibold-18.fnt `
+  --font-size 13 `
+  --render-mode palette3 `
+  --threshold 64 `
+  --gray-threshold 176 `
+  --assignment-model bitplane `
   --overwrite
 ```
 
@@ -86,8 +92,18 @@ tools/text_codec.py
 | `tools/inspect_mig.py` | Inspects `MIG.00.1PSP` resources. |
 | `tools/export_mig_png.py` | Exports supported MIG textures to PNG. |
 | `tools/export_glyph_cells.py` | Exports font atlas cells and glyph ID hypotheses for mapping. |
+| `tools/export_jp_glyph_table.py` | Exports the confirmed low/high JP logical glyph-cell map, seeded labels, template-OCR guesses, and contact sheets. |
+| `tools/render_clear_glyph_pages.py` | Renders 24 clean unlabeled high-res low/high font pages, grid copies, and cell crops for external OCR. |
+| `tools/import_ocr_glyph_map.py` | Joins block OCR CSV output back to rendered glyph pages, cells, runtime codes, and seed-match diagnostics. |
+| `tools/make_reviewed_ocr_glyph_map.py` | Builds a safer reviewed OCR glyph map with status tags for confirmed seeds, reliable full-page OCR, prefix candidates, and shifted blocks. |
+| `tools/build_jp_glyph_table_v2.py` | Builds the v2 reviewer package, human-edit CSVs, and text grids, using 2bpp page renders for contact sheets and preserving ANK `9x14` and JP `14x14` geometry. |
+| `tools/research_jp_glyph_usage.py` | Reads human-reviewed OCR text grids and reports which glyph cells are used by extracted JP `glyph_codes` records, with raw-bin u16 sightings kept as lower-confidence context. |
+| `tools/make_glyph_identification_sheet.py` | Builds reviewer contact sheets for unknown/blank glyph cells that appear in the usage research report. |
+| `tools/mark_glyph_identification_cells.py` | Marks glyph cells needing identification on v2-style 2bpp contact sheets, preserving ANK `14x9` and JP `9x9` page geometry. |
+| `tools/build_full_jp_texts.py` | Builds a fresh `code,char` map from `local/ocr_reviewed/`, re-decodes all known JP extracts from the global inventory, and writes full JP text CSV/JSON plus samples. |
+| `tools/export_chs_font_corpus.py` | Exports translated CHS character corpora for external font generation; under the current policy the font-char set is CJK-only because Latin/punctuation/symbols reuse source glyph codes. |
 | `tools/font_cell_inventory.py` | Inventories occupied and empty font cells for CHS glyph planning. |
-| `tools/render_mig_font_cell.py` | Renders a font glyph into a MIG font cell, including low/high two-bit layer-preserving writes. |
+| `tools/render_mig_font_cell.py` | Renders a font glyph into a MIG font cell from TTF/TTC or single/multi-page BMFont `.fnt` atlases, including low/high two-bit layer-preserving writes; 2bpp output uses `0=background`, `1=light gray`, `2=deep gray`, `3=white`, with source values `1..16` dropped to background. |
 | `tools/patch_mig_font_cell.py` | Replaces font atlas cells with test patterns for probes. |
 | `tools/copy_mig_font_cell.py` | Copies one compatible MIG font cell into another page. |
 | `tools/compare_chs_fonts.py` | Compares candidate CHS font rendering. |
@@ -107,6 +123,7 @@ tools/text_codec.py
 | `tools/report_mig_index_layers.py` | Splits MIG font pages into separate palette-index layer renders. |
 | `tools/infer_runtime_clut_layers.py` | Infers which static low/high index groups match clean PPSSPP runtime CLUT dumps. |
 | `tools/build_bitplane_probe.py` | Builds the current PPSSPP marker probe for low/high logical pages sharing one physical font cell. |
+| `tools/build_child11_high_probe.py` | Builds the help/manual probe that confirmed child 11 high base `0x07a5`. |
 | `tools/build_page_base_probe.py` | Builds controlled page-base/code-window probes. |
 | `tools/build_kana_runtime_map.py` | Builds kana runtime map references from seeded observations. |
 | `tools/stage_font_probe.py` | Also used directly for custom font/page/text probe configs. |

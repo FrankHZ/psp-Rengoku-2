@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import re
 
 from analyze_font_grid import parse_cell_size
 from mig import decode_mig_indices, replace_mig_indices, write_png_rgba
@@ -19,6 +20,11 @@ def require_pillow() -> None:
 
 def has_pillow() -> bool:
     return Image is not None and ImageDraw is not None and ImageFilter is not None and ImageFont is not None
+
+
+_BMFONT_CACHE: dict[Path, dict[str, object]] = {}
+DEFAULT_BMFONT_FALLBACK = Path("C:/Windows/Fonts/simsun.ttc")
+TWO_BIT_VISIBLE_THRESHOLD = 16
 
 
 def render_font_cell(
@@ -150,6 +156,19 @@ def render_glyph_mask(
     stroke_radius: int = 0,
 ) -> bytes:
     require_pillow()
+    if font_path.suffix.lower() == ".fnt":
+        canvas = render_bmfont_glyph_mask(
+            char,
+            font_path,
+            cell_w,
+            cell_h,
+            x_offset,
+            y_offset,
+            font_size,
+        )
+        if stroke_radius:
+            canvas = canvas.filter(ImageFilter.MaxFilter(stroke_radius * 2 + 1))
+        return canvas.tobytes()
     font = ImageFont.truetype(str(font_path), font_size, index=font_index)
     canvas = Image.new("L", (cell_w, cell_h), 0)
     draw = ImageDraw.Draw(canvas)
@@ -162,6 +181,120 @@ def render_glyph_mask(
     if stroke_radius:
         canvas = canvas.filter(ImageFilter.MaxFilter(stroke_radius * 2 + 1))
     return canvas.tobytes()
+
+
+def render_bmfont_glyph_mask(
+    char: str,
+    font_path: Path,
+    cell_w: int,
+    cell_h: int,
+    x_offset: int,
+    y_offset: int,
+    fallback_font_size: int,
+) -> Image.Image:
+    font = load_bmfont(font_path)
+    char_map = font["chars"]
+    assert isinstance(char_map, dict)
+    glyph = char_map.get(ord(char))
+    if glyph is None:
+        if DEFAULT_BMFONT_FALLBACK.exists():
+            return Image.frombytes(
+                "L",
+                (cell_w, cell_h),
+                render_glyph_mask(
+                    char,
+                    DEFAULT_BMFONT_FALLBACK,
+                    0,
+                    fallback_font_size,
+                    cell_w,
+                    cell_h,
+                    x_offset,
+                    y_offset,
+                    0,
+                ),
+            )
+        raise ValueError(f"BMFont {font_path} does not contain {char!r} / U+{ord(char):04X}")
+    assert isinstance(glyph, dict)
+    pages = font["pages"]
+    assert isinstance(pages, dict)
+    page_id = int(glyph.get("page", 0))
+    atlas = pages.get(page_id)
+    if atlas is None:
+        raise ValueError(f"BMFont {font_path} references missing page id {page_id}")
+    assert isinstance(atlas, Image.Image)
+    line_height = int(font["line_height"])
+
+    crop = atlas.crop(
+        (
+            int(glyph["x"]),
+            int(glyph["y"]),
+            int(glyph["x"]) + int(glyph["width"]),
+            int(glyph["y"]) + int(glyph["height"]),
+        )
+    )
+    if crop.width > cell_w or crop.height > cell_h:
+        left = max(0, (crop.width - cell_w) // 2)
+        top = max(0, (crop.height - cell_h) // 2)
+        crop = crop.crop((left, top, left + min(cell_w, crop.width), top + min(cell_h, crop.height)))
+    canvas = Image.new("L", (cell_w, cell_h), 0)
+    xadvance = min(cell_w, int(glyph.get("xadvance") or glyph["width"]))
+    x = (cell_w - xadvance) // 2 + int(glyph["xoffset"]) + x_offset
+    y = (cell_h - min(cell_h, line_height)) // 2 + int(glyph["yoffset"]) + y_offset
+    canvas.paste(crop, (x, y))
+    return canvas
+
+
+def load_bmfont(path: Path) -> dict[str, object]:
+    resolved = path.resolve()
+    cached = _BMFONT_CACHE.get(resolved)
+    if cached is not None:
+        return cached
+
+    text = read_text_auto(resolved)
+    chars: dict[int, dict[str, int]] = {}
+    page_files: dict[int, str] = {}
+    line_height = 14
+    for line in text.splitlines():
+        if line.startswith("common "):
+            fields = parse_bmfont_fields(line)
+            line_height = int(fields.get("lineHeight", line_height))
+        elif line.startswith("page "):
+            fields = parse_bmfont_fields(line)
+            page_files[int(fields["id"])] = str(fields["file"]).strip('"')
+        elif line.startswith("char "):
+            fields = parse_bmfont_fields(line)
+            chars[int(fields["id"])] = {
+                "x": int(fields["x"]),
+                "y": int(fields["y"]),
+                "width": int(fields["width"]),
+                "height": int(fields["height"]),
+                "xoffset": int(fields["xoffset"]),
+                "yoffset": int(fields["yoffset"]),
+                "xadvance": int(fields["xadvance"]),
+                "page": int(fields.get("page", 0)),
+            }
+    if not page_files:
+        raise ValueError(f"BMFont {path} does not declare a page file")
+    pages = {
+        page_id: Image.open(resolved.parent / page_file).convert("L")
+        for page_id, page_file in sorted(page_files.items())
+    }
+    payload: dict[str, object] = {"chars": chars, "pages": pages, "line_height": line_height}
+    _BMFONT_CACHE[resolved] = payload
+    return payload
+
+
+def parse_bmfont_fields(line: str) -> dict[str, str]:
+    return dict(re.findall(r'(\w+)=("[^"]*"|\S+)', line))
+
+
+def read_text_auto(path: Path) -> str:
+    raw = path.read_bytes()
+    if raw.startswith((b"\xff\xfe", b"\xfe\xff")):
+        return raw.decode("utf-16")
+    if raw.startswith(b"\xef\xbb\xbf"):
+        return raw.decode("utf-8-sig")
+    return raw.decode("utf-8")
 
 
 def mask_to_indices(
@@ -178,14 +311,17 @@ def mask_to_indices(
 
     indices = bytearray()
     for value in mask:
-        if value <= threshold:
+        if value == 0:
             indices.append(0)
         elif render_mode == "binary":
-            indices.append(ink_index)
+            indices.append(0 if value <= threshold else ink_index)
         elif render_mode == "palette3":
             indices.append(14 if value <= gray_threshold else 15)
         else:
-            indices.append(max(1, round(value * ink_index / 255)))
+            if value <= threshold:
+                indices.append(1)
+            else:
+                indices.append(max(1, round(value * ink_index / 255)))
     return bytes(indices)
 
 
@@ -204,12 +340,17 @@ def mask_to_two_bit_indices(
 
     indices = bytearray()
     for value in mask:
-        if value <= threshold:
+        if value <= TWO_BIT_VISIBLE_THRESHOLD:
             indices.append(0)
         elif render_mode == "binary":
-            indices.append(3)
+            indices.append(0 if value <= threshold else 3)
         else:
-            indices.append(2 if value <= gray_threshold else 3)
+            if value <= threshold:
+                indices.append(1)
+            elif value <= gray_threshold:
+                indices.append(2)
+            else:
+                indices.append(3)
     return bytes(indices)
 
 
@@ -221,6 +362,19 @@ def indices_to_preview_rgba(indices: bytes) -> bytes:
         else:
             value = round(index * 255 / 15)
             rgba.extend((255, 255, 255, value))
+    return bytes(rgba)
+
+
+def two_bit_indices_to_preview_rgba(indices: bytes) -> bytes:
+    palette = {
+        0: (0, 0, 0, 0),
+        1: (176, 176, 176, 255),
+        2: (96, 96, 96, 255),
+        3: (255, 255, 255, 255),
+    }
+    rgba = bytearray()
+    for index in indices:
+        rgba.extend(palette.get(index & 0x03, palette[0]))
     return bytes(rgba)
 
 

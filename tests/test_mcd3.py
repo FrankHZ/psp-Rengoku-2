@@ -344,10 +344,10 @@ class Mcd3Tests(unittest.TestCase):
 
     def test_mask_to_indices_preserves_antialias_levels(self) -> None:
         self.assertEqual(mask_to_indices(bytes([0, 1, 128, 255]), ink_index=15, threshold=0), bytes([0, 1, 8, 15]))
-        self.assertEqual(mask_to_indices(bytes([3, 4]), ink_index=15, threshold=3), bytes([0, 1]))
+        self.assertEqual(mask_to_indices(bytes([3, 4]), ink_index=15, threshold=3), bytes([1, 1]))
 
     def test_mask_to_two_bit_indices_quantizes_for_split_layers(self) -> None:
-        self.assertEqual(mask_to_two_bit_indices(bytes([0, 100, 200]), threshold=64), bytes([0, 2, 3]))
+        self.assertEqual(mask_to_two_bit_indices(bytes([0, 16, 17, 100, 200]), threshold=64), bytes([0, 0, 1, 2, 3]))
         self.assertEqual(
             mask_to_two_bit_indices(bytes([0, 100, 200]), threshold=64, render_mode="binary"),
             bytes([0, 3, 3]),

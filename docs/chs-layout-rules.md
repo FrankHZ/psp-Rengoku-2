@@ -22,6 +22,55 @@ UI sheet.
 Use explicit `0x000a` line breaks only. Do not inject `0x0100` or `0x0105` as
 newline helpers because they render as visible dots in this context.
 
+The same hard-break rule applies to equipment descriptions, tutorials, and other
+offset-table prose rows. In decoded JP review text, `*` is a display marker for
+source `0x000a`; it is not a literal star. The current builder preserves source
+hard-break count automatically when a Chinese draft has no explicit newlines,
+and a reviewer may use `*` in a draft as a manual hard-break marker for rows
+whose source contains `0x000a`.
+
+Treat source breaks by function, not just count:
+
+```text
+soft wrap:       JP inserted 0x000a only to fit a visual line; CHS may rewrap.
+paragraph break: JP inserted 0x000a to separate thoughts/list items; CHS should preserve it.
+```
+
+The `DATA001/0015#0013:1` Stun Anchor row is the current example. Its first JP
+break is a visual wrap, while the second starts a new paragraph. Automatic
+preservation is useful for preventing single overlong lines, but translator
+review should still decide whether each break is a soft wrap or paragraph break.
+
+## Font Assignment
+
+Use the custom CHS font only for CJK ideographs that are not already being
+preserved as original source codes. Latin letters, ASCII digits, ASCII
+punctuation, fullwidth punctuation, math symbols, Roman numerals, Greek letters,
+button icons, and other reviewed original symbols should prefer the original
+JP/ANK glyph codes.
+
+Practical rules:
+
+```text
+ASCII Latin/digits/punctuation: emit low ASCII directly.
+Button/key icons: emit explicit <icon:....> or <code:....> source code tokens.
+Reviewed punctuation/symbols: emit original JP code when a known source glyph exists.
+CJK ideographs: assign/render with the generated CHS font.
+```
+
+This keeps generated font corpora CJK-first, reduces cell churn, and preserves
+the original PSP font style for Latin and symbols.
+
+Current generated-font default:
+
+```text
+local/fonts/full-semibold-18.fnt
+```
+
+The renderer supports multi-page BMFont atlases, so this full 20k-CJK atlas is
+preferred over the smaller corpus-only atlas unless PPSSPP testing shows a
+runtime problem.
+
 Current v23 note: DATA001/0017 is translated in the broad build, and the queued
 manual body pages have explicit layout overrides based on the Japanese line/page
 shape and the aligned English reference. They still need PPSSPP visual checks,
