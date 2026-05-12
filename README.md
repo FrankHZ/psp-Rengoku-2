@@ -13,28 +13,30 @@ generated binary patches. Keep those files under ignored local paths such as
 
 ## Current State
 
-The current CHS handoff lives in:
+The current CHS handoff is:
 
 ```text
-docs/chs-plan.md
-docs/chs-strategy.md
-docs/chs-layout-rules.md
-docs/local-artifacts.md
-docs/tooling.md
+local/rebuilt/combined_chs_v34_symbol_softwrap_fix_extracted/
 ```
 
-The current PPSSPP-ready broad build is documented in `docs/chs-plan.md` and
-`docs/local-artifacts.md`. Local generated builds are intentionally ignored by
-git.
+The build covers all 1637 parsed target rows, uses the full SemiBold 18px CJK
+font atlas, preserves original Latin/punctuation/symbol glyphs where source
+codes are known, and adds source-budget soft wrapping for long Chinese prose.
+
+Current text review package:
+
+```text
+local/work/translation_review_slim_v4/
+```
 
 ## Repository Layout
 
 | Path | Purpose |
 | --- | --- |
-| `docs/` | Current plan, strategy, layout rules, format notes, survey history, runtime observations, tooling index, and local artifact policy. |
-| `tools/` | Small command-line utilities for extraction, decoding, font work, staging builds, and current CHS sheet generation. |
+| `docs/` | Current plan, strategy, layout rules, format notes, runtime findings, tooling index, and local artifact policy. |
+| `tools/` | Command-line utilities for extraction, decoding, font work, staging builds, and current CHS sheet generation. |
 | `tests/` | Synthetic fixtures and unit tests for parsers/build helpers. Tests do not require game data. |
-| `samples/` | Non-copyrighted seed/example files, including runtime glyph-map seeds. |
+| `samples/` | Repo-safe seed/example files, including runtime glyph-map seeds. |
 | `patch/` | Placeholder notes for future patch packaging workflow. |
 | `local/` | Ignored local workspace for extracted game files, generated sheets, PPSSPP-ready folders, emulator helpers, and rebuilt images. |
 
@@ -48,6 +50,7 @@ local/
   extracted/
   work/
   rebuilt/
+  fonts/
 ```
 
 Keep pristine original ROMs outside this repository. Use `local/extracted/` for
@@ -58,18 +61,14 @@ unpacked ISO contents, `local/work/` for generated working files, and
 
 | Document | Purpose |
 | --- | --- |
-| `docs/chs-plan.md` | Short current-stage handoff: current build, current blocker, confirmed runtime bases, and next deliverable. |
-| `docs/chs-strategy.md` | Mutable CHS build strategy, translation policy, and glyph-capacity approach. |
-| `docs/chs-layout-rules.md` | Runtime layout rules for key-hint overlays, manual/help pages, and name-input confirmation text. |
-| `docs/local-artifacts.md` | Keep/remove policy for ignored `local/` outputs, including current PPSSPP-ready builds and useful generated inputs. |
-| `docs/tooling.md` | Workflow-oriented index of scripts in `tools/`, grouped by current build path, extraction/import, archive utilities, font work, probes, and verification. |
-| `docs/runtime-observations.md` | PPSSPP/runtime findings and confirmed behavior that should not clutter the short plan. |
+| `docs/chs-plan.md` | Short current-stage handoff: current build, coverage, blockers, and next work. |
+| `docs/chs-strategy.md` | Mutable CHS build strategy, translation policy, glyph-capacity model, and current review guidance. |
+| `docs/chs-layout-rules.md` | Runtime layout rules for hard/soft breaks, source symbols, key hints, manual pages, and name input. |
+| `docs/local-artifacts.md` | Keep/remove policy for ignored `local/` outputs. |
+| `docs/tooling.md` | Workflow-oriented index of maintained scripts in `tools/`. |
+| `docs/runtime-observations.md` | Confirmed PPSSPP/runtime findings that still affect the current pipeline. |
 | `docs/formats.md` | File/container format notes for MCD3, TDL, MIG, offset-table text, and related structures. |
-| `docs/text-candidate-report.md` | Candidate text-table findings and ownership notes from the broader survey. |
-| `docs/survey-report.md` | Historical survey summary and confirmed table mappings/probe results. |
-| `docs/survey-targets.md` | Survey target list and investigation priorities. |
-| `docs/early-stage-report.md` | Early project observations retained for historical context. |
-| `docs/assumptions.md` | Project assumptions and constraints captured during reverse-engineering. |
+| `docs/assumptions.md` | Project assumptions and safety constraints. |
 
 Current reference seed files:
 
@@ -82,16 +81,18 @@ Current reference seed files:
 
 ## Tooling
 
-Use `docs/tooling.md` as the source of truth for scripts and build commands.
-The current broad-build path is centered on:
+Use `docs/tooling.md` as the source of truth for maintained scripts and build
+commands. The current broad-build path is centered on:
 
 ```text
-tools/make_equipment_name_english_variant.py
-tools/make_chs_name_input_sheet.py
-tools/format_chs_manual_layout.py
-tools/promote_tutorial_usa_alignments.py
 tools/build_chs_combined_data001.py
+tools/build_chs_tutorial.py
+tools/build_chs_offset_table.py
 tools/stage_font_probe.py
+tools/render_mig_font_cell.py
+tools/report_chs_coverage.py
+tools/export_chs_font_corpus.py
+tools/build_full_jp_texts.py
 ```
 
 `tools/build_chs_combined_data001.py` has a legacy name, but the current staging

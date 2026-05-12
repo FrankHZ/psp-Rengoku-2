@@ -82,7 +82,7 @@ then uses remaining source `0x000a` break budget to wrap overlong Chinese lines
 near the original JP visual line width. Translators should still mark true
 paragraph breaks, but they do not need to manually tune every visual wrap.
 
-Current v23 note: DATA001/0017 is translated in the broad build, and the queued
+Current note: DATA001/0017 is translated in the broad build, and the queued
 manual body pages have explicit layout overrides based on the Japanese line/page
 shape and the aligned English reference. They still need PPSSPP visual checks,
 but they are no longer known-provisional paragraph wraps.
@@ -94,7 +94,7 @@ DATA001/0017 record 17 title: 4. 技能点
 DATA001/0017 record 18 body:  skill-point page
 ```
 
-The v15 manual-layout pass also covers these body records:
+The manual-layout pass also covers these body records:
 
 ```text
 DATA001/0017 body records:
@@ -151,4 +151,4 @@ Treat the displayed player name, such as `GRAM`, as runtime input rather than a
 literal string to translate.
 
 `tools/make_chs_name_input_sheet.py` generates the current DATA002/0065 sheet
-for these rows, and the v23 broad build includes them.
+for these rows, and the current broad build includes them.
