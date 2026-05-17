@@ -112,6 +112,16 @@ Latin, punctuation, symbols, and key-icon glyphs still reuse original source cel
 
 DATA001/0015 now uses the reviewer equipment pass as the unshrunk layer. DATA003/1089 uses `docs/chs-glossary.json` for story names. The v12 all-file review pack mirrors the local `translation_reviewed/` input and records runtime-fit overrides for rows that exceeded source slots. Runtime tester checks are still useful for line flow and menu fit.
 
+Existing PPSSPP savedata list metadata can now be patched separately with:
+
+```text
+tools/patch_savedata_sfo.py --rengoku2-chs
+```
+
+This does not solve the runtime writer for newly created saves; new-save
+metadata and the PSP OSK prompt remain outside the current DATA001/002/003 text
+table path.
+
 ## Current Local Artifacts
 
 The local workspace has been cleaned to the current keep list. See:

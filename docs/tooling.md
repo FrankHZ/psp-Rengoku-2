@@ -25,6 +25,7 @@ an old experiment must be reconstructed.
 | `tools/make_ui_data002_review_layers.py` | Builds the DATA001/0016 UI and DATA002/0065 target/review overlays: English standalone attack attributes plus translated DATA002 rough rows. Retained for regenerating those layers if needed. |
 | `tools/promote_reviewed_translation_package.py` | Promotes the local `translation_reviewed/` JSON package into v41 target sheets and a consolidated v12 review package, with runtime-fit overrides for rows too long for source slots. |
 | `tools/compare_chs_fonts.py` | Compares candidate CHS font rendering. |
+| `tools/patch_savedata_sfo.py` | Lists or patches existing PSP savedata `PARAM.SFO` metadata; `--rengoku2-chs` translates the current Rengoku 2 save-list title/detail fields in fixed-size UTF-8 slots. |
 
 Current broad-build command shape:
 
@@ -85,6 +86,7 @@ tools/mig.py
 tools/mscr.py
 tools/offset_table.py
 tools/pack0001.py
+tools/param_sfo.py
 tools/tdl.py
 tools/text_codec.py
 tools/glyph_map.py
@@ -130,3 +132,14 @@ Run the Python tests after tooling changes:
 
 For current local artifacts and PPSSPP-ready outputs, see
 `docs/local-artifacts.md`.
+
+Existing-save metadata patch example:
+
+```powershell
+.\.venv\Scripts\python.exe tools/patch_savedata_sfo.py `
+  G:\Codes-roms\emulators\ppsspp_win\memstick\PSP\SAVEDATA\ULJM05055_DATA0000\PARAM.SFO `
+  --rengoku2-chs --dry-run
+```
+
+Replace `--dry-run` with `--in-place` only after reviewing the reported field
+changes, or pass an explicit output `PARAM.SFO` path to write a patched copy.

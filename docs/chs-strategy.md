@@ -173,6 +173,7 @@ Known remaining external/system text:
 
 ```text
 PSP savedata list metadata is written into savedata PARAM.SFO and is still Japanese for new v41 saves.
+Existing savedata PARAM.SFO files can be patched separately with tools/patch_savedata_sfo.py.
 PSP OSK title/prompt, e.g. 名前を入力してください, appears outside the current DATA001/002/003 text-table patch path.
 ```
 

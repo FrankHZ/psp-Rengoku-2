@@ -395,10 +395,11 @@ Evidence:
 - Game title string found: `煉獄弐 - The Stairway to H.E.A.V.E.N.`
 - PPSSPP save-list text is stored in each savedata directory's `PARAM.SFO`, not in the current DATA001/002/003 text-table patch path.
 - Confirmed savedata fields include `SAVEDATA_TITLE` such as `1 F プレイ時間  0:00`, `SAVEDATA_DETAIL` with the Peter-gate prose plus clear/death/kill counters, and `TITLE`.
+- Savedata string fields in the observed PPSSPP `PARAM.SFO` are fixed-capacity UTF-8 entries; the index length can be updated as long as the new null-terminated string fits the original maximum length.
 
 Mutation rules:
 - Game metadata translation is optional and separate from the text-table build.
-- Existing saves need a savedata `PARAM.SFO` patcher if their save-list title/detail should be translated.
+- Existing saves can be patched with `tools/patch_savedata_sfo.py`; use `--rengoku2-chs --dry-run` first to review the translated `SAVEDATA_TITLE`, `SAVEDATA_DETAIL`, and `TITLE` fields.
 - New v41 saves still write Japanese savedata metadata; finding the runtime writer likely requires executable/runtime investigation.
 
 ## Executables

@@ -96,6 +96,7 @@ tools/report_chs_coverage.py
 tools/export_chs_font_corpus.py
 tools/build_full_jp_texts.py
 tools/promote_reviewed_translation_package.py
+tools/patch_savedata_sfo.py
 tools/build_psp_iso.py
 ```
 
