@@ -12,13 +12,13 @@ docs/chs-layout-rules.md
 Current PPSSPP-ready broad build:
 
 ```text
-local/rebuilt/combined_chs_v40_ui_data002_extracted/
+local/rebuilt/combined_chs_v41_reviewed_all_extracted/
 ```
 
 Current work root and coverage:
 
 ```text
-local/work/combined_chs_v40_ui_data002/
+local/work/combined_chs_v41_reviewed_all/
 local/work/chs_coverage_v35_quality_translation/
 ```
 
@@ -41,8 +41,8 @@ Current coverage:
 parsed rows across v35 target tables:    1637
 DATA003/1089 story glyph rows patched:    855
 total current text patch rows:           2492
-assigned CJK glyphs:                     1515
-physical cells used:                      837
+assigned CJK glyphs:                     1524
+physical cells used:                      846
 reserved source logical cells:            153
 logical headroom before source reserves:  268
 ```
@@ -72,9 +72,12 @@ local/work/translation_review_slim_v9_story_glossary/
 entries: 855 DATA003/1089 story-script rows
 fields: id, category, chs, jp, en, fit_note
 
-local/work/translation_review_slim_v10_ui_data002/
+local/work/translation_review_slim_v12_reviewed_all/
 entries: DATA001/0016 UI plus DATA002/0065 UI/gallery/sound rows
 fields: id, category, chs, jp, en
+combined entries: 2492
+changed/promoted rows: 340
+rough markers: 0
 ```
 
 ## Confirmed Runtime Model
@@ -104,7 +107,7 @@ not extra storage.
 ## Active Focus
 
 Glyph capacity is not the active blocker for the current parsed target set.
-v40 keeps the reviewed DATA001/0015 equipment and DATA003/1089 story-name glossary baseline, then updates UI/DATA002 polish:
+v41 promotes the reviewed all-file JSON package over the v40 baseline:
 
 ```text
 DATA001/0008 record 64: 熟练 -> 熟练度
@@ -112,12 +115,13 @@ DATA001/0015: reviewer-edited current_chs promoted into chs_unshrunk/chs_shrunk 
 DATA001/0017: Skill Points wording normalized to 熟练度 in visible status/help text
 DATA003/1089: 855 story glyph rows patched from reviewed JP decode; 31 rows glossary-normalized
 DATA001/0016 records 5-10: standalone attack attributes restored to GRAPPLE/SLASH/IMPACT/QUANTUM/BULLET/HEAT
-DATA002/0065: standalone GRAPPLE label restored to English; 68 remaining rough UI/gallery/sound labels translated with JP/EN review context
+translation_reviewed package promoted: 340 changed rows across tutorial, DATA001/0012, equipment, UI, help, DATA002, and DATA003
+DATA002/0065: standalone GRAPPLE label restored to English; rough UI/gallery/sound rows remain cleared
 source hard paragraph breaks and generated soft wraps preserved
 Latin, punctuation, symbols, and key-icon glyphs still reuse original source cells where known
 ```
 
-DATA001/0015 now uses the reviewer equipment pass as the unshrunk layer. DATA003/1089 uses `docs/chs-glossary.json` for story names. DATA001/0016 and DATA002/0065 have a v40 UI/DATA002 review pack for the latest label changes; runtime tester checks are still useful for line flow and menu fit.
+DATA001/0015 now uses the reviewer equipment pass as the unshrunk layer. DATA003/1089 uses `docs/chs-glossary.json` for story names. The v12 all-file review pack mirrors the local `translation_reviewed/` input and records runtime-fit overrides for rows that exceeded source slots. Runtime tester checks are still useful for line flow and menu fit.
 
 ## Current Local Artifacts
 

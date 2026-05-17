@@ -12,6 +12,7 @@ an old experiment must be reconstructed.
 | `tools/build_chs_tutorial.py` | Shared CHS assignment/layout helper module plus the older focused tutorial builder. Owns bitplane assignment, source-symbol reservation, and source-budget soft wrapping. |
 | `tools/build_chs_offset_table.py` | Builds one translated offset-table target with font patches and source hard-break preservation. |
 | `tools/stage_font_probe.py` | Stages extracted-folder builds by patching font pages and same-size MCD3 text entries. |
+| `tools/build_psp_iso.py` | Builds a PSP ISO from a PPSSPP-ready extracted folder using UMDGen-like ISO9660 layout: blank volume id, unversioned file names, fixed path-table sectors, 2048-byte directory sectors, and matching v40-style file LBA order. Still needs PPSSPP/hardware validation per build. |
 | `tools/report_chs_coverage.py` | Summarizes parsed-row coverage, not-in-build rows, and current glyph headroom. |
 | `tools/report_actual_cjk_requirement.py` | Counts actual unique CJK/non-ASCII requirements from translated rows plus local override/classification sheets. |
 | `tools/export_chs_font_corpus.py` | Exports CJK-only CHS corpora for external font generation. |
@@ -22,6 +23,7 @@ an old experiment must be reconstructed.
 | `tools/make_equipment_jp_first_layers.py` | Builds layered DATA001/0015 equipment sheets with `chs_unshrunk` for review and `chs_shrunk` for runtime fitting; accepts reviewer `current_chs` overrides from `translation_reviewed/equipment.json`. |
 | `tools/apply_story_glossary.py` | Applies `docs/chs-glossary.json` to DATA003/1089 target and review sheets so story names stay consistent. |
 | `tools/make_ui_data002_review_layers.py` | Builds the v40 DATA001/0016 UI and DATA002/0065 target/review overlays: English standalone attack attributes plus translated DATA002 rough rows. |
+| `tools/promote_reviewed_translation_package.py` | Promotes the local `translation_reviewed/` JSON package into v41 target sheets and a consolidated v12 review package, with runtime-fit overrides for rows too long for source slots. |
 | `tools/compare_chs_fonts.py` | Compares candidate CHS font rendering. |
 
 Current broad-build command shape:
@@ -31,11 +33,11 @@ Current broad-build command shape:
   --target DATA001/0003 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0003_full_current_target_sheet.json `
   --target DATA001/0008 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0008_full_current_target_sheet.json `
   --target DATA001/0012 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0012_full_current_target_sheet.json `
-  --target DATA001/0015 local/work/translation_refine_v1/merged_target_sheets_v39_equipment_reviewed/DATA001_0015_full_current_target_sheet.json `
-  --target DATA001/0016 local/work/translation_refine_v1/merged_target_sheets_v40_ui_data002/DATA001_0016_full_current_target_sheet.json `
+  --target DATA001/0015 local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA001_0015_full_current_target_sheet.json `
+  --target DATA001/0016 local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA001_0016_full_current_target_sheet.json `
   --target DATA001/0017 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0017_full_current_target_sheet.json `
-  --target DATA002/0065 local/work/translation_refine_v1/merged_target_sheets_v40_ui_data002/DATA002_0065_full_current_target_sheet.json `
-  --target DATA003/1089 local/work/translation_refine_v1/merged_target_sheets_v39_story_glossary/DATA003_1089_jp_first_target_sheet.json `
+  --target DATA002/0065 local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA002_0065_full_current_target_sheet.json `
+  --target DATA003/1089 local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA003_1089_jp_first_target_sheet.json `
   --work-root local/work/<name> `
   --output-root local/rebuilt/<name>_extracted `
   --font local/fonts/full-semibold-18.fnt `

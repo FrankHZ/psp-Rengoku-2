@@ -12,8 +12,9 @@ Evidence:
 - Game data is concentrated in `PSP_GAME/USRDIR/DATA000.BIN` through `DATA005.BIN`.
 - `SYSDIR/UPDATE` appears to be PSP firmware update data and is not a translation target.
 
-Unknowns:
-- Exact rebuild requirements and whether file ordering/LBA positions matter for this title.
+Known rebuild shape:
+- UMDGen v40 uses blank volume id, path tables at LBA 18 and 20, root directory at LBA 22, one 2048-byte sector for each directory, unversioned file identifiers, and the observed file LBA order beginning with `UMD_DATA.BIN` at 28 and `PSP_GAME/SYSDIR/EBOOT.BIN` at 29.
+- `tools/build_psp_iso.py` now targets that layout from a PPSSPP-ready extracted folder. Keep PPSSPP/hardware boot as the final validation gate for each generated ISO.
 
 ## DATA000.BIN
 

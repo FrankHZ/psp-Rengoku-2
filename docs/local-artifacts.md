@@ -10,8 +10,9 @@ Current PPSSPP build:
 
 | Path | Purpose |
 | --- | --- |
-| `local/rebuilt/combined_chs_v40_ui_data002_extracted/` | Current PPSSPP-ready broad CHS build with reviewed equipment text, story glossary names, English attack attributes, and DATA002 rough UI labels cleared. |
-| `local/work/combined_chs_v40_ui_data002/` | Current build metadata, stage config, glyph assignment, text payloads, and previews. |
+| `local/rebuilt/combined_chs_v41_reviewed_all_extracted/` | Current PPSSPP-ready broad CHS build with reviewed equipment text, story glossary names, the full reviewed JSON package, English attack attributes, and DATA002 rough UI labels cleared. |
+| `local/rebuilt/combined_chs_v41_reviewed_all.iso` | ISO built from the v41 extracted folder by `tools/build_psp_iso.py`; its high-level ISO9660/UMD layout now matches the UMDGen v40 artifact, pending PPSSPP validation. |
+| `local/work/combined_chs_v41_reviewed_all/` | Current build metadata, stage config, glyph assignment, text payloads, and previews. |
 | `local/work/chs_coverage_v35_quality_translation/` | Current parsed-row and glyph-headroom coverage report. |
 
 Current text/review inputs:
@@ -29,7 +30,7 @@ Current text/review inputs:
 | `local/work/translation_review_slim_v5/` | Current human review package, one concise JSON per category. |
 | `local/work/translation_review_slim_v9_equipment_reviewed/` | Equipment review pack using reviewer-edited `current_chs`, with `chs_unshrunk` and `chs_shrunk` layers. |
 | `local/work/translation_review_slim_v9_story_glossary/` | Concise DATA003/1089 JP-first story review pack after glossary name normalization. |
-| `local/work/translation_review_slim_v10_ui_data002/` | Concise UI/DATA002 review pack with English attack attributes and translated DATA002 rough rows. |
+| `local/work/translation_review_slim_v12_reviewed_all/` | Current all-file review package promoted from `translation_reviewed/`; includes 2492 entries, 340 changed/promoted rows, and runtime-fit notes. |
 | `local/work/story_jp_translation_v1/` | Local worker-generated JP-first DATA003/1089 story translation parts. |
 | `translation_reviewed/` | Local reviewer-edited input packs; promote into generated work sheets, but do not treat as build output. |
 

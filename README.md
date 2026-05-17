@@ -16,10 +16,10 @@ generated binary patches. Keep those files under ignored local paths such as
 The current CHS handoff is:
 
 ```text
-local/rebuilt/combined_chs_v40_ui_data002_extracted/
+local/rebuilt/combined_chs_v41_reviewed_all_extracted/
 ```
 
-The build keeps the JP-first story baseline, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text with separate review/runtime layers, restores standalone attack-attribute labels to English, and clears the known DATA002/0065 rough UI rows. It uses the full SemiBold 18px CJK font
+The build keeps the JP-first story baseline, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text with separate review/runtime layers, promotes the full reviewer JSON package, keeps standalone attack-attribute labels in English, and keeps DATA002/0065 rough UI rows cleared. It uses the full SemiBold 18px CJK font
 atlas, preserves original Latin/punctuation/symbol glyphs where source codes are
 known, and keeps source-budget wrapping for long Chinese prose.
 
@@ -29,7 +29,7 @@ Current text review package:
 local/work/translation_review_slim_v5/
 local/work/translation_review_slim_v9_equipment_reviewed/
 local/work/translation_review_slim_v9_story_glossary/
-local/work/translation_review_slim_v10_ui_data002/
+local/work/translation_review_slim_v12_reviewed_all/
 ```
 
 ## Repository Layout

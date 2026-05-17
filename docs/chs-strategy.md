@@ -8,10 +8,10 @@ workflow evolves.
 Treat this as the baseline until tester/reviewer feedback says otherwise:
 
 ```text
-local/rebuilt/combined_chs_v40_ui_data002_extracted/
+local/rebuilt/combined_chs_v41_reviewed_all_extracted/
 ```
 
-The current build keeps the JP-first DATA003/1089 story pass, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text into layered review/runtime sheets, restores standalone attack attributes to English, and clears the known DATA002 rough UI rows. Glyph capacity
+The current build keeps the JP-first DATA003/1089 story pass, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text into layered review/runtime sheets, promotes the full local reviewer JSON package, keeps standalone attack attributes in English, and keeps known DATA002 rough UI rows cleared. Glyph capacity
 is not the active blocker after the confirmed low/high bitplane packing model.
 
 Current build policy:
@@ -88,12 +88,12 @@ logical layers:           2
 logical capacity:      1782
 ```
 
-Current v40 usage:
+Current v41 usage:
 
 ```text
-assigned CJK glyphs:                   1515
-physical cells used:                    837
-low-layer glyphs:                       737
+assigned CJK glyphs:                   1524
+physical cells used:                    846
+low-layer glyphs:                       746
 high-layer glyphs:                      778
 reserved source logical cells:          153
 logical headroom before source reserves: 268
@@ -116,7 +116,7 @@ unique non-ASCII required:            1452
 ```
 
 The full candidate-bank number remains useful for planning. The current broad
-build needs 1515 assigned CJK glyphs after the reviewed equipment, glossary story, and v40 UI/DATA002 passes.
+build needs 1524 assigned CJK glyphs after promoting the v41 all-file review package.
 
 ## JP Glyph Table Backup
 
@@ -160,9 +160,9 @@ local/work/translation_review_slim_v9_story_glossary/
 DATA003/1089 story rows: 855
 fields: id, category, chs, jp, en, fit_note
 
-local/work/translation_review_slim_v10_ui_data002/
-DATA001/0016 and DATA002/0065 UI rows
-fields: id, category, chs, jp, en
+local/work/translation_review_slim_v12_reviewed_all/
+all current reviewer-facing rows: 2492 entries
+fields: id, category, chs, jp, en plus equipment layer fields where applicable
 ```
 
 v35 quality pass:
@@ -200,10 +200,19 @@ DATA001/0016: standalone attack attributes use English labels matching JP/EN: GR
 DATA002/0065: standalone GRAPPLE label restored to English; 68 remaining rough UI/gallery/sound labels translated; v10 review pack carries JP/EN context
 ```
 
+v41 reviewed-all pass:
+
+```text
+translation_reviewed/: local-only nested git repo for reviewer JSON inputs
+local/work/translation_review_slim_v12_reviewed_all/: all-file reviewed package, 2492 entries
+changed/promoted rows: 340
+runtime-fit overrides: source-slot shortening for a small set of long reviewed rows; reviewer text is retained in the review pack
+```
+
 Recommended next loop:
 
 ```text
-1. Collect reviewer corrections against translation_review_slim_v9_equipment_reviewed and translation_review_slim_v9_story_glossary.
+1. Collect reviewer corrections in the local-only `translation_reviewed/` repo, then promote with `tools/promote_reviewed_translation_package.py`.
 2. Promote corrections into translation_refine_v1 target sheets.
 3. Run coverage and CJK requirement reports.
 4. Build a new PPSSPP artifact only after enough corrections accumulate.
