@@ -261,6 +261,18 @@ CLAUSE_TRANSLATIONS = {
 }
 
 
+
+ASCII_TO_FULLWIDTH = {
+    **{chr(ord("0") + index): chr(ord("０") + index) for index in range(10)},
+    **{chr(ord("A") + index): chr(ord("Ａ") + index) for index in range(26)},
+    **{chr(ord("a") + index): chr(ord("ａ") + index) for index in range(26)},
+}
+FULLWIDTH_SOURCE_CODES = {
+    **{chr(ord("０") + index): 0x0193 + index for index in range(10)},
+    **{chr(ord("Ａ") + index): 0x019D + index for index in range(26)},
+    **{chr(ord("ａ") + index): 0x01B7 + index for index in range(26)},
+}
+
 COMPRESSION_REPLACEMENTS = (
     ("近战用", "近战"),
     ("武装", "武器"),
@@ -291,23 +303,50 @@ def main() -> int:
         type=Path,
         default=Path("local/work/translation_refine_v1/merged_target_sheets_v35_quality/DATA001_0015_full_current_target_sheet.json"),
     )
-    parser.add_argument("--layer-root", type=Path, default=Path("local/work/translation_refine_v1/equipment_jp_layers_v1"))
+    parser.add_argument(
+        "--source-export",
+        type=Path,
+        default=Path("local/work/extract_text_DATA001_0015_seeded.json"),
+        help="Source extraction with original glyph codes; used to preserve fullwidth Latin/digits only where the JP source uses them.",
+    )
+    parser.add_argument("--layer-root", type=Path, default=Path("local/work/translation_refine_v1/equipment_jp_layers_v2_reviewed"))
     parser.add_argument(
         "--target-root",
         type=Path,
-        default=Path("local/work/translation_refine_v1/merged_target_sheets_v38_equipment_jp_first"),
+        default=Path("local/work/translation_refine_v1/merged_target_sheets_v39_equipment_reviewed"),
     )
-    parser.add_argument("--review-root", type=Path, default=Path("local/work/translation_review_slim_v8_equipment_jp_first"))
+    parser.add_argument("--review-root", type=Path, default=Path("local/work/translation_review_slim_v9_equipment_reviewed"))
+    parser.add_argument(
+        "--reviewed",
+        type=Path,
+        default=Path("translation_reviewed/equipment.json"),
+        help="Optional human-reviewed equipment pack. current_chs values override generated JP-first text.",
+    )
     args = parser.parse_args()
 
-    build_layers(args.review, args.source_sheet, args.layer_root, args.target_root, args.review_root)
+    build_layers(args.review, args.source_sheet, args.source_export, args.layer_root, args.target_root, args.review_root, args.reviewed)
     return 0
 
 
-def build_layers(review_path: Path, source_sheet_path: Path, layer_root: Path, target_root: Path, review_root: Path) -> None:
+def build_layers(
+    review_path: Path,
+    source_sheet_path: Path,
+    source_export_path: Path,
+    layer_root: Path,
+    target_root: Path,
+    review_root: Path,
+    reviewed_path: Path | None = None,
+) -> None:
     review_rows = json.loads(review_path.read_text(encoding="utf-8"))
+    if reviewed_path is not None and reviewed_path.exists():
+        review_rows = json.loads(reviewed_path.read_text(encoding="utf-8"))
     source_rows = json.loads(source_sheet_path.read_text(encoding="utf-8"))["entries"]
     source_by_key = {(int(row["record"]), int(row["run"])): row for row in source_rows}
+    source_export_rows = json.loads(source_export_path.read_text(encoding="utf-8"))["entries"]
+    source_codes_by_key = {
+        (int(row["record"]), int(row["run"])): normalize_source_codes(row.get("codes", []))
+        for row in source_export_rows
+    }
 
     layer_entries: list[dict[str, Any]] = []
     target_entries: list[dict[str, Any]] = []
@@ -320,12 +359,18 @@ def build_layers(review_path: Path, source_sheet_path: Path, layer_root: Path, t
         max_units = int(source_row["source_max_units"])
         jp = str(row.get("jp", ""))
         en = str(row.get("en", ""))
-        current = str(row.get("chs", ""))
+        source_codes = source_codes_by_key.get((record, run), [])
+        current = preserve_source_symbols(str(row.get("current_chs", row.get("chs", ""))), jp, source_codes)
+        has_human_review = "current_chs" in row
 
         if run == 0:
             unshrunk = current
-            shrink = current
-            fit_note = "name_current"
+            shrink, name_fit = shrink_name_to_fit(current, max_units)
+            fit_note = ("name_reviewed" if has_human_review else "name_current") if name_fit == "fits" else f"name_{name_fit}"
+        elif has_human_review and current:
+            unshrunk = current
+            shrink, fit_note = shrink_to_fit(unshrunk, max_units, current)
+            fit_note = f"reviewed_{fit_note}"
         else:
             unshrunk, row_unknowns = translate_equipment_description(jp, current)
             unknown_clauses.update(row_unknowns)
@@ -352,8 +397,8 @@ def build_layers(review_path: Path, source_sheet_path: Path, layer_root: Path, t
                 "run": run,
                 "chs_draft": shrink,
                 "source_max_units": max_units,
-                "source": "translation_refine_v1/equipment_jp_layers_v1",
-                "notes": f"v38 equipment JP-first layered; fit={fit_note}",
+                "source": "translation_refine_v1/equipment_jp_layers_v2_reviewed",
+                "notes": f"v39 reviewer equipment layered; fit={fit_note}",
             }
         )
         review_entries.append(
@@ -401,6 +446,39 @@ def parse_review_id(text: str) -> tuple[int, int]:
     return int(record), int(run)
 
 
+def preserve_source_symbols(text: str, jp: str, source_codes: list[int]) -> str:
+    result = text
+    source_code_set = set(source_codes)
+    if "㎜" in jp or 0x03B6 in source_code_set:
+        result = result.replace("mm", "㎜")
+    if "Ⅴ" in jp or 0x032A in source_code_set:
+        result = result.replace("V", "Ⅴ")
+    return apply_source_fullwidth_latin(result, source_code_set)
+
+
+def normalize_source_codes(raw_codes: Any) -> list[int]:
+    if not isinstance(raw_codes, list):
+        return []
+    codes: list[int] = []
+    for code in raw_codes:
+        try:
+            codes.append(int(code, 16 if isinstance(code, str) and code.lower().startswith("0x") else 10))
+        except (TypeError, ValueError):
+            continue
+    return codes
+
+
+def apply_source_fullwidth_latin(text: str, source_code_set: set[int]) -> str:
+    chars: list[str] = []
+    for char in text:
+        fullwidth = ASCII_TO_FULLWIDTH.get(char)
+        if fullwidth is not None and FULLWIDTH_SOURCE_CODES[fullwidth] in source_code_set:
+            chars.append(fullwidth)
+        else:
+            chars.append(char)
+    return "".join(chars)
+
+
 def translate_equipment_description(jp: str, current: str) -> tuple[str, set[str]]:
     normalized = jp.replace("＊", "*").replace("　", "").strip()
     if not normalized:
@@ -437,6 +515,23 @@ def translate_boss_label(text: str) -> str | None:
     return f"{floor}F Boss {boss_name} {part_name}"
 
 
+def shrink_name_to_fit(text: str, max_units: int) -> tuple[str, str]:
+    normalized = normalize_punctuation(text)
+    if code_units(normalized) <= max_units:
+        return normalized, "fits"
+    replacements = (
+        ("重型榴弹炮", "重榴弹炮"),
+        ("反装甲", "反甲"),
+        ("重型", "重"),
+    )
+    candidate = normalized
+    for source, target in replacements:
+        candidate = candidate.replace(source, target)
+    if code_units(candidate) <= max_units:
+        return candidate, "reviewed_compressed"
+    return hard_trim(candidate, max_units), "reviewed_hard_trimmed"
+
+
 def shrink_to_fit(text: str, max_units: int, current: str) -> tuple[str, str]:
     normalized = normalize_punctuation(text)
     if code_units(normalized) <= max_units:
@@ -462,14 +557,7 @@ def shrink_to_fit(text: str, max_units: int, current: str) -> tuple[str, str]:
 
 
 def normalize_punctuation(text: str) -> str:
-    return (
-        text.replace("（", "(")
-        .replace("）", ")")
-        .replace("“", "「")
-        .replace("”", "」")
-        .replace("，", "，")
-        .replace("；", "；")
-    )
+    return text.replace("\r\n", "\n").replace("\r", "\n")
 
 
 def compact_lines(text: str) -> str:

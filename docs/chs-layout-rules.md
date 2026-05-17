@@ -53,6 +53,7 @@ Practical rules:
 
 ```text
 ASCII Latin/digits/punctuation: emit low ASCII directly.
+Fullwidth Latin/digits: emit reviewed original JP codes when the text intentionally uses fullwidth forms (`０-９`, `Ａ-Ｚ`, `ａ-ｚ`).
 Button/key icons: emit explicit <icon:....> or <code:....> source code tokens.
 Reviewed punctuation/symbols: emit original JP code when a known source glyph exists.
 CJK ideographs: assign/render with the generated CHS font.
@@ -135,6 +136,19 @@ A2, C5, F1, F3, G1, G2, G7, G9, H1, H2, H4, H5, H7
 That wrapper preserves ASCII words, restores known manual phrases such as
 `Memory Stick Duo` and `Delete Save`, and breaks on Chinese sentence punctuation
 instead of raw character count.
+
+## UI Labels
+
+Standalone attack-attribute labels in `DATA001/0016` records 5-10 should stay in English to match the JP/EN UI reference and avoid awkward short Chinese stat labels:
+
+```text
+GRAPPLE
+SLASH
+IMPACT
+QUANTUM
+BULLET
+HEAT
+```
 
 ## Name Input
 

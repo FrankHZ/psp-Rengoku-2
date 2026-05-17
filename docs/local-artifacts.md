@@ -10,8 +10,8 @@ Current PPSSPP build:
 
 | Path | Purpose |
 | --- | --- |
-| `local/rebuilt/combined_chs_v38_jp_equipment_story_extracted/` | Current PPSSPP-ready broad CHS build plus JP-first story and layered JP-first equipment descriptions. |
-| `local/work/combined_chs_v38_jp_equipment_story/` | Current build metadata, stage config, glyph assignment, text payloads, and previews. |
+| `local/rebuilt/combined_chs_v40_ui_data002_extracted/` | Current PPSSPP-ready broad CHS build with reviewed equipment text, story glossary names, English attack attributes, and DATA002 rough UI labels cleared. |
+| `local/work/combined_chs_v40_ui_data002/` | Current build metadata, stage config, glyph assignment, text payloads, and previews. |
 | `local/work/chs_coverage_v35_quality_translation/` | Current parsed-row and glyph-headroom coverage report. |
 
 Current text/review inputs:
@@ -27,9 +27,11 @@ Current text/review inputs:
 | `local/work/full_jp_text_decode_v1/` | JP decode output built from the reviewed glyph table. |
 | `local/work/translation_refine_v1/` | Current JP+EN refinement packs and merged target sheets. |
 | `local/work/translation_review_slim_v5/` | Current human review package, one concise JSON per category. |
-| `local/work/translation_review_slim_v8_equipment_jp_first/` | Equipment review pack with `chs_unshrunk` and `chs_shrunk` layers. |
-| `local/work/translation_review_slim_v7_story_jp_first/` | Concise DATA003/1089 JP-first story review pack for the v37 story pass. |
+| `local/work/translation_review_slim_v9_equipment_reviewed/` | Equipment review pack using reviewer-edited `current_chs`, with `chs_unshrunk` and `chs_shrunk` layers. |
+| `local/work/translation_review_slim_v9_story_glossary/` | Concise DATA003/1089 JP-first story review pack after glossary name normalization. |
+| `local/work/translation_review_slim_v10_ui_data002/` | Concise UI/DATA002 review pack with English attack attributes and translated DATA002 rough rows. |
 | `local/work/story_jp_translation_v1/` | Local worker-generated JP-first DATA003/1089 story translation parts. |
+| `translation_reviewed/` | Local reviewer-edited input packs; promote into generated work sheets, but do not treat as build output. |
 
 Current font artifacts:
 

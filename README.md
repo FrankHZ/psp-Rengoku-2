@@ -16,11 +16,10 @@ generated binary patches. Keep those files under ignored local paths such as
 The current CHS handoff is:
 
 ```text
-local/rebuilt/combined_chs_v38_jp_equipment_story_extracted/
+local/rebuilt/combined_chs_v40_ui_data002_extracted/
 ```
 
-The build keeps the v37 JP-first story baseline and adds a layered JP-first
-DATA001/0015 equipment description pass. It uses the full SemiBold 18px CJK font
+The build keeps the JP-first story baseline, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text with separate review/runtime layers, restores standalone attack-attribute labels to English, and clears the known DATA002/0065 rough UI rows. It uses the full SemiBold 18px CJK font
 atlas, preserves original Latin/punctuation/symbol glyphs where source codes are
 known, and keeps source-budget wrapping for long Chinese prose.
 
@@ -28,8 +27,9 @@ Current text review package:
 
 ```text
 local/work/translation_review_slim_v5/
-local/work/translation_review_slim_v8_equipment_jp_first/
-local/work/translation_review_slim_v7_story_jp_first/
+local/work/translation_review_slim_v9_equipment_reviewed/
+local/work/translation_review_slim_v9_story_glossary/
+local/work/translation_review_slim_v10_ui_data002/
 ```
 
 ## Repository Layout
@@ -67,6 +67,7 @@ unpacked ISO contents, `local/work/` for generated working files, and
 | `docs/chs-plan.md` | Short current-stage handoff: current build, coverage, blockers, and next work. |
 | `docs/chs-strategy.md` | Mutable CHS build strategy, translation policy, glyph-capacity model, and current review guidance. |
 | `docs/chs-layout-rules.md` | Runtime layout rules for hard/soft breaks, source symbols, key hints, manual pages, and name input. |
+| `docs/chs-glossary.json` | Machine-readable story terminology/name glossary, including Divine Comedy name forms. |
 | `docs/local-artifacts.md` | Keep/remove policy for ignored `local/` outputs. |
 | `docs/tooling.md` | Workflow-oriented index of maintained scripts in `tools/`. |
 | `docs/runtime-observations.md` | Confirmed PPSSPP/runtime findings that still affect the current pipeline. |
@@ -96,6 +97,7 @@ tools/render_mig_font_cell.py
 tools/report_chs_coverage.py
 tools/export_chs_font_corpus.py
 tools/build_full_jp_texts.py
+tools/make_ui_data002_review_layers.py
 ```
 
 `tools/build_chs_combined_data001.py` has a legacy name, but the current staging

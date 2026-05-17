@@ -12,13 +12,13 @@ docs/chs-layout-rules.md
 Current PPSSPP-ready broad build:
 
 ```text
-local/rebuilt/combined_chs_v38_jp_equipment_story_extracted/
+local/rebuilt/combined_chs_v40_ui_data002_extracted/
 ```
 
 Current work root and coverage:
 
 ```text
-local/work/combined_chs_v38_jp_equipment_story/
+local/work/combined_chs_v40_ui_data002/
 local/work/chs_coverage_v35_quality_translation/
 ```
 
@@ -31,7 +31,7 @@ DATA001/0012 story/local story table slice
 DATA001/0015 layered JP-first equipment/catalog names and descriptions
 DATA001/0016 UI/menu table
 DATA001/0017 help/manual table
-DATA002/0065 name-input confirmation rows and related visible rows
+DATA002/0065 name-input confirmation rows and visible UI/gallery/sound rows
 DATA003/1089 JP-first story-script pass
 ```
 
@@ -41,10 +41,10 @@ Current coverage:
 parsed rows across v35 target tables:    1637
 DATA003/1089 story glyph rows patched:    855
 total current text patch rows:           2492
-assigned CJK glyphs:                     1498
-physical cells used:                      800
-reserved source logical cells:             91
-logical headroom before source reserves:  284
+assigned CJK glyphs:                     1515
+physical cells used:                      837
+reserved source logical cells:            153
+logical headroom before source reserves:  268
 ```
 
 Current font/quantizer baseline:
@@ -64,13 +64,17 @@ entries: 1637
 fields: id, category, chs, jp, en
 changed from v4: 116 rows
 
-local/work/translation_review_slim_v8_equipment_jp_first/
+local/work/translation_review_slim_v9_equipment_reviewed/
 entries: 672 DATA001/0015 equipment rows
 fields: id, category, jp, en, current_chs, chs_unshrunk, chs_shrunk, max_units, fit_note
 
-local/work/translation_review_slim_v7_story_jp_first/
+local/work/translation_review_slim_v9_story_glossary/
 entries: 855 DATA003/1089 story-script rows
 fields: id, category, chs, jp, en, fit_note
+
+local/work/translation_review_slim_v10_ui_data002/
+entries: DATA001/0016 UI plus DATA002/0065 UI/gallery/sound rows
+fields: id, category, chs, jp, en
 ```
 
 ## Confirmed Runtime Model
@@ -100,20 +104,20 @@ not extra storage.
 ## Active Focus
 
 Glyph capacity is not the active blocker for the current parsed target set.
-v38 keeps the v37 story pass and adds a layered JP-first DATA001/0015 equipment
-description pass:
+v40 keeps the reviewed DATA001/0015 equipment and DATA003/1089 story-name glossary baseline, then updates UI/DATA002 polish:
 
 ```text
 DATA001/0008 record 64: 熟练 -> 熟练度
-DATA001/0015: review layer separates full JP-first translation from fitted build string
+DATA001/0015: reviewer-edited current_chs promoted into chs_unshrunk/chs_shrunk layers
 DATA001/0017: Skill Points wording normalized to 熟练度 in visible status/help text
-DATA003/1089: 855 story glyph rows patched from reviewed JP decode
+DATA003/1089: 855 story glyph rows patched from reviewed JP decode; 31 rows glossary-normalized
+DATA001/0016 records 5-10: standalone attack attributes restored to GRAPPLE/SLASH/IMPACT/QUANTUM/BULLET/HEAT
+DATA002/0065: standalone GRAPPLE label restored to English; 68 remaining rough UI/gallery/sound labels translated with JP/EN review context
 source hard paragraph breaks and generated soft wraps preserved
 Latin, punctuation, symbols, and key-icon glyphs still reuse original source cells where known
 ```
 
-DATA001/0015 and DATA003/1089 still need reviewer/tester pass for prose quality
-and runtime line flow, but both now expose JP-first review context.
+DATA001/0015 now uses the reviewer equipment pass as the unshrunk layer. DATA003/1089 uses `docs/chs-glossary.json` for story names. DATA001/0016 and DATA002/0065 have a v40 UI/DATA002 review pack for the latest label changes; runtime tester checks are still useful for line flow and menu fit.
 
 ## Current Local Artifacts
 

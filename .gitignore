@@ -62,3 +62,6 @@ __pycache__/
 tests/.tmp/
 .venv/
 venv/
+
+# Local human review input packs
+translation_reviewed/

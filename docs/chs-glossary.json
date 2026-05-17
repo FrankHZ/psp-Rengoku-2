@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "policy": "Use established Simplified Chinese Divine Comedy names for story characters where applicable. Keep game-specific stylized names such as GRAM as-is unless reviewer changes them.",
+  "terms": [
+    {
+      "key": "beatrice",
+      "jp": ["ベアトリーチェ"],
+      "en": ["Beatrice"],
+      "chs": "贝雅特丽齐",
+      "replace": ["贝雅", "Beatrice"],
+      "notes": "Divine Comedy name; avoid shortening to 贝雅 in story prose or speaker labels."
+    },
+    {
+      "key": "virgil",
+      "jp": ["ヴェルギリウス"],
+      "en": ["Virgil"],
+      "chs": "维吉尔",
+      "replace": ["Virgil"],
+      "notes": "Common Simplified Chinese Divine Comedy form."
+    },
+    {
+      "key": "dante",
+      "jp": ["ダンテ"],
+      "en": ["Dante"],
+      "chs": "但丁",
+      "replace": ["Dante"],
+      "notes": "Divine Comedy author/protagonist name."
+    },
+    {
+      "key": "statius",
+      "jp": ["スタティウス"],
+      "en": ["Statius"],
+      "chs": "斯塔提乌斯",
+      "replace": ["Statius"],
+      "notes": "Divine Comedy character name."
+    },
+    {
+      "key": "lucifer",
+      "jp": ["ルシファー"],
+      "en": ["Lucifer"],
+      "chs": "路西法",
+      "replace": ["Lucifer"],
+      "notes": "Use if this name appears in future story rows."
+    },
+    {
+      "key": "deucalion",
+      "jp": ["デウカリオーン"],
+      "en": ["Deucalion"],
+      "chs": "丢卡利翁",
+      "replace": ["Deucalion"],
+      "notes": "Game organization/AI name, not a Divine Comedy name; kept here so story terminology is still centralized."
+    },
+    {
+      "key": "gram",
+      "jp": ["CgramC"],
+      "en": ["GRAM", "#GRAM#"],
+      "chs": "GRAM",
+      "replace": [],
+      "notes": "Player/protagonist token; keep stylized Latin."
+    }
+  ]
+}
