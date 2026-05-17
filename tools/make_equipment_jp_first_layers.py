@@ -297,11 +297,11 @@ COMPRESSION_REPLACEMENTS = (
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build JP-first layered DATA001/0015 equipment sheets.")
-    parser.add_argument("--review", type=Path, default=Path("local/work/translation_review_slim_v5/equipment.json"))
+    parser.add_argument("--review", type=Path, default=Path("local/work/translation_review_slim_v12_reviewed_all/equipment.json"))
     parser.add_argument(
         "--source-sheet",
         type=Path,
-        default=Path("local/work/translation_refine_v1/merged_target_sheets_v35_quality/DATA001_0015_full_current_target_sheet.json"),
+        default=Path("local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA001_0015_full_current_target_sheet.json"),
     )
     parser.add_argument(
         "--source-export",
@@ -309,13 +309,13 @@ def main() -> int:
         default=Path("local/work/extract_text_DATA001_0015_seeded.json"),
         help="Source extraction with original glyph codes; used to preserve fullwidth Latin/digits only where the JP source uses them.",
     )
-    parser.add_argument("--layer-root", type=Path, default=Path("local/work/translation_refine_v1/equipment_jp_layers_v2_reviewed"))
+    parser.add_argument("--layer-root", type=Path, default=Path("local/work/translation_refine_v1/equipment_jp_layers_current"))
     parser.add_argument(
         "--target-root",
         type=Path,
-        default=Path("local/work/translation_refine_v1/merged_target_sheets_v39_equipment_reviewed"),
+        default=Path("local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all"),
     )
-    parser.add_argument("--review-root", type=Path, default=Path("local/work/translation_review_slim_v9_equipment_reviewed"))
+    parser.add_argument("--review-root", type=Path, default=Path("local/work/translation_review_slim_v12_reviewed_all"))
     parser.add_argument(
         "--reviewed",
         type=Path,

@@ -388,13 +388,18 @@ Unknowns:
 
 Files:
 `PSP_GAME/PARAM.SFO`
+`savedata/PARAM.SFO`
 
 Evidence:
-- Contains PSP metadata fields such as `DISC_ID`, `TITLE`, and `PSP_SYSTEM_VER`.
-- Title string found: `煉獄弐 - The Stairway to H.E.A.V.E.N.`
+- Game `PARAM.SFO` contains PSP metadata fields such as `DISC_ID`, `TITLE`, and `PSP_SYSTEM_VER`.
+- Game title string found: `煉獄弐 - The Stairway to H.E.A.V.E.N.`
+- PPSSPP save-list text is stored in each savedata directory's `PARAM.SFO`, not in the current DATA001/002/003 text-table patch path.
+- Confirmed savedata fields include `SAVEDATA_TITLE` such as `1 F プレイ時間  0:00`, `SAVEDATA_DETAIL` with the Peter-gate prose plus clear/death/kill counters, and `TITLE`.
 
 Mutation rules:
-- Optional metadata translation target; do not edit until rebuild workflow is stable.
+- Game metadata translation is optional and separate from the text-table build.
+- Existing saves need a savedata `PARAM.SFO` patcher if their save-list title/detail should be translated.
+- New v41 saves still write Japanese savedata metadata; finding the runtime writer likely requires executable/runtime investigation.
 
 ## Executables
 

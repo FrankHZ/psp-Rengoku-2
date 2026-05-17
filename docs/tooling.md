@@ -12,7 +12,7 @@ an old experiment must be reconstructed.
 | `tools/build_chs_tutorial.py` | Shared CHS assignment/layout helper module plus the older focused tutorial builder. Owns bitplane assignment, source-symbol reservation, and source-budget soft wrapping. |
 | `tools/build_chs_offset_table.py` | Builds one translated offset-table target with font patches and source hard-break preservation. |
 | `tools/stage_font_probe.py` | Stages extracted-folder builds by patching font pages and same-size MCD3 text entries. |
-| `tools/build_psp_iso.py` | Builds a PSP ISO from a PPSSPP-ready extracted folder using UMDGen-like ISO9660 layout: blank volume id, unversioned file names, fixed path-table sectors, 2048-byte directory sectors, and matching v40-style file LBA order. Still needs PPSSPP/hardware validation per build. |
+| `tools/build_psp_iso.py` | Builds a PSP ISO from a PPSSPP-ready extracted folder using UMDGen-like ISO9660 layout: blank volume id, unversioned file names, fixed path-table sectors, 2048-byte directory sectors, and matching the observed UMDGen file LBA order. v41 ISO was confirmed in PPSSPP; keep hardware/PPSSPP boot as the final validation gate for future builds. |
 | `tools/report_chs_coverage.py` | Summarizes parsed-row coverage, not-in-build rows, and current glyph headroom. |
 | `tools/report_actual_cjk_requirement.py` | Counts actual unique CJK/non-ASCII requirements from translated rows plus local override/classification sheets. |
 | `tools/export_chs_font_corpus.py` | Exports CJK-only CHS corpora for external font generation. |
@@ -22,7 +22,7 @@ an old experiment must be reconstructed.
 | `tools/make_chs_name_input_sheet.py` | Creates DATA002/0065 name-input confirmation rows 82-84 when that sheet is regenerated. |
 | `tools/make_equipment_jp_first_layers.py` | Builds layered DATA001/0015 equipment sheets with `chs_unshrunk` for review and `chs_shrunk` for runtime fitting; accepts reviewer `current_chs` overrides from `translation_reviewed/equipment.json`. |
 | `tools/apply_story_glossary.py` | Applies `docs/chs-glossary.json` to DATA003/1089 target and review sheets so story names stay consistent. |
-| `tools/make_ui_data002_review_layers.py` | Builds the v40 DATA001/0016 UI and DATA002/0065 target/review overlays: English standalone attack attributes plus translated DATA002 rough rows. |
+| `tools/make_ui_data002_review_layers.py` | Builds the DATA001/0016 UI and DATA002/0065 target/review overlays: English standalone attack attributes plus translated DATA002 rough rows. Retained for regenerating those layers if needed. |
 | `tools/promote_reviewed_translation_package.py` | Promotes the local `translation_reviewed/` JSON package into v41 target sheets and a consolidated v12 review package, with runtime-fit overrides for rows too long for source slots. |
 | `tools/compare_chs_fonts.py` | Compares candidate CHS font rendering. |
 

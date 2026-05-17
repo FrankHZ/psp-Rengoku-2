@@ -26,10 +26,8 @@ known, and keeps source-budget wrapping for long Chinese prose.
 Current text review package:
 
 ```text
-local/work/translation_review_slim_v5/
-local/work/translation_review_slim_v9_equipment_reviewed/
-local/work/translation_review_slim_v9_story_glossary/
 local/work/translation_review_slim_v12_reviewed_all/
+translation_reviewed/
 ```
 
 ## Repository Layout
@@ -97,7 +95,8 @@ tools/render_mig_font_cell.py
 tools/report_chs_coverage.py
 tools/export_chs_font_corpus.py
 tools/build_full_jp_texts.py
-tools/make_ui_data002_review_layers.py
+tools/promote_reviewed_translation_package.py
+tools/build_psp_iso.py
 ```
 
 `tools/build_chs_combined_data001.py` has a legacy name, but the current staging

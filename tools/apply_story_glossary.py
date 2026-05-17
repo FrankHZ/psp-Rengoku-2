@@ -12,27 +12,27 @@ def main() -> int:
     parser.add_argument(
         "--target",
         type=Path,
-        default=Path("local/work/translation_refine_v1/merged_target_sheets_v37_jp_story/DATA003_1089_jp_first_target_sheet.json"),
+        default=Path("local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA003_1089_jp_first_target_sheet.json"),
     )
     parser.add_argument(
         "--review",
         type=Path,
-        default=Path("local/work/translation_review_slim_v7_story_jp_first/story_data003_1089_jp_first.json"),
+        default=Path("local/work/translation_review_slim_v12_reviewed_all/story_data003_1089.json"),
     )
     parser.add_argument(
         "--target-output",
         type=Path,
-        default=Path("local/work/translation_refine_v1/merged_target_sheets_v39_story_glossary/DATA003_1089_jp_first_target_sheet.json"),
+        default=Path("local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA003_1089_jp_first_target_sheet.json"),
     )
     parser.add_argument(
         "--review-output",
         type=Path,
-        default=Path("local/work/translation_review_slim_v9_story_glossary/story_data003_1089_jp_first.json"),
+        default=Path("local/work/translation_review_slim_v12_reviewed_all/story_data003_1089.json"),
     )
     parser.add_argument(
         "--summary",
         type=Path,
-        default=Path("local/work/translation_refine_v1/merged_target_sheets_v39_story_glossary/summary.json"),
+        default=Path("local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/story_glossary_summary.json"),
     )
     args = parser.parse_args()
 

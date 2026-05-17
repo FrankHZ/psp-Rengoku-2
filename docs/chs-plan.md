@@ -19,7 +19,7 @@ Current work root and coverage:
 
 ```text
 local/work/combined_chs_v41_reviewed_all/
-local/work/chs_coverage_v35_quality_translation/
+local/work/chs_coverage_v41_reviewed_all/
 ```
 
 Included targets:
@@ -38,7 +38,7 @@ DATA003/1089 JP-first story-script pass
 Current coverage:
 
 ```text
-parsed rows across v35 target tables:    1637
+parsed rows across current target tables: 1637
 DATA003/1089 story glyph rows patched:    855
 total current text patch rows:           2492
 assigned CJK glyphs:                     1524
@@ -59,25 +59,14 @@ gray threshold: 176
 Current human review package:
 
 ```text
-local/work/translation_review_slim_v5/
-entries: 1637
-fields: id, category, chs, jp, en
-changed from v4: 116 rows
-
-local/work/translation_review_slim_v9_equipment_reviewed/
-entries: 672 DATA001/0015 equipment rows
-fields: id, category, jp, en, current_chs, chs_unshrunk, chs_shrunk, max_units, fit_note
-
-local/work/translation_review_slim_v9_story_glossary/
-entries: 855 DATA003/1089 story-script rows
-fields: id, category, chs, jp, en, fit_note
-
 local/work/translation_review_slim_v12_reviewed_all/
-entries: DATA001/0016 UI plus DATA002/0065 UI/gallery/sound rows
-fields: id, category, chs, jp, en
-combined entries: 2492
+entries: 2492
+fields: id, category, chs, jp, en plus equipment layer fields where applicable
 changed/promoted rows: 340
 rough markers: 0
+
+translation_reviewed/
+local reviewer-edited JSON inputs, tracked by its own local git repo
 ```
 
 ## Confirmed Runtime Model
@@ -107,7 +96,7 @@ not extra storage.
 ## Active Focus
 
 Glyph capacity is not the active blocker for the current parsed target set.
-v41 promotes the reviewed all-file JSON package over the v40 baseline:
+v41 promotes the reviewed all-file JSON package over the previous baseline:
 
 ```text
 DATA001/0008 record 64: 熟练 -> 熟练度

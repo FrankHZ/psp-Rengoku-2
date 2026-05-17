@@ -27,7 +27,7 @@ SHEET_SPECS = {
     ),
     "ui.json": (
         "DATA001/0016",
-        Path("local/work/translation_refine_v1/merged_target_sheets_v40_ui_data002/DATA001_0016_full_current_target_sheet.json"),
+        Path("local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA001_0016_full_current_target_sheet.json"),
         "DATA001_0016_full_current_target_sheet.json",
     ),
     "help_manual.json": (
@@ -37,12 +37,12 @@ SHEET_SPECS = {
     ),
     "data002_ui.json": (
         "DATA002/0065",
-        Path("local/work/translation_refine_v1/merged_target_sheets_v40_ui_data002/DATA002_0065_full_current_target_sheet.json"),
+        Path("local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA002_0065_full_current_target_sheet.json"),
         "DATA002_0065_full_current_target_sheet.json",
     ),
     "story_data003_1089.json": (
         "DATA003/1089",
-        Path("local/work/translation_refine_v1/merged_target_sheets_v39_story_glossary/DATA003_1089_jp_first_target_sheet.json"),
+        Path("local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA003_1089_jp_first_target_sheet.json"),
         "DATA003_1089_jp_first_target_sheet.json",
     ),
 }

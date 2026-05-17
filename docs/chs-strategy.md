@@ -147,66 +147,33 @@ current unresolved blank/unknown used cells: 0.
 Current review package:
 
 ```text
-local/work/translation_review_slim_v5/
-total built rows: 1637
-fields: id, category, chs, jp, en
-changed from v4: 116 rows
-
-local/work/translation_review_slim_v9_equipment_reviewed/
-DATA001/0015 equipment rows: 672
-fields: id, category, jp, en, current_chs, chs_unshrunk, chs_shrunk, max_units, fit_note
-
-local/work/translation_review_slim_v9_story_glossary/
-DATA003/1089 story rows: 855
-fields: id, category, chs, jp, en, fit_note
-
 local/work/translation_review_slim_v12_reviewed_all/
 all current reviewer-facing rows: 2492 entries
 fields: id, category, chs, jp, en plus equipment layer fields where applicable
+runtime-fit overrides are documented in the package
+
+translation_reviewed/
+local reviewer-edited JSON inputs, tracked by its own local git repo
 ```
 
-v35 quality pass:
-
-```text
-DATA001/0008 record 64: 熟练度 title correction
-DATA001/0015: 112 equipment name/description revisions
-DATA001/0017: visible Skill Points wording normalized to 熟练度
-review pack v5 regenerated from the v35 build
-```
-
-v37 story pass:
-
-```text
-DATA003/1089: JP-first story-script pass
-855 reviewed JP glyph rows patched
-old USA alignment retained only as reviewer reference context
-rows are fitted to JP source slot budgets
-```
-
-v39 reviewer/glossary pass:
+Current v41 pass:
 
 ```text
 DATA001/0015: reviewer-edited current_chs promoted to chs_unshrunk/chs_shrunk layers
-336 names and 336 descriptions exported
-336 descriptions fit unshrunk; 1 equipment name uses runtime-only shortening
-DATA003/1089: 31 rows updated by story-name glossary
-runtime build uses chs_shrunk; reviewer pack keeps chs_unshrunk
-```
-
-v40 UI/DATA002 pass:
-
-```text
 DATA001/0016: standalone attack attributes use English labels matching JP/EN: GRAPPLE, SLASH, IMPACT, QUANTUM, BULLET, HEAT
-DATA002/0065: standalone GRAPPLE label restored to English; 68 remaining rough UI/gallery/sound labels translated; v10 review pack carries JP/EN context
-```
-
-v41 reviewed-all pass:
-
-```text
+DATA001/0017: visible Skill Points wording normalized to 熟练度
+DATA002/0065: standalone GRAPPLE label restored to English; DATA002 rough UI/gallery/sound rows cleared
+DATA003/1089: JP-first story-script pass with glossary-normalized story names
 translation_reviewed/: local-only nested git repo for reviewer JSON inputs
 local/work/translation_review_slim_v12_reviewed_all/: all-file reviewed package, 2492 entries
-changed/promoted rows: 340
 runtime-fit overrides: source-slot shortening for a small set of long reviewed rows; reviewer text is retained in the review pack
+```
+
+Known remaining external/system text:
+
+```text
+PSP savedata list metadata is written into savedata PARAM.SFO and is still Japanese for new v41 saves.
+PSP OSK title/prompt, e.g. 名前を入力してください, appears outside the current DATA001/002/003 text-table patch path.
 ```
 
 Recommended next loop:

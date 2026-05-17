@@ -95,21 +95,21 @@ def main() -> int:
     parser.add_argument(
         "--ui-target",
         type=Path,
-        default=Path("local/work/translation_refine_v1/merged_target_sheets_v35_quality/DATA001_0016_full_current_target_sheet.json"),
+        default=Path("local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA001_0016_full_current_target_sheet.json"),
     )
     parser.add_argument(
         "--data002-target",
         type=Path,
-        default=Path("local/work/translation_refine_v1/merged_target_sheets_v35_quality/DATA002_0065_full_current_target_sheet.json"),
+        default=Path("local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA002_0065_full_current_target_sheet.json"),
     )
-    parser.add_argument("--ui-review", type=Path, default=Path("local/work/translation_review_slim_v5/ui.json"))
-    parser.add_argument("--data002-review", type=Path, default=Path("local/work/translation_review_slim_v5/data002_ui.json"))
+    parser.add_argument("--ui-review", type=Path, default=Path("local/work/translation_review_slim_v12_reviewed_all/ui.json"))
+    parser.add_argument("--data002-review", type=Path, default=Path("local/work/translation_review_slim_v12_reviewed_all/data002_ui.json"))
     parser.add_argument(
         "--target-root",
         type=Path,
-        default=Path("local/work/translation_refine_v1/merged_target_sheets_v40_ui_data002"),
+        default=Path("local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all"),
     )
-    parser.add_argument("--review-root", type=Path, default=Path("local/work/translation_review_slim_v10_ui_data002"))
+    parser.add_argument("--review-root", type=Path, default=Path("local/work/translation_review_slim_v12_reviewed_all"))
     args = parser.parse_args()
 
     args.target_root.mkdir(parents=True, exist_ok=True)
