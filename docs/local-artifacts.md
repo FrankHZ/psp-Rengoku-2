@@ -10,10 +10,10 @@ Current PPSSPP build:
 
 | Path | Purpose |
 | --- | --- |
-| `local/rebuilt/combined_chs_v41_reviewed_all_extracted/` | Current PPSSPP-ready broad CHS build with reviewed equipment text, story glossary names, the full reviewed JSON package, English attack attributes, and DATA002 rough UI labels cleared. |
-| `local/rebuilt/combined_chs_v41_reviewed_all.iso` | PPSSPP-validated ISO built from the v41 extracted folder by `tools/build_psp_iso.py`; its high-level ISO9660/UMD layout matches the UMDGen v40 artifact. |
-| `local/work/combined_chs_v41_reviewed_all/` | Current build metadata, stage config, glyph assignment, text payloads, and previews. |
-| `local/work/chs_coverage_v41_reviewed_all/` | Current parsed-row and glyph-headroom coverage report. |
+| `local/rebuilt/combined_chs_v42_review_feedback_extracted/` | Current PPSSPP-ready broad CHS build with latest reviewer feedback, reviewed equipment text, story glossary names, English attack attributes, DATA002 rough UI labels cleared, and the ANK halfwidth `1` glyph alignment patch. |
+| `local/rebuilt/combined_chs_v42_review_feedback.iso` | Current ISO built from the v42 extracted folder by `tools/build_psp_iso.py`; its high-level ISO9660/UMD layout follows the PPSSPP-tested v41/v40 path. |
+| `local/work/combined_chs_v42_review_feedback/` | Current build metadata, stage config, glyph assignment, text payloads, and previews. |
+| `local/work/chs_coverage_v42_review_feedback/` | Current parsed-row and glyph-headroom coverage report. |
 
 Current text/review inputs:
 
@@ -27,7 +27,7 @@ Current text/review inputs:
 | `local/work/actual_cjk_requirement_v1/` | Actual translated/candidate-bank CJK requirement report. |
 | `local/work/full_jp_text_decode_v1/` | JP decode output built from the reviewed glyph table. |
 | `local/work/translation_refine_v1/` | Current JP+EN refinement packs and merged target sheets. Keep `merged_target_sheets_all_fit_v1/` plus `merged_target_sheets_v41_reviewed_all/`; older intermediate target-sheet directories were removed. |
-| `local/work/translation_review_slim_v12_reviewed_all/` | Current all-file review package promoted from `translation_reviewed/`; includes 2492 entries, 340 changed/promoted rows, and runtime-fit notes. |
+| `local/work/translation_review_slim_v12_reviewed_all/` | Current all-file review package promoted from `translation_reviewed/`; includes 2492 entries, 247 changed/promoted rows, and runtime-fit notes. |
 | `translation_reviewed/` | Local reviewer-edited input packs; promote into generated work sheets, but do not treat as build output. |
 
 Current font artifacts:
@@ -38,6 +38,7 @@ Current font artifacts:
 | `local/fonts/corpus-semibold-18.fnt`, `local/fonts/corpus-semibold-18_0.png` | Smaller corpus-only fallback atlas. |
 | `local/work/chs_font_corpus_v3_refined_cjk_only/` | Current CJK-only corpus used for external font generation. |
 | `local/work/font_compare/` | Current font-render comparison output. |
+| `local/work/font_digit1_probe/` | Current before/after evidence for the ANK halfwidth `1` glyph alignment patch. |
 | `local/ocr_reviewed/` | Human-reviewed OCR text grids used as the JP glyph-map source. |
 
 Older one-off font experiments were removed. Regenerate a comparison font only

@@ -12,14 +12,14 @@ docs/chs-layout-rules.md
 Current PPSSPP-ready broad build:
 
 ```text
-local/rebuilt/combined_chs_v41_reviewed_all_extracted/
+local/rebuilt/combined_chs_v42_review_feedback_extracted/
 ```
 
 Current work root and coverage:
 
 ```text
-local/work/combined_chs_v41_reviewed_all/
-local/work/chs_coverage_v41_reviewed_all/
+local/work/combined_chs_v42_review_feedback/
+local/work/chs_coverage_v42_review_feedback/
 ```
 
 Included targets:
@@ -42,9 +42,9 @@ parsed rows across current target tables: 1637
 DATA003/1089 story glyph rows patched:    855
 total current text patch rows:           2492
 assigned CJK glyphs:                     1524
-physical cells used:                      846
+physical cells used:                      847
 reserved source logical cells:            153
-logical headroom before source reserves:  268
+logical headroom before source reserves:  258
 ```
 
 Current font/quantizer baseline:
@@ -62,7 +62,7 @@ Current human review package:
 local/work/translation_review_slim_v12_reviewed_all/
 entries: 2492
 fields: id, category, chs, jp, en plus equipment layer fields where applicable
-changed/promoted rows: 340
+changed/promoted rows: 247
 rough markers: 0
 
 translation_reviewed/
@@ -96,7 +96,7 @@ not extra storage.
 ## Active Focus
 
 Glyph capacity is not the active blocker for the current parsed target set.
-v41 promotes the reviewed all-file JSON package over the previous baseline:
+v42 promotes the latest reviewer feedback over the previous baseline:
 
 ```text
 DATA001/0008 record 64: 熟练 -> 熟练度
@@ -104,8 +104,13 @@ DATA001/0015: reviewer-edited current_chs promoted into chs_unshrunk/chs_shrunk 
 DATA001/0017: Skill Points wording normalized to 熟练度 in visible status/help text
 DATA003/1089: 855 story glyph rows patched from reviewed JP decode; 31 rows glossary-normalized
 DATA001/0016 records 5-10: standalone attack attributes restored to GRAPPLE/SLASH/IMPACT/QUANTUM/BULLET/HEAT
-translation_reviewed package promoted: 340 changed rows across tutorial, DATA001/0012, equipment, UI, help, DATA002, and DATA003
+translation_reviewed package promoted: 247 changed rows across tutorial, DATA001/0012, equipment, UI, help, DATA002, and DATA003
 DATA002/0065: standalone GRAPPLE label restored to English; rough UI/gallery/sound rows remain cleared
+DATA001/0016 records 142-144: upgrade stat abbreviations use source labels En/He/Pr
+DATA002/0065: latest missing UI/gallery/sound rows promoted, including `开场` and `结局`
+DATA001/0017: latest help/manual layout feedback promoted
+DATA001/0012 and DATA003/1089: runtime-fit override handoff applied; reviewer JSON keeps reviewer text, target sheets keep separate fitted strings
+codeANK9x14_00_0 low cell 17: halfwidth digit `1` patched from 4px to 7px visible width for better alignment with other halfwidth digits
 source hard paragraph breaks and generated soft wraps preserved
 Latin, punctuation, symbols, and key-icon glyphs still reuse original source cells where known
 ```

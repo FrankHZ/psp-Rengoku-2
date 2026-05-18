@@ -8,17 +8,17 @@ workflow evolves.
 Treat this as the baseline until tester/reviewer feedback says otherwise:
 
 ```text
-local/rebuilt/combined_chs_v41_reviewed_all_extracted/
+local/rebuilt/combined_chs_v42_review_feedback_extracted/
 ```
 
-The current build keeps the JP-first DATA003/1089 story pass, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text into layered review/runtime sheets, promotes the full local reviewer JSON package, keeps standalone attack attributes in English, and keeps known DATA002 rough UI rows cleared. Glyph capacity
-is not the active blocker after the confirmed low/high bitplane packing model.
+The current build keeps the JP-first DATA003/1089 story pass, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text into layered review/runtime sheets, promotes the full local reviewer JSON package plus the latest help/manual and DATA002 UI feedback, keeps standalone attack attributes in English, and keeps known DATA002 rough UI rows cleared. Glyph capacity is not the active blocker after the confirmed low/high bitplane packing model.
 
 Current build policy:
 
 ```text
 use generated CHS font only for CJK ideographs
 reuse source Latin, digits, punctuation, symbols, and key icons when known
+patch source halfwidth digit `1` in the ANK font page for visual alignment
 reserve source cells for every reused symbol code
 preserve explicit paragraph/list hard breaks
 let tooling add soft visual wraps for long Chinese lines
@@ -88,15 +88,15 @@ logical layers:           2
 logical capacity:      1782
 ```
 
-Current v41 usage:
+Current v42 usage:
 
 ```text
 assigned CJK glyphs:                   1524
-physical cells used:                    846
-low-layer glyphs:                       746
+physical cells used:                    847
+low-layer glyphs:                       747
 high-layer glyphs:                      778
 reserved source logical cells:          153
-logical headroom before source reserves: 268
+logical headroom before source reserves: 258
 font: local/fonts/full-semibold-18.fnt
 quantization: palette3, threshold 64, gray threshold 176
 2bpp convention: 0 background, 1 light gray, 2 deep gray, 3 white
@@ -116,7 +116,7 @@ unique non-ASCII required:            1452
 ```
 
 The full candidate-bank number remains useful for planning. The current broad
-build needs 1524 assigned CJK glyphs after promoting the v41 all-file review package.
+build needs 1524 assigned CJK glyphs after promoting the v42 reviewer feedback package.
 
 ## JP Glyph Table Backup
 
@@ -134,6 +134,7 @@ Current watch notes:
 
 ```text
 block02_child00_codeANK9x14_00_0_low: Windows-1252-style symbols reviewed; remaining blanks are intentional blank/control cells.
+block02_child00_codeANK9x14_00_0_low cell 17: source halfwidth `1` patched from 4px to 7px visible width during broad builds.
 block03_child01_codeJAP14x14_00__high: digits 0-9 and letters A-E are fullwidth glyphs, mapped as ０-９ and Ａ-Ｅ.
 block06_child02_codeJAP14x14_02__low: letters F-Z and a-z are fullwidth glyphs, mapped as Ｆ-Ｚ and ａ-ｚ.
 block08_child03_codeJAP14x14_04__low: contains reusable key glyphs for L/R/O/X/triangle/square.
@@ -156,13 +157,17 @@ translation_reviewed/
 local reviewer-edited JSON inputs, tracked by its own local git repo
 ```
 
-Current v41 pass:
+Current v42 pass:
 
 ```text
 DATA001/0015: reviewer-edited current_chs promoted to chs_unshrunk/chs_shrunk layers
 DATA001/0016: standalone attack attributes use English labels matching JP/EN: GRAPPLE, SLASH, IMPACT, QUANTUM, BULLET, HEAT
 DATA001/0017: visible Skill Points wording normalized to 熟练度
+DATA001/0016 records 142-144: upgrade stat abbreviations use source labels En/He/Pr
 DATA002/0065: standalone GRAPPLE label restored to English; DATA002 rough UI/gallery/sound rows cleared
+DATA002/0065: latest missing UI/gallery/sound rows promoted, including `开场` and `结局`
+DATA001/0017: latest help/manual layout feedback promoted
+DATA001/0012 and DATA003/1089: latest runtime-fit handoff applied without mixing fitted strings into reviewed JSON
 DATA003/1089: JP-first story-script pass with glossary-normalized story names
 translation_reviewed/: local-only nested git repo for reviewer JSON inputs
 local/work/translation_review_slim_v12_reviewed_all/: all-file reviewed package, 2492 entries
@@ -172,7 +177,7 @@ runtime-fit overrides: source-slot shortening for a small set of long reviewed r
 Known remaining external/system text:
 
 ```text
-PSP savedata list metadata is written into savedata PARAM.SFO and is still Japanese for new v41 saves.
+PSP savedata list metadata is written into savedata PARAM.SFO and is still Japanese for new v42 saves.
 Existing savedata PARAM.SFO files can be patched separately with tools/patch_savedata_sfo.py.
 PSP OSK title/prompt, e.g. 名前を入力してください, appears outside the current DATA001/002/003 text-table patch path.
 ```

@@ -26,6 +26,30 @@ DEFAULT_TARGETS = (
     ("DATA001/0017", "local/work/ui_help_chs_v1/DATA001_0017_help_sheet.json"),
 )
 
+ANK_DIGIT_ONE_PATCH = {
+    "mode": "bitmap_bitplane",
+    "target_page": "local/work/tdl_DATA001_0002/0000_codeANK9x14_00_0.bin",
+    "target_child": 0,
+    "target_cell": 17,
+    "layer": "low",
+    "rows": [
+        ".........",
+        "..##+....",
+        ".###+....",
+        "#+##+....",
+        "++##+....",
+        "..##+....",
+        "..##+....",
+        "..##+....",
+        "..##+....",
+        "..##+....",
+        "..##+....",
+        "######+..",
+        "+++++++..",
+        ".........",
+    ],
+}
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build a combined CHS artifact with one font patch pass.")
@@ -118,6 +142,7 @@ def build_combined_data001(
         stroke_radius,
         work_root / "previews",
     )
+    font_patches.insert(0, ANK_DIGIT_ONE_PATCH)
 
     text_patches = []
     for target in targets:

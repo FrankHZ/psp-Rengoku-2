@@ -10,6 +10,7 @@ from typing import Any
 from copy_mig_font_cell import copy_font_cell
 from import_text import import_text
 from mcd3 import read_mcd3
+from mig import decode_mig_indices, replace_mig_indices
 from patch_mig_font_cell import patch_font_cells, parse_cell_range
 from render_mig_font_cell import render_font_cell, render_font_cell_bitplane
 from replace_mcd3_entry import replace_mcd3_entry
@@ -178,7 +179,67 @@ def apply_font_patch(font: dict[str, Any], target_page: Path, output_path: Path)
         )
         return
 
+    if mode == "bitmap_bitplane":
+        if len(target_cells) != 1:
+            raise ValueError("bitmap_bitplane mode requires exactly one target cell")
+        patch_bitplane_bitmap(
+            target_page,
+            output_path,
+            cell_index=target_cells[0],
+            layer=str(font["layer"]),
+            rows=list(font["rows"]),
+        )
+        return
+
     raise ValueError(f"unsupported font patch mode: {mode!r}")
+
+
+def patch_bitplane_bitmap(source_page: Path, output_path: Path, cell_index: int, layer: str, rows: list[str]) -> None:
+    width, height, indices = decode_mig_indices(source_page)
+    cell_w, cell_h = cell_size_from_rows(source_page, rows)
+    cols = width // cell_w
+    capacity = cols * (height // cell_h)
+    if cell_index < 0 or cell_index >= capacity:
+        raise ValueError(f"cell {cell_index} is outside page capacity {capacity}")
+    if layer not in {"low", "high"}:
+        raise ValueError(f"unsupported bitplane layer: {layer!r}")
+
+    output = bytearray(indices)
+    target_x = (cell_index % cols) * cell_w
+    target_y = (cell_index // cols) * cell_h
+    preserve_mask = 0x0C if layer == "low" else 0x03
+    shift = 0 if layer == "low" else 2
+    for y, row in enumerate(rows):
+        if len(row) != cell_w:
+            raise ValueError(f"bitmap row {y} has width {len(row)}, expected {cell_w}")
+        for x, char in enumerate(row):
+            value = bitmap_char_value(char)
+            offset = (target_y + y) * width + target_x + x
+            output[offset] = (output[offset] & preserve_mask) | (value << shift)
+    replace_mig_indices(source_page, bytes(output), output_path)
+
+
+def cell_size_from_rows(source_page: Path, rows: list[str]) -> tuple[int, int]:
+    if not rows:
+        raise ValueError("bitmap rows must not be empty")
+    cell_w = len(rows[0])
+    cell_h = len(rows)
+    width, height, _indices = decode_mig_indices(source_page)
+    if cell_w <= 0 or cell_h <= 0 or width < cell_w or height < cell_h:
+        raise ValueError(f"bitmap size {cell_w}x{cell_h} is invalid for page {width}x{height}")
+    return cell_w, cell_h
+
+
+def bitmap_char_value(char: str) -> int:
+    if char in {".", " ", "0"}:
+        return 0
+    if char == "+":
+        return 1
+    if char == "*":
+        return 2
+    if char == "#":
+        return 3
+    raise ValueError(f"unsupported bitmap character: {char!r}")
 
 
 def main() -> int:

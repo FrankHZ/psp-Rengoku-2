@@ -8,7 +8,7 @@ an old experiment must be reconstructed.
 
 | Script | Purpose |
 | --- | --- |
-| `tools/build_chs_combined_data001.py` | Builds the broad PPSSPP-ready artifact with one shared font assignment pass. Despite the legacy filename, it can include DATA002 and DATA003 text patches. |
+| `tools/build_chs_combined_data001.py` | Builds the broad PPSSPP-ready artifact with one shared font assignment pass. Despite the legacy filename, it can include DATA002 and DATA003 text patches. Current broad builds also patch ANK low-layer cell 17 so the halfwidth `1` aligns visually with other halfwidth digits. |
 | `tools/build_chs_tutorial.py` | Shared CHS assignment/layout helper module plus the older focused tutorial builder. Owns bitplane assignment, source-symbol reservation, and source-budget soft wrapping. |
 | `tools/build_chs_offset_table.py` | Builds one translated offset-table target with font patches and source hard-break preservation. |
 | `tools/stage_font_probe.py` | Stages extracted-folder builds by patching font pages and same-size MCD3 text entries. |
@@ -31,12 +31,12 @@ Current broad-build command shape:
 
 ```powershell
 .\.venv\Scripts\python.exe tools/build_chs_combined_data001.py `
-  --target DATA001/0003 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0003_full_current_target_sheet.json `
-  --target DATA001/0008 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0008_full_current_target_sheet.json `
-  --target DATA001/0012 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0012_full_current_target_sheet.json `
+  --target DATA001/0003 local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA001_0003_full_current_target_sheet.json `
+  --target DATA001/0008 local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA001_0008_full_current_target_sheet.json `
+  --target DATA001/0012 local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA001_0012_full_current_target_sheet.json `
   --target DATA001/0015 local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA001_0015_full_current_target_sheet.json `
   --target DATA001/0016 local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA001_0016_full_current_target_sheet.json `
-  --target DATA001/0017 local/work/translation_refine_v1/merged_target_sheets_all_fit_v1/DATA001_0017_full_current_target_sheet.json `
+  --target DATA001/0017 local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA001_0017_full_current_target_sheet.json `
   --target DATA002/0065 local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA002_0065_full_current_target_sheet.json `
   --target DATA003/1089 local/work/translation_refine_v1/merged_target_sheets_v41_reviewed_all/DATA003_1089_jp_first_target_sheet.json `
   --work-root local/work/<name> `
