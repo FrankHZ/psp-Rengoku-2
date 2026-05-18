@@ -62,7 +62,7 @@ Current human review package:
 local/work/translation_review_slim_v12_reviewed_all/
 entries: 2492
 fields: id, category, chs, jp, en plus equipment layer fields where applicable
-changed/promoted rows: 247
+changed/promoted rows: 242
 rough markers: 0
 
 translation_reviewed/
@@ -104,7 +104,7 @@ DATA001/0015: reviewer-edited current_chs promoted into chs_unshrunk/chs_shrunk 
 DATA001/0017: Skill Points wording normalized to 熟练度 in visible status/help text
 DATA003/1089: 855 story glyph rows patched from reviewed JP decode; 31 rows glossary-normalized
 DATA001/0016 records 5-10: standalone attack attributes restored to GRAPPLE/SLASH/IMPACT/QUANTUM/BULLET/HEAT
-translation_reviewed package promoted: 247 changed rows across tutorial, DATA001/0012, equipment, UI, help, DATA002, and DATA003
+translation_reviewed package promoted: 242 changed rows across tutorial, DATA001/0012, equipment, UI, help, DATA002, and DATA003
 DATA002/0065: standalone GRAPPLE label restored to English; rough UI/gallery/sound rows remain cleared
 DATA001/0016 records 142-144: upgrade stat abbreviations use source labels En/He/Pr
 DATA002/0065: latest missing UI/gallery/sound rows promoted, including `开场` and `结局`
