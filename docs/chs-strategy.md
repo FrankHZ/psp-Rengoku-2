@@ -134,7 +134,7 @@ Current watch notes:
 
 ```text
 block02_child00_codeANK9x14_00_0_low: Windows-1252-style symbols reviewed; remaining blanks are intentional blank/control cells.
-block02_child00_codeANK9x14_00_0_low cell 17: source halfwidth `1` keeps its original 4px strokes but is recentered from x0-3 to x2-5 during broad builds.
+block02_child00_codeANK9x14_00_0_low cell 17: source halfwidth `1` keeps a thin main stroke but gets a wider visible footprint during broad builds.
 block03_child01_codeJAP14x14_00__high: digits 0-9 and letters A-E are fullwidth glyphs, mapped as ０-９ and Ａ-Ｅ.
 block06_child02_codeJAP14x14_02__low: letters F-Z and a-z are fullwidth glyphs, mapped as Ｆ-Ｚ and ａ-ｚ.
 block08_child03_codeJAP14x14_04__low: contains reusable key glyphs for L/R/O/X/triangle/square.

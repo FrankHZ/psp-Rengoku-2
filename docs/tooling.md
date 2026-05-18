@@ -8,7 +8,7 @@ an old experiment must be reconstructed.
 
 | Script | Purpose |
 | --- | --- |
-| `tools/build_chs_combined_data001.py` | Builds the broad PPSSPP-ready artifact with one shared font assignment pass. Despite the legacy filename, it can include DATA002 and DATA003 text patches. Current broad builds also recenter ANK low-layer cell 17 so the halfwidth `1` aligns visually with other halfwidth digits without changing stroke weight. |
+| `tools/build_chs_combined_data001.py` | Builds the broad PPSSPP-ready artifact with one shared font assignment pass. Despite the legacy filename, it can include DATA002 and DATA003 text patches. Current broad builds also patch ANK low-layer cell 17 so the halfwidth `1` has a wider visible footprint while keeping a thin main stroke. |
 | `tools/build_chs_tutorial.py` | Shared CHS assignment/layout helper module plus the older focused tutorial builder. Owns bitplane assignment, source-symbol reservation, and source-budget soft wrapping. |
 | `tools/build_chs_offset_table.py` | Builds one translated offset-table target with font patches and source hard-break preservation. |
 | `tools/stage_font_probe.py` | Stages extracted-folder builds by patching font pages and same-size MCD3 text entries. |
