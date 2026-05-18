@@ -10,7 +10,7 @@ Current PPSSPP build:
 
 | Path | Purpose |
 | --- | --- |
-| `local/rebuilt/combined_chs_v42_review_feedback_extracted/` | Current PPSSPP-ready broad CHS build with latest reviewer feedback, reviewed equipment text, story glossary names, English attack attributes, DATA002 rough UI labels cleared, and the ANK halfwidth `1` glyph alignment patch. |
+| `local/rebuilt/combined_chs_v42_review_feedback_extracted/` | Current PPSSPP-ready broad CHS build with latest reviewer feedback, reviewed equipment text, story glossary names, English attack attributes, DATA002 rough UI labels cleared, and the ANK halfwidth `1` recentering patch. |
 | `local/rebuilt/combined_chs_v42_review_feedback.iso` | Current ISO built from the v42 extracted folder by `tools/build_psp_iso.py`; its high-level ISO9660/UMD layout follows the PPSSPP-tested v41/v40 path. |
 | `local/work/combined_chs_v42_review_feedback/` | Current build metadata, stage config, glyph assignment, text payloads, and previews. |
 | `local/work/chs_coverage_v42_review_feedback/` | Current parsed-row and glyph-headroom coverage report. |
@@ -38,7 +38,7 @@ Current font artifacts:
 | `local/fonts/corpus-semibold-18.fnt`, `local/fonts/corpus-semibold-18_0.png` | Smaller corpus-only fallback atlas. |
 | `local/work/chs_font_corpus_v3_refined_cjk_only/` | Current CJK-only corpus used for external font generation. |
 | `local/work/font_compare/` | Current font-render comparison output. |
-| `local/work/font_digit1_probe/` | Current before/after evidence for the ANK halfwidth `1` glyph alignment patch. |
+| `local/work/font_digit1_probe/` | Current before/after evidence for the ANK halfwidth `1` recentering patch. |
 | `local/ocr_reviewed/` | Human-reviewed OCR text grids used as the JP glyph-map source. |
 
 Older one-off font experiments were removed. Regenerate a comparison font only
