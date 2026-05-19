@@ -27,6 +27,7 @@ an old experiment must be reconstructed.
 | `tools/compare_chs_fonts.py` | Compares candidate CHS font rendering. |
 | `tools/patch_savedata_sfo.py` | Lists or patches existing PSP savedata `PARAM.SFO` metadata; `--rengoku2-chs` translates the current Rengoku 2 save-list title/detail fields in fixed-size UTF-8 slots. |
 | `tools/patch_eboot_runtime_strings.py` | Patches verified runtime strings in a decrypted EBOOT ELF: name-input OSK prompt, game/save title, savedata detail template, and play-time label. |
+| `tools/patch_psp_pic0.py` | Replaces `PSP_GAME/PIC0.PNG`, the PSP shell preview/description image, in a staged extracted build. It validates against the staged image's existing dimensions; Rengoku 2 JP uses 310x180. |
 | `tools/patch_title_credit.py` | Experimental title-credit patcher. The current version patches `DATA001/0004` TDL child `tlogo` with `小方 oid Codex 汉化`, using the CHS SemiBold BMFont for CJK and original `codeANK9x14_00_0` glyphs for Latin. The clean v43 savedata baseline should be built with `--no-title-credit`. |
 
 Current broad-build command shape:
@@ -146,3 +147,16 @@ Existing-save metadata patch example:
 
 Replace `--dry-run` with `--in-place` only after reviewing the reported field
 changes, or pass an explicit output `PARAM.SFO` path to write a patched copy.
+
+PSP shell preview image patch example:
+
+```powershell
+.\.venv\Scripts\python.exe tools/patch_psp_pic0.py `
+  local/rebuilt/combined_chs_v43_savedata_extracted `
+  local/work/title_pic0_chs.png `
+  --dry-run
+```
+
+The replacement must be a PNG with the same dimensions as the staged
+`PSP_GAME/PIC0.PNG`; Rengoku 2 JP uses 310x180. Remove `--dry-run` to write
+`PSP_GAME/PIC0.PNG`, then rebuild the ISO with `tools/build_psp_iso.py`.

@@ -11,10 +11,13 @@ Evidence:
 - Standard PSP layout with `UMD_DATA.BIN`, `PSP_GAME/PARAM.SFO`, `PSP_GAME/SYSDIR`, and `PSP_GAME/USRDIR`.
 - Game data is concentrated in `PSP_GAME/USRDIR/DATA000.BIN` through `DATA005.BIN`.
 - `SYSDIR/UPDATE` appears to be PSP firmware update data and is not a translation target.
+- `PSP_GAME/PIC0.PNG` is the PSP shell preview/description image. For Rengoku 2 JP it is a 310x180 PNG containing the logo, Japanese blurb, and copyright line; it matches PPSSPP's game preview screen.
+- `PSP_GAME/ICON0.PNG` is the smaller PSP shell icon, and `PSP_GAME/PIC1.PNG` is the 480x272 PSP shell background.
 
 Known rebuild shape:
 - UMDGen v40 uses blank volume id, path tables at LBA 18 and 20, root directory at LBA 22, one 2048-byte sector for each directory, unversioned file identifiers, and the observed file LBA order beginning with `UMD_DATA.BIN` at 28 and `PSP_GAME/SYSDIR/EBOOT.BIN` at 29.
 - `tools/build_psp_iso.py` now targets that layout from a PPSSPP-ready extracted folder. Keep PPSSPP/hardware boot as the final validation gate for each generated ISO.
+- `tools/patch_psp_pic0.py` validates and replaces `PSP_GAME/PIC0.PNG` in staged extracted builds. Use a same-size translated PNG, then rebuild the ISO.
 
 ## DATA000.BIN
 
