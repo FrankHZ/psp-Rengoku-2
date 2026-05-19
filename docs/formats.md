@@ -404,18 +404,19 @@ Mutation rules:
 - The v43 savedata detail prose starts with `推开彼得之门的众魂啊。` and `得淑女之宽恕，净化汝等之罪。`.
 - The game writes the clear/death/kill counters at fixed byte offsets within the original detail template. Keep the replacement detail string 200 bytes long and keep the three `000` slots at byte offsets `121`, `140`, and `156`.
 
-## PSP_GAME PIC1.PNG
+## DATA002/0112 Title PNG
 
 Files:
-`PSP_GAME/PIC1.PNG`
+`PSP_GAME/USRDIR/DATA000.BIN`, `PSP_GAME/USRDIR/DATA002.BIN`
 
 Evidence:
-- 480x272 PNG shown by the PSP shell/title presentation.
+- MCD3 entry `112` in `DATA002.BIN` is a 480x272 PNG containing the in-game title background art.
+- PPSSPP GE inspection shows the in-game title page as a 512x256 runtime texture at `0x04115240`; that texture is the uploaded form of this PNG, not `PSP_GAME/PIC1.PNG`.
 - v43 patches this image with a small `小方 oid Codex 汉化` credit in the top-left corner.
 
 Mutation rules:
 - Patch only staged extracted builds, not the original extracted source.
-- `tools/build_chs_combined_data001.py` resets `PIC1.PNG` from the clean extracted source before applying the credit, so repeated builds do not accumulate stale text.
+- Keep the MCD3 entry size fixed. `tools/patch_title_credit.py` rewrites entry `112` with the patched PNG and pads remaining bytes after PNG `IEND`.
 - `tools/patch_title_credit.py` owns this patch; use `--no-title-credit` on the broad builder to skip it.
 
 ## Executables

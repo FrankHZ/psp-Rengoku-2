@@ -108,7 +108,7 @@ EBOOT ASCII advance table: halfwidth `1` width is patched from 5 to 7 so it alig
 EBOOT save-list metadata templates: new saves write Chinese title/detail/time labels from the runtime EBOOT strings
 EBOOT savedata detail counter slots remain fixed at byte offsets 121/140/156 inside the original 200-byte template
 EBOOT OSK prompt: `名前を入力してください` is patched to `请输入名称`
-PSP_GAME/PIC1.PNG title background: small `小方 oid Codex 汉化` credit patched into the correct title art
+DATA002/0112 in-game title background: small `小方 oid Codex 汉化` credit patched into the title art; PPSSPP shows it as a runtime 512x256 texture at `0x04115240`
 source hard paragraph breaks and generated soft wraps preserved
 Latin, punctuation, symbols, and key-icon glyphs still reuse original source cells where known
 ```

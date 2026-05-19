@@ -10,12 +10,12 @@ Current PPSSPP build:
 
 | Path | Purpose |
 | --- | --- |
-| `local/rebuilt/combined_chs_v43_savedata_extracted/` | Current PPSSPP-ready broad CHS build with promoted reviewer feedback, reviewed equipment text, story glossary names, English attack attributes, DATA002 rough UI labels cleared, EBOOT halfwidth `1` advance patch, EBOOT new-save metadata string patches, and title-background credit patch. |
+| `local/rebuilt/combined_chs_v43_savedata_extracted/` | Current PPSSPP-ready broad CHS build with promoted reviewer feedback, reviewed equipment text, story glossary names, English attack attributes, DATA002 rough UI labels cleared, EBOOT halfwidth `1` advance patch, EBOOT new-save metadata string patches, and in-game title-background credit patch. |
 | `local/rebuilt/combined_chs_v43_savedata.iso` | Current ISO built from the v43 extracted folder by `tools/build_psp_iso.py`; its high-level ISO9660/UMD layout follows the PPSSPP-tested v41/v40 path. |
 | `local/work/combined_chs_v43_savedata/` | Current build metadata, stage config, glyph assignment, text payloads, and previews. |
 | `local/work/chs_coverage_v43_savedata/` | Current parsed-row and glyph-headroom coverage report. |
 | `local/work/eboot_width_patch/` | Current EBOOT work area. `EBOOT_DEC_WIDTH7_SAVECHS.BIN` is the decrypted EBOOT with ASCII `1` advance patched from 5 to 7 plus new-save metadata and OSK prompt strings; broad builds copy it into `PSP_GAME/SYSDIR/EBOOT.BIN` when present. |
-| `local/work/title_credit_probe/` | Ignored title-texture extraction/probe outputs and PNG previews from the earlier texture search; the final credit patch targets `PSP_GAME/PIC1.PNG`. |
+| `local/work/title_credit_probe/` | Ignored title-texture extraction/probe outputs and PNG previews from the texture search; the final credit patch targets `DATA002/0112`, which PPSSPP shows as the runtime 512x256 title texture. |
 | `local/tools/deceboot_0_3/` | Local PSP EBOOT decryptor used to produce the decrypted ELF for the width-table patch. |
 
 Current text/review inputs:

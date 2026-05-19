@@ -20,7 +20,7 @@ use generated CHS font only for CJK ideographs
 reuse source Latin, digits, punctuation, symbols, and key icons when known
 patch EBOOT ASCII advance table so source halfwidth `1` uses width 7 like other halfwidth digits
 patch EBOOT runtime save-list metadata templates and name-input prompt
-patch `PSP_GAME/PIC1.PNG` title background with a small credit
+patch `DATA002/0112` in-game title background with a small credit
 reserve source cells for every reused symbol code
 preserve explicit paragraph/list hard breaks
 let tooling add soft visual wraps for long Chinese lines
@@ -174,7 +174,7 @@ DATA001/0012 and DATA003/1089: runtime-fit handoff applied without mixing fitted
 DATA003/1089: JP-first story-script pass with glossary-normalized story names
 EBOOT: new-save metadata templates and the name-input OSK prompt are patched in decrypted EBOOT runtime strings
 EBOOT savedata detail text starts with `推开彼得之门的众魂啊。` / `得淑女之宽恕，净化汝等之罪。`; counter write offsets remain 121/140/156
-PSP_GAME/PIC1.PNG: title background has a small `小方 oid Codex 汉化` credit
+DATA002/0112: in-game title background has a small `小方 oid Codex 汉化` credit; PPSSPP shows it as the runtime 512x256 title texture at `0x04115240`
 translation_reviewed/: local-only nested git repo for reviewer JSON inputs
 local/work/translation_review_slim_v12_reviewed_all/: all-file reviewed package, 2492 entries
 runtime-fit overrides: source-slot shortening for a small set of long reviewed rows; reviewer text is retained in the review pack

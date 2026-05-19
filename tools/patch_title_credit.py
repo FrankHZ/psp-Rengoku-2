@@ -1,17 +1,22 @@
 from __future__ import annotations
 
 import argparse
+from io import BytesIO
 from pathlib import Path
 
+from mcd3 import read_mcd3
 from PIL import Image, ImageDraw, ImageFont
 
 
 DEFAULT_CREDIT_TEXT = "小方 oid Codex 汉化"
-PIC1_RELATIVE_PATH = Path("PSP_GAME") / "PIC1.PNG"
+USRDIR_RELATIVE_PATH = Path("PSP_GAME") / "USRDIR"
+MCD3_INDEX_NAME = "DATA000.BIN"
+TITLE_ARCHIVE_NAME = "DATA002.BIN"
+TITLE_PNG_ENTRY_ID = 112
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Patch a small credit line into the PSP title background PIC1.PNG.")
+    parser = argparse.ArgumentParser(description="Patch a small credit line into the in-game title background PNG.")
     parser.add_argument("extracted_root", type=Path, help="PPSSPP-ready extracted build root.")
     parser.add_argument("--text", default=DEFAULT_CREDIT_TEXT, help="Credit text to draw.")
     parser.add_argument("--dry-run", action="store_true", help="Validate the target image without writing.")
@@ -21,22 +26,44 @@ def main() -> int:
     if args.dry_run:
         print("dry run: no file written")
     else:
-        print(f"patched title credit in {args.extracted_root / PIC1_RELATIVE_PATH}")
+        print(
+            "patched title credit in "
+            f"{args.extracted_root / USRDIR_RELATIVE_PATH / TITLE_ARCHIVE_NAME}"
+            f" entry {TITLE_PNG_ENTRY_ID}"
+        )
     return 0
 
 
 def patch_title_credit(extracted_root: Path, text: str = DEFAULT_CREDIT_TEXT, dry_run: bool = False) -> None:
-    target = extracted_root / PIC1_RELATIVE_PATH
-    if not target.exists():
-        raise FileNotFoundError(target)
+    usrdir = extracted_root / USRDIR_RELATIVE_PATH
+    index = read_mcd3(usrdir / MCD3_INDEX_NAME)
+    entry = index.entries[TITLE_PNG_ENTRY_ID]
+    if entry.archive_name != TITLE_ARCHIVE_NAME:
+        raise ValueError(
+            f"expected entry {TITLE_PNG_ENTRY_ID} in {TITLE_ARCHIVE_NAME}, got {entry.archive_name!r}"
+        )
 
-    image = Image.open(target).convert("RGBA")
+    target = usrdir / TITLE_ARCHIVE_NAME
+    archive = bytearray(target.read_bytes())
+    if entry.end_offset > len(archive):
+        raise ValueError(f"entry {TITLE_PNG_ENTRY_ID} extends past {target}")
+
+    original_png = bytes(archive[entry.offset : entry.end_offset])
+    image = Image.open(BytesIO(original_png)).convert("RGBA")
     if image.size != (480, 272):
-        raise ValueError(f"expected PIC1.PNG to be 480x272, got {image.size[0]}x{image.size[1]}")
+        raise ValueError(f"expected title PNG to be 480x272, got {image.size[0]}x{image.size[1]}")
 
     draw_credit(image, text)
     if not dry_run:
-        image.convert("RGB").save(target, format="PNG", optimize=True)
+        buffer = BytesIO()
+        image.convert("RGB").save(buffer, format="PNG", optimize=True)
+        patched_png = buffer.getvalue()
+        if len(patched_png) > entry.size:
+            raise ValueError(
+                f"patched title PNG is {len(patched_png)} bytes, larger than entry {TITLE_PNG_ENTRY_ID} size {entry.size}"
+            )
+        archive[entry.offset : entry.end_offset] = patched_png + b"\x00" * (entry.size - len(patched_png))
+        target.write_bytes(archive)
 
 
 def draw_credit(image: Image.Image, text: str) -> None:
