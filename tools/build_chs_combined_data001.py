@@ -177,6 +177,7 @@ def build_combined_data001(
     )
     stage_font_probe(stage_config)
     apply_patched_eboot(output_root, patched_eboot)
+    reset_shell_title_art(Path(stage_config["extracted_root"]), output_root)
     if title_credit:
         patch_title_credit(output_root, title_credit)
 
@@ -188,6 +189,16 @@ def apply_patched_eboot(output_root: Path, patched_eboot: Path | None) -> None:
     if not target.exists():
         raise FileNotFoundError(f"staged EBOOT target does not exist: {target}")
     shutil.copyfile(patched_eboot, target)
+
+
+def reset_shell_title_art(extracted_root: Path, output_root: Path) -> None:
+    source = extracted_root / "PSP_GAME" / "PIC1.PNG"
+    target = output_root / "PSP_GAME" / "PIC1.PNG"
+    if not source.exists():
+        raise FileNotFoundError(f"source shell title art does not exist: {source}")
+    if not target.exists():
+        raise FileNotFoundError(f"staged shell title art target does not exist: {target}")
+    shutil.copyfile(source, target)
 
 
 def load_targets(target_specs: tuple[tuple[str, Path], ...]) -> list[dict[str, Any]]:

@@ -70,7 +70,9 @@ def draw_credit(image: Image.Image, text: str) -> None:
     draw = ImageDraw.Draw(image, "RGBA")
     font = load_font(13)
     x = 8
-    y = 7
+    # The title PNG is uploaded into a 512x256 runtime texture whose visible
+    # title band starts below the top edge; keep the credit inside that band.
+    y = 42
     draw.text((x + 1, y + 1), text, font=font, fill=(0, 0, 0, 96))
     draw.text((x, y), text, font=font, fill=(245, 248, 255, 230))
 

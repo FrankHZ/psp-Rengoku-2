@@ -28,7 +28,8 @@ class PatchTitleCreditTests(unittest.TestCase):
         ]
         self.assertTrue(changed)
         self.assertLess(max(x for x, _y in changed), 180)
-        self.assertLess(max(y for _x, y in changed), 40)
+        self.assertGreaterEqual(min(y for _x, y in changed), 40)
+        self.assertLess(max(y for _x, y in changed), 70)
 
 
 if __name__ == "__main__":
