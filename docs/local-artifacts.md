@@ -10,11 +10,11 @@ Current PPSSPP build:
 
 | Path | Purpose |
 | --- | --- |
-| `local/rebuilt/combined_chs_v42_review_feedback_extracted/` | Current PPSSPP-ready broad CHS build with latest reviewer feedback, reviewed equipment text, story glossary names, English attack attributes, DATA002 rough UI labels cleared, and the EBOOT halfwidth `1` advance patch. |
-| `local/rebuilt/combined_chs_v42_review_feedback.iso` | Current ISO built from the v42 extracted folder by `tools/build_psp_iso.py`; its high-level ISO9660/UMD layout follows the PPSSPP-tested v41/v40 path. |
-| `local/work/combined_chs_v42_review_feedback/` | Current build metadata, stage config, glyph assignment, text payloads, and previews. |
-| `local/work/chs_coverage_v42_review_feedback/` | Current parsed-row and glyph-headroom coverage report. |
-| `local/work/eboot_width_patch/` | Current EBOOT width-table work area. `EBOOT_DEC_WIDTH7.BIN` is the decrypted EBOOT with ASCII `1` advance patched from 5 to 7; broad builds copy it into `PSP_GAME/SYSDIR/EBOOT.BIN` when present. |
+| `local/rebuilt/combined_chs_v43_savedata_extracted/` | Current PPSSPP-ready broad CHS build with latest reviewer feedback, reviewed equipment text, story glossary names, English attack attributes, DATA002 rough UI labels cleared, EBOOT halfwidth `1` advance patch, and EBOOT new-save metadata string patches. |
+| `local/rebuilt/combined_chs_v43_savedata.iso` | Current ISO built from the v43 extracted folder by `tools/build_psp_iso.py`; its high-level ISO9660/UMD layout follows the PPSSPP-tested v41/v40 path. |
+| `local/work/combined_chs_v43_savedata/` | Current build metadata, stage config, glyph assignment, text payloads, and previews. |
+| `local/work/chs_coverage_v43_savedata/` | Current parsed-row and glyph-headroom coverage report. |
+| `local/work/eboot_width_patch/` | Current EBOOT work area. `EBOOT_DEC_WIDTH7_SAVECHS.BIN` is the decrypted EBOOT with ASCII `1` advance patched from 5 to 7 plus new-save metadata and OSK prompt strings; broad builds copy it into `PSP_GAME/SYSDIR/EBOOT.BIN` when present. |
 | `local/tools/deceboot_0_3/` | Local PSP EBOOT decryptor used to produce the decrypted ELF for the width-table patch. |
 
 Current text/review inputs:

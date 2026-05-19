@@ -12,14 +12,14 @@ docs/chs-layout-rules.md
 Current PPSSPP-ready broad build:
 
 ```text
-local/rebuilt/combined_chs_v42_review_feedback_extracted/
+local/rebuilt/combined_chs_v43_savedata_extracted/
 ```
 
 Current work root and coverage:
 
 ```text
-local/work/combined_chs_v42_review_feedback/
-local/work/chs_coverage_v42_review_feedback/
+local/work/combined_chs_v43_savedata/
+local/work/chs_coverage_v43_savedata/
 ```
 
 Included targets:
@@ -42,7 +42,7 @@ parsed rows across current target tables: 1637
 DATA003/1089 story glyph rows patched:    855
 total current text patch rows:           2492
 assigned CJK glyphs:                     1524
-physical cells used:                      847
+physical cells used:                      846
 reserved source logical cells:            153
 logical headroom before source reserves:  258
 ```
@@ -96,7 +96,7 @@ not extra storage.
 ## Active Focus
 
 Glyph capacity is not the active blocker for the current parsed target set.
-v42 promotes the latest reviewer feedback over the previous baseline:
+v43 keeps the reviewed v42 text baseline and adds EBOOT runtime metadata patches:
 
 ```text
 DATA001/0008 record 64: 熟练 -> 熟练度
@@ -111,21 +111,23 @@ DATA002/0065: latest missing UI/gallery/sound rows promoted, including `开场` 
 DATA001/0017: latest help/manual layout feedback promoted
 DATA001/0012 and DATA003/1089: runtime-fit override handoff applied; reviewer JSON keeps reviewer text, target sheets keep separate fitted strings
 EBOOT ASCII advance table: halfwidth `1` width is patched from 5 to 7 so it aligns with other halfwidth digits while the original glyph bitmap stays unchanged
+EBOOT save-list metadata templates: new saves should write Chinese title/detail/time labels from the runtime EBOOT strings
+EBOOT OSK prompt: `名前を入力してください` is patched to `请输入名称`
 source hard paragraph breaks and generated soft wraps preserved
 Latin, punctuation, symbols, and key-icon glyphs still reuse original source cells where known
 ```
 
 DATA001/0015 now uses the reviewer equipment pass as the unshrunk layer. DATA003/1089 uses `docs/chs-glossary.json` for story names. The v12 all-file review pack mirrors the local `translation_reviewed/` input and records runtime-fit overrides for rows that exceeded source slots. Runtime tester checks are still useful for line flow and menu fit.
 
-Existing PPSSPP savedata list metadata can now be patched separately with:
+Existing PPSSPP savedata list metadata can still be patched separately with:
 
 ```text
 tools/patch_savedata_sfo.py --rengoku2-chs
 ```
 
-This does not solve the runtime writer for newly created saves; new-save
-metadata and the PSP OSK prompt remain outside the current DATA001/002/003 text
-table path.
+v43 patches the runtime EBOOT templates used for new-save metadata and the name
+input OSK prompt. Existing savedata `PARAM.SFO` files are not rewritten by the
+ISO and still need the standalone patch tool if they should be updated.
 
 ## Current Local Artifacts
 

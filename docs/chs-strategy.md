@@ -8,10 +8,10 @@ workflow evolves.
 Treat this as the baseline until tester/reviewer feedback says otherwise:
 
 ```text
-local/rebuilt/combined_chs_v42_review_feedback_extracted/
+local/rebuilt/combined_chs_v43_savedata_extracted/
 ```
 
-The current build keeps the JP-first DATA003/1089 story pass, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text into layered review/runtime sheets, promotes the full local reviewer JSON package plus the latest help/manual and DATA002 UI feedback, keeps standalone attack attributes in English, and keeps known DATA002 rough UI rows cleared. Glyph capacity is not the active blocker after the confirmed low/high bitplane packing model.
+The current build keeps the JP-first DATA003/1089 story pass, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text into layered review/runtime sheets, promotes the full local reviewer JSON package plus the latest help/manual and DATA002 UI feedback, keeps standalone attack attributes in English, keeps known DATA002 rough UI rows cleared, and patches EBOOT runtime metadata strings for new saves. Glyph capacity is not the active blocker after the confirmed low/high bitplane packing model.
 
 Current build policy:
 
@@ -19,6 +19,7 @@ Current build policy:
 use generated CHS font only for CJK ideographs
 reuse source Latin, digits, punctuation, symbols, and key icons when known
 patch EBOOT ASCII advance table so source halfwidth `1` uses width 7 like other halfwidth digits
+patch EBOOT runtime save-list metadata templates and name-input prompt
 reserve source cells for every reused symbol code
 preserve explicit paragraph/list hard breaks
 let tooling add soft visual wraps for long Chinese lines
@@ -88,12 +89,12 @@ logical layers:           2
 logical capacity:      1782
 ```
 
-Current v42 usage:
+Current v43 usage:
 
 ```text
 assigned CJK glyphs:                   1524
-physical cells used:                    847
-low-layer glyphs:                       747
+physical cells used:                    846
+low-layer glyphs:                       746
 high-layer glyphs:                      778
 reserved source logical cells:          153
 logical headroom before source reserves: 258
@@ -116,7 +117,7 @@ unique non-ASCII required:            1452
 ```
 
 The full candidate-bank number remains useful for planning. The current broad
-build needs 1524 assigned CJK glyphs after promoting the v42 reviewer feedback package.
+build needs 1524 assigned CJK glyphs after promoting the v43 reviewer feedback package.
 
 ## JP Glyph Table Backup
 
@@ -157,7 +158,7 @@ translation_reviewed/
 local reviewer-edited JSON inputs, tracked by its own local git repo
 ```
 
-Current v42 pass:
+Current v43 pass:
 
 ```text
 DATA001/0015: reviewer-edited current_chs promoted to chs_unshrunk/chs_shrunk layers
@@ -169,6 +170,7 @@ DATA002/0065: latest missing UI/gallery/sound rows promoted, including `开场` 
 DATA001/0017: latest help/manual layout feedback promoted
 DATA001/0012 and DATA003/1089: latest runtime-fit handoff applied without mixing fitted strings into reviewed JSON
 DATA003/1089: JP-first story-script pass with glossary-normalized story names
+EBOOT: new-save metadata templates and the name-input OSK prompt are patched in decrypted EBOOT runtime strings
 translation_reviewed/: local-only nested git repo for reviewer JSON inputs
 local/work/translation_review_slim_v12_reviewed_all/: all-file reviewed package, 2492 entries
 runtime-fit overrides: source-slot shortening for a small set of long reviewed rows; reviewer text is retained in the review pack
@@ -177,9 +179,9 @@ runtime-fit overrides: source-slot shortening for a small set of long reviewed r
 Known remaining external/system text:
 
 ```text
-PSP savedata list metadata is written into savedata PARAM.SFO and is still Japanese for new v42 saves.
+PSP savedata list metadata is written into savedata PARAM.SFO. v43 patches the EBOOT templates used for new saves.
 Existing savedata PARAM.SFO files can be patched separately with tools/patch_savedata_sfo.py.
-PSP OSK title/prompt, e.g. 名前を入力してください, appears outside the current DATA001/002/003 text-table patch path.
+The PSP OSK title/prompt, e.g. 名前を入力してください, is outside the DATA001/002/003 text-table path but is patched in the decrypted EBOOT runtime strings.
 ```
 
 Recommended next loop:

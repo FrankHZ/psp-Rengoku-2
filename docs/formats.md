@@ -393,14 +393,14 @@ Files:
 Evidence:
 - Game `PARAM.SFO` contains PSP metadata fields such as `DISC_ID`, `TITLE`, and `PSP_SYSTEM_VER`.
 - Game title string found: `煉獄弐 - The Stairway to H.E.A.V.E.N.`
-- PPSSPP save-list text is stored in each savedata directory's `PARAM.SFO`, not in the current DATA001/002/003 text-table patch path.
+- PPSSPP save-list text is stored in each savedata directory's `PARAM.SFO`, not in the DATA001/002/003 text-table patch path.
 - Confirmed savedata fields include `SAVEDATA_TITLE` such as `1 F プレイ時間  0:00`, `SAVEDATA_DETAIL` with the Peter-gate prose plus clear/death/kill counters, and `TITLE`.
 - Savedata string fields in the observed PPSSPP `PARAM.SFO` are fixed-capacity UTF-8 entries; the index length can be updated as long as the new null-terminated string fits the original maximum length.
 
 Mutation rules:
 - Game metadata translation is optional and separate from the text-table build.
 - Existing saves can be patched with `tools/patch_savedata_sfo.py`; use `--rengoku2-chs --dry-run` first to review the translated `SAVEDATA_TITLE`, `SAVEDATA_DETAIL`, and `TITLE` fields.
-- New v41 saves still write Japanese savedata metadata; finding the runtime writer likely requires executable/runtime investigation.
+- New-save metadata templates are in the decrypted EBOOT ELF as UTF-8 runtime strings. v43 patches the title, detail prose/counters, and play-time label there; existing savedata still needs standalone `PARAM.SFO` patching.
 
 ## Executables
 
@@ -413,9 +413,11 @@ Evidence:
 - `local/tools/deceboot_0_3/deceboot.exe` decrypts the current `EBOOT.BIN` to a standard ELF of 1766741 bytes.
 - PPSSPP memory testing confirmed the ASCII advance table at runtime address `0x08924840` with default load address `0x08804000`. The halfwidth `1` advance byte is runtime `0x08924851`, ELF virtual/module offset `0x00120851`, decrypted ELF file offset `0x001208d1`.
 - The current visual fix changes decrypted ELF file offset `0x001208d1` from `0x05` to `0x07`, making halfwidth `1` advance like the other halfwidth digits while leaving the ANK bitmap unchanged.
+- Decrypted EBOOT runtime strings include save metadata at file offsets `0x11c310` (title), `0x11c337` (detail template), `0x11c401` (play-time label), and the UTF-16LE name-input prompt at `0x11c1f0`.
 
 Mutation rules:
-- Keep executable changes narrowly scoped. The current broad build may use a decrypted ELF EBOOT with only the halfwidth `1` advance byte changed.
+- Keep executable changes narrowly scoped. The current broad build may use a decrypted ELF EBOOT with the halfwidth `1` advance byte and verified runtime metadata strings changed.
+- Runtime string patches must preserve fixed string starts and fit within the original null-terminated capacity; use `tools/patch_eboot_runtime_strings.py`.
 
 ## DATA005.BIN
 

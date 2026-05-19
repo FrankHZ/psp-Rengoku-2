@@ -27,7 +27,7 @@ DEFAULT_TARGETS = (
     ("DATA001/0017", "local/work/ui_help_chs_v1/DATA001_0017_help_sheet.json"),
 )
 
-DEFAULT_PATCHED_EBOOT = Path("local/work/eboot_width_patch/EBOOT_DEC_WIDTH7.BIN")
+DEFAULT_PATCHED_EBOOT = Path("local/work/eboot_width_patch/EBOOT_DEC_WIDTH7_SAVECHS.BIN")
 
 
 def main() -> int:
