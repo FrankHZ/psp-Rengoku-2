@@ -17,6 +17,7 @@ from build_chs_offset_table import (
 from build_chs_tutorial import DEFAULT_SLOT_POOLS, assign_chars, build_font_patches, needs_glyph_assignment, write_assignments_csv
 from build_chs_tutorial import BITPLANE_SLOT_POOLS, assign_chars_bitplane
 from build_chs_tutorial import visible_translation_chars
+from patch_title_credit import DEFAULT_CREDIT_TEXT, patch_title_credit
 from stage_font_probe import stage_font_probe
 
 
@@ -65,6 +66,8 @@ def main() -> int:
         default="bitplane",
         help="Use the legacy one-glyph-per-physical-cell model or the confirmed low/high bitplane model.",
     )
+    parser.add_argument("--title-credit", default=DEFAULT_CREDIT_TEXT, help="Small title-background credit text.")
+    parser.add_argument("--no-title-credit", action="store_true", help="Do not patch the title-background credit.")
     parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
 
@@ -82,6 +85,7 @@ def main() -> int:
         stroke_radius=args.stroke_radius,
         assignment_model=args.assignment_model,
         patched_eboot=None if args.no_eboot_width_patch else args.patched_eboot,
+        title_credit=None if args.no_title_credit else args.title_credit,
         overwrite=args.overwrite,
     )
     print(f"staged {args.output_root}")
@@ -101,6 +105,7 @@ def build_combined_data001(
     stroke_radius: int = 0,
     assignment_model: str = "bitplane",
     patched_eboot: Path | None = DEFAULT_PATCHED_EBOOT,
+    title_credit: str | None = DEFAULT_CREDIT_TEXT,
     overwrite: bool = False,
 ) -> None:
     targets = load_targets(target_specs)
@@ -172,6 +177,8 @@ def build_combined_data001(
     )
     stage_font_probe(stage_config)
     apply_patched_eboot(output_root, patched_eboot)
+    if title_credit:
+        patch_title_credit(output_root, title_credit)
 
 
 def apply_patched_eboot(output_root: Path, patched_eboot: Path | None) -> None:

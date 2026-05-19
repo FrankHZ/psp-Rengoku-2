@@ -8,7 +8,7 @@ an old experiment must be reconstructed.
 
 | Script | Purpose |
 | --- | --- |
-| `tools/build_chs_combined_data001.py` | Builds the broad PPSSPP-ready artifact with one shared font assignment pass. Despite the legacy filename, it can include DATA002 and DATA003 text patches. Current broad builds also copy the local decrypted/patched EBOOT artifact when present so halfwidth `1` advances like the other digits and new-save metadata templates are Chinese. |
+| `tools/build_chs_combined_data001.py` | Builds the broad PPSSPP-ready artifact with one shared font assignment pass. Despite the legacy filename, it can include DATA002 and DATA003 text patches. Current broad builds also copy the local decrypted/patched EBOOT artifact when present so halfwidth `1` advances like the other digits and new-save metadata templates are Chinese, then patch a small title-background credit unless `--no-title-credit` is used. |
 | `tools/build_chs_tutorial.py` | Shared CHS assignment/layout helper module plus the older focused tutorial builder. Owns bitplane assignment, source-symbol reservation, and source-budget soft wrapping. |
 | `tools/build_chs_offset_table.py` | Builds one translated offset-table target with font patches and source hard-break preservation. |
 | `tools/stage_font_probe.py` | Stages extracted-folder builds by patching font pages and same-size MCD3 text entries. |
@@ -27,6 +27,7 @@ an old experiment must be reconstructed.
 | `tools/compare_chs_fonts.py` | Compares candidate CHS font rendering. |
 | `tools/patch_savedata_sfo.py` | Lists or patches existing PSP savedata `PARAM.SFO` metadata; `--rengoku2-chs` translates the current Rengoku 2 save-list title/detail fields in fixed-size UTF-8 slots. |
 | `tools/patch_eboot_runtime_strings.py` | Patches verified runtime strings in a decrypted EBOOT ELF: name-input OSK prompt, game/save title, savedata detail template, and play-time label. |
+| `tools/patch_title_credit.py` | Patches DATA001/0006 `.TDL` child `tback` in a staged extracted build with a small `CHS PATCH v43` title-background credit. |
 
 Current broad-build command shape:
 
