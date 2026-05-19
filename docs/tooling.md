@@ -8,7 +8,7 @@ an old experiment must be reconstructed.
 
 | Script | Purpose |
 | --- | --- |
-| `tools/build_chs_combined_data001.py` | Builds the broad PPSSPP-ready artifact with one shared font assignment pass. Despite the legacy filename, it can include DATA002 and DATA003 text patches. Current broad builds also copy the local decrypted/patched EBOOT artifact when present so halfwidth `1` advances like the other digits and new-save metadata templates are Chinese, then patch a small in-game title-background credit unless `--no-title-credit` is used. |
+| `tools/build_chs_combined_data001.py` | Builds the broad PPSSPP-ready artifact with one shared font assignment pass. Despite the legacy filename, it can include DATA002 and DATA003 text patches. Current broad builds also copy the local decrypted/patched EBOOT artifact when present so halfwidth `1` advances like the other digits and new-save metadata templates are Chinese. Use `--no-title-credit` for the clean releasable savedata baseline. |
 | `tools/build_chs_tutorial.py` | Shared CHS assignment/layout helper module plus the older focused tutorial builder. Owns bitplane assignment, source-symbol reservation, and source-budget soft wrapping. |
 | `tools/build_chs_offset_table.py` | Builds one translated offset-table target with font patches and source hard-break preservation. |
 | `tools/stage_font_probe.py` | Stages extracted-folder builds by patching font pages and same-size MCD3 text entries. |
@@ -27,7 +27,7 @@ an old experiment must be reconstructed.
 | `tools/compare_chs_fonts.py` | Compares candidate CHS font rendering. |
 | `tools/patch_savedata_sfo.py` | Lists or patches existing PSP savedata `PARAM.SFO` metadata; `--rengoku2-chs` translates the current Rengoku 2 save-list title/detail fields in fixed-size UTF-8 slots. |
 | `tools/patch_eboot_runtime_strings.py` | Patches verified runtime strings in a decrypted EBOOT ELF: name-input OSK prompt, game/save title, savedata detail template, and play-time label. |
-| `tools/patch_title_credit.py` | Patches the staged in-game title texture at `DATA001/0006` TDL child `tback` with a small `小方 oid Codex 汉化` credit. This is the 512x256 8bpp swizzled texture PPSSPP shows on the title screen. |
+| `tools/patch_title_credit.py` | Experimental title-credit patcher. The current version patches `DATA001/0004` TDL child `tlogo` with `小方 oid Codex 汉化`, using the CHS SemiBold BMFont for CJK and original `codeANK9x14_00_0` glyphs for Latin. The clean v43 savedata baseline should be built with `--no-title-credit`. |
 
 Current broad-build command shape:
 
@@ -49,6 +49,7 @@ Current broad-build command shape:
   --threshold 64 `
   --gray-threshold 176 `
   --assignment-model bitplane `
+  --no-title-credit `
   --overwrite
 ```
 

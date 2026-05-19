@@ -11,7 +11,7 @@ Treat this as the baseline until tester/reviewer feedback says otherwise:
 local/rebuilt/combined_chs_v43_savedata_extracted/
 ```
 
-The current build keeps the JP-first DATA003/1089 story pass, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text into layered review/runtime sheets, promotes the full local reviewer JSON package including help/manual and DATA002 UI feedback, keeps standalone attack attributes in English, keeps known DATA002 rough UI rows cleared, patches EBOOT runtime metadata strings for new saves, and adds a small `小方 oid Codex 汉化` title-background credit. Glyph capacity is not the active blocker after the confirmed low/high bitplane packing model.
+The current clean build keeps the JP-first DATA003/1089 story pass, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text into layered review/runtime sheets, promotes the full local reviewer JSON package including help/manual and DATA002 UI feedback, keeps standalone attack attributes in English, keeps known DATA002 rough UI rows cleared, and patches EBOOT runtime metadata strings for new saves. Glyph capacity is not the active blocker after the confirmed low/high bitplane packing model.
 
 Current build policy:
 
@@ -20,7 +20,7 @@ use generated CHS font only for CJK ideographs
 reuse source Latin, digits, punctuation, symbols, and key icons when known
 patch EBOOT ASCII advance table so source halfwidth `1` uses width 7 like other halfwidth digits
 patch EBOOT runtime save-list metadata templates and name-input prompt
-patch `DATA001/0006` TDL child `tback` in-game title background with a small credit
+keep the releasable v43 savedata build free of title-credit texture changes
 reserve source cells for every reused symbol code
 preserve explicit paragraph/list hard breaks
 let tooling add soft visual wraps for long Chinese lines
@@ -28,6 +28,8 @@ use reviewed JP as primary source for DATA003/1089 story text
 separate full review translation from fitted build text for equipment names/descriptions
 apply the story glossary before building DATA003/1089
 ```
+
+Title-credit experiments are tracked separately from the clean baseline. The latest local experiment patches `DATA001/0004` TDL child `tlogo` with `小方 oid Codex 汉化`, using the CHS SemiBold BMFont for CJK and original ANK Latin glyphs. It is visible in PPSSPP, but the result is still visually rough and is not part of the releasable savedata baseline.
 
 Do not assume alternate runtime bases add storage. Bases like child 9 /
 `0x0610` and child 9 / `0x0661` are alternate code windows over the same
@@ -174,7 +176,7 @@ DATA001/0012 and DATA003/1089: runtime-fit handoff applied without mixing fitted
 DATA003/1089: JP-first story-script pass with glossary-normalized story names
 EBOOT: new-save metadata templates and the name-input OSK prompt are patched in decrypted EBOOT runtime strings
 EBOOT savedata detail text starts with `推开彼得之门的众魂啊。` / `得淑女之宽恕，净化汝等之罪。`; counter write offsets remain 121/140/156
-DATA001/0006 `tback`: in-game title background has a small `小方 oid Codex 汉化` credit; PPSSPP shows this 512x256 texture on the title screen
+title-screen credit: clean `combined_chs_v43_savedata` has no credit patch; latest local experiment is `combined_chs_v43_title_logo_ank3_retry`
 translation_reviewed/: local-only nested git repo for reviewer JSON inputs
 local/work/translation_review_slim_v12_reviewed_all/: all-file reviewed package, 2492 entries
 runtime-fit overrides: source-slot shortening for a small set of long reviewed rows; reviewer text is retained in the review pack

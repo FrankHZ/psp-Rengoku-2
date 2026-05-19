@@ -108,7 +108,7 @@ EBOOT ASCII advance table: halfwidth `1` width is patched from 5 to 7 so it alig
 EBOOT save-list metadata templates: new saves write Chinese title/detail/time labels from the runtime EBOOT strings
 EBOOT savedata detail counter slots remain fixed at byte offsets 121/140/156 inside the original 200-byte template
 EBOOT OSK prompt: `名前を入力してください` is patched to `请输入名称`
-DATA001/0006 `tback` in-game title background: small `小方 oid Codex 汉化` credit patched into the 512x256 title texture
+title-screen credit: not included in the clean releasable `combined_chs_v43_savedata` build; latest local experiment is `combined_chs_v43_title_logo_ank3_retry`, patching `DATA001/0004` `tlogo`, but the visual quality is still under review
 source hard paragraph breaks and generated soft wraps preserved
 Latin, punctuation, symbols, and key-icon glyphs still reuse original source cells where known
 ```
