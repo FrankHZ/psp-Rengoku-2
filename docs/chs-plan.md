@@ -113,7 +113,7 @@ DATA001/0012 and DATA003/1089: runtime-fit override handoff applied; reviewer JS
 EBOOT ASCII advance table: halfwidth `1` width is patched from 5 to 7 so it aligns with other halfwidth digits while the original glyph bitmap stays unchanged
 EBOOT save-list metadata templates: new saves should write Chinese title/detail/time labels from the runtime EBOOT strings
 EBOOT OSK prompt: `名前を入力してください` is patched to `请输入名称`
-DATA001/0006 title background: small `CHS PATCH v43` credit patched into `tback`
+PSP_GAME/PIC1.PNG title background: small `CHS PATCH v43` credit patched into the correct title art
 source hard paragraph breaks and generated soft wraps preserved
 Latin, punctuation, symbols, and key-icon glyphs still reuse original source cells where known
 ```

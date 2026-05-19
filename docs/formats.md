@@ -98,7 +98,6 @@ Evidence:
 - Child table starts at `0x10`.
 - Child rows are 24 bytes: 16-byte null-padded ASCII name, `u32 size`, `u32 offset`.
 - `DATA001` entry `2` contains 12 child resources named `codeANK9x14_00_0` and `codeJAP14x14_*`.
-- `DATA001` entry `6` contains title resources `tback` and `tpart`; `tback` is a 128x256 swizzled 32bpp ABGR texture with pixel data at child offset `0x4D0`.
 
 Text encoding:
 - Confirmed ASCII resource names.
@@ -111,7 +110,6 @@ Pointer layout:
 
 Mutation rules:
 - Unknown. Treat as read-only until child formats are understood.
-- For the current title credit patch only, `tools/patch_title_credit.py` updates DATA001/0006 child `tback` in a staged extracted build and preserves the original child and MCD3 entry sizes.
 
 Verification:
 - `tools/inspect_tdl.py` parses `DATA001` entry `2` and extracts all 12 children.
