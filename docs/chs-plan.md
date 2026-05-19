@@ -93,32 +93,27 @@ child 11 base 0x0754 / 0x07a5
 Alternate bases on the same child are code windows over the same physical cells,
 not extra storage.
 
-## Active Focus
+## Current Status
 
-Glyph capacity is not the active blocker for the current parsed target set.
-v43 keeps the reviewed v42 text baseline and adds EBOOT runtime metadata patches:
+v43 is the current releasable baseline. Glyph capacity is not the active blocker
+for the current parsed target set, and the current `translation_reviewed/`
+package has been promoted into the target sheets and reviewer-facing package.
 
 ```text
-DATA001/0008 record 64: 熟练 -> 熟练度
 DATA001/0015: reviewer-edited current_chs promoted into chs_unshrunk/chs_shrunk layers
-DATA001/0017: Skill Points wording normalized to 熟练度 in visible status/help text
 DATA003/1089: 855 story glyph rows patched from reviewed JP decode; 31 rows glossary-normalized
 DATA001/0016 records 5-10: standalone attack attributes restored to GRAPPLE/SLASH/IMPACT/QUANTUM/BULLET/HEAT
 translation_reviewed package promoted: 244 changed rows across tutorial, DATA001/0012, equipment, UI, help, DATA002, and DATA003
-DATA002/0065: standalone GRAPPLE label restored to English; rough UI/gallery/sound rows remain cleared
-DATA001/0016 records 142-144: upgrade stat abbreviations use source labels En/He/Pr
-DATA002/0065: latest missing UI/gallery/sound rows promoted, including `开场` and `结局`
-DATA001/0017: latest help/manual layout feedback promoted
-DATA001/0012 and DATA003/1089: runtime-fit override handoff applied; reviewer JSON keeps reviewer text, target sheets keep separate fitted strings
 EBOOT ASCII advance table: halfwidth `1` width is patched from 5 to 7 so it aligns with other halfwidth digits while the original glyph bitmap stays unchanged
-EBOOT save-list metadata templates: new saves should write Chinese title/detail/time labels from the runtime EBOOT strings
+EBOOT save-list metadata templates: new saves write Chinese title/detail/time labels from the runtime EBOOT strings
+EBOOT savedata detail counter slots remain fixed at byte offsets 121/140/156 inside the original 200-byte template
 EBOOT OSK prompt: `名前を入力してください` is patched to `请输入名称`
 PSP_GAME/PIC1.PNG title background: small `小方 oid Codex 汉化` credit patched into the correct title art
 source hard paragraph breaks and generated soft wraps preserved
 Latin, punctuation, symbols, and key-icon glyphs still reuse original source cells where known
 ```
 
-DATA001/0015 now uses the reviewer equipment pass as the unshrunk layer. DATA003/1089 uses `docs/chs-glossary.json` for story names. The v12 all-file review pack mirrors the local `translation_reviewed/` input and records runtime-fit overrides for rows that exceeded source slots. Runtime tester checks are still useful for line flow and menu fit.
+DATA001/0015 uses the reviewer equipment pass as the unshrunk layer. DATA003/1089 uses `docs/chs-glossary.json` for story names. The v12 all-file review pack mirrors the local `translation_reviewed/` input and records runtime-fit overrides for rows that exceeded source slots. Runtime tester checks are still useful for line flow and menu fit.
 
 Existing PPSSPP savedata list metadata can still be patched separately with:
 

@@ -11,7 +11,7 @@ Treat this as the baseline until tester/reviewer feedback says otherwise:
 local/rebuilt/combined_chs_v43_savedata_extracted/
 ```
 
-The current build keeps the JP-first DATA003/1089 story pass, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text into layered review/runtime sheets, promotes the full local reviewer JSON package plus the latest help/manual and DATA002 UI feedback, keeps standalone attack attributes in English, keeps known DATA002 rough UI rows cleared, patches EBOOT runtime metadata strings for new saves, and adds a small `小方 oid Codex 汉化` title-background credit. Glyph capacity is not the active blocker after the confirmed low/high bitplane packing model.
+The current build keeps the JP-first DATA003/1089 story pass, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text into layered review/runtime sheets, promotes the full local reviewer JSON package including help/manual and DATA002 UI feedback, keeps standalone attack attributes in English, keeps known DATA002 rough UI rows cleared, patches EBOOT runtime metadata strings for new saves, and adds a small `小方 oid Codex 汉化` title-background credit. Glyph capacity is not the active blocker after the confirmed low/high bitplane packing model.
 
 Current build policy:
 
@@ -163,15 +163,17 @@ Current v43 pass:
 
 ```text
 DATA001/0015: reviewer-edited current_chs promoted to chs_unshrunk/chs_shrunk layers
+DATA001/0015 current equipment name review includes 碎甲连爪 and 削甲刀
 DATA001/0016: standalone attack attributes use English labels matching JP/EN: GRAPPLE, SLASH, IMPACT, QUANTUM, BULLET, HEAT
 DATA001/0017: visible Skill Points wording normalized to 熟练度
 DATA001/0016 records 142-144: upgrade stat abbreviations use source labels En/He/Pr
 DATA002/0065: standalone GRAPPLE label restored to English; DATA002 rough UI/gallery/sound rows cleared
-DATA002/0065: latest missing UI/gallery/sound rows promoted, including `开场` and `结局`
-DATA001/0017: latest help/manual layout feedback promoted
-DATA001/0012 and DATA003/1089: latest runtime-fit handoff applied without mixing fitted strings into reviewed JSON
+DATA002/0065: missing UI/gallery/sound rows are translated, including `开场` and `结局`
+DATA001/0017: help/manual layout feedback is promoted
+DATA001/0012 and DATA003/1089: runtime-fit handoff applied without mixing fitted strings into reviewed JSON
 DATA003/1089: JP-first story-script pass with glossary-normalized story names
 EBOOT: new-save metadata templates and the name-input OSK prompt are patched in decrypted EBOOT runtime strings
+EBOOT savedata detail text starts with `推开彼得之门的众魂啊。` / `得淑女之宽恕，净化汝等之罪。`; counter write offsets remain 121/140/156
 PSP_GAME/PIC1.PNG: title background has a small `小方 oid Codex 汉化` credit
 translation_reviewed/: local-only nested git repo for reviewer JSON inputs
 local/work/translation_review_slim_v12_reviewed_all/: all-file reviewed package, 2492 entries
@@ -183,7 +185,7 @@ Known remaining external/system text:
 ```text
 PSP savedata list metadata is written into savedata PARAM.SFO. v43 patches the EBOOT templates used for new saves.
 Existing savedata PARAM.SFO files can be patched separately with tools/patch_savedata_sfo.py.
-The PSP OSK title/prompt, e.g. 名前を入力してください, is outside the DATA001/002/003 text-table path but is patched in the decrypted EBOOT runtime strings.
+The PSP OSK prompt was outside the DATA001/002/003 text-table path, but v43 patches the known decrypted EBOOT prompt string.
 ```
 
 Recommended next loop:

@@ -401,6 +401,22 @@ Mutation rules:
 - Game metadata translation is optional and separate from the text-table build.
 - Existing saves can be patched with `tools/patch_savedata_sfo.py`; use `--rengoku2-chs --dry-run` first to review the translated `SAVEDATA_TITLE`, `SAVEDATA_DETAIL`, and `TITLE` fields.
 - New-save metadata templates are in the decrypted EBOOT ELF as UTF-8 runtime strings. v43 patches the title, detail prose/counters, and play-time label there; existing savedata still needs standalone `PARAM.SFO` patching.
+- The v43 savedata detail prose starts with `推开彼得之门的众魂啊。` and `得淑女之宽恕，净化汝等之罪。`.
+- The game writes the clear/death/kill counters at fixed byte offsets within the original detail template. Keep the replacement detail string 200 bytes long and keep the three `000` slots at byte offsets `121`, `140`, and `156`.
+
+## PSP_GAME PIC1.PNG
+
+Files:
+`PSP_GAME/PIC1.PNG`
+
+Evidence:
+- 480x272 PNG shown by the PSP shell/title presentation.
+- v43 patches this image with a small `小方 oid Codex 汉化` credit in the top-left corner.
+
+Mutation rules:
+- Patch only staged extracted builds, not the original extracted source.
+- `tools/build_chs_combined_data001.py` resets `PIC1.PNG` from the clean extracted source before applying the credit, so repeated builds do not accumulate stale text.
+- `tools/patch_title_credit.py` owns this patch; use `--no-title-credit` on the broad builder to skip it.
 
 ## Executables
 

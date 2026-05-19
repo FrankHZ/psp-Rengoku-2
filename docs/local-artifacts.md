@@ -10,7 +10,7 @@ Current PPSSPP build:
 
 | Path | Purpose |
 | --- | --- |
-| `local/rebuilt/combined_chs_v43_savedata_extracted/` | Current PPSSPP-ready broad CHS build with latest reviewer feedback, reviewed equipment text, story glossary names, English attack attributes, DATA002 rough UI labels cleared, EBOOT halfwidth `1` advance patch, EBOOT new-save metadata string patches, and title-background credit patch. |
+| `local/rebuilt/combined_chs_v43_savedata_extracted/` | Current PPSSPP-ready broad CHS build with promoted reviewer feedback, reviewed equipment text, story glossary names, English attack attributes, DATA002 rough UI labels cleared, EBOOT halfwidth `1` advance patch, EBOOT new-save metadata string patches, and title-background credit patch. |
 | `local/rebuilt/combined_chs_v43_savedata.iso` | Current ISO built from the v43 extracted folder by `tools/build_psp_iso.py`; its high-level ISO9660/UMD layout follows the PPSSPP-tested v41/v40 path. |
 | `local/work/combined_chs_v43_savedata/` | Current build metadata, stage config, glyph assignment, text payloads, and previews. |
 | `local/work/chs_coverage_v43_savedata/` | Current parsed-row and glyph-headroom coverage report. |
