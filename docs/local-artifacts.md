@@ -15,7 +15,7 @@ Current PPSSPP build:
 | `local/work/combined_chs_v43_savedata/` | Current build metadata, stage config, glyph assignment, text payloads, and previews. |
 | `local/work/chs_coverage_v43_savedata/` | Current parsed-row and glyph-headroom coverage report. |
 | `local/work/eboot_width_patch/` | Current EBOOT work area. `EBOOT_DEC_WIDTH7_SAVECHS.BIN` is the decrypted EBOOT with ASCII `1` advance patched from 5 to 7 plus new-save metadata and OSK prompt strings; broad builds copy it into `PSP_GAME/SYSDIR/EBOOT.BIN` when present. |
-| `local/work/title_credit_probe/` | Ignored title-texture extraction/probe outputs and PNG previews from the texture search; the final credit patch targets `DATA002/0112`, which PPSSPP shows as the runtime 512x256 title texture. |
+| `local/work/title_credit_probe/` | Ignored title-texture extraction/probe outputs and PNG previews from the texture search; the final credit patch targets `DATA001/0006` TDL child `tback`, the 512x256 title texture with the right-side vertical copyright. |
 | `local/tools/deceboot_0_3/` | Local PSP EBOOT decryptor used to produce the decrypted ELF for the width-table patch. |
 
 Current text/review inputs:

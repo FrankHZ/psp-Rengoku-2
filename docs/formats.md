@@ -404,19 +404,20 @@ Mutation rules:
 - The v43 savedata detail prose starts with `推开彼得之门的众魂啊。` and `得淑女之宽恕，净化汝等之罪。`.
 - The game writes the clear/death/kill counters at fixed byte offsets within the original detail template. Keep the replacement detail string 200 bytes long and keep the three `000` slots at byte offsets `121`, `140`, and `156`.
 
-## DATA002/0112 Title PNG
+## DATA001/0006 Title Background Texture
 
 Files:
-`PSP_GAME/USRDIR/DATA000.BIN`, `PSP_GAME/USRDIR/DATA002.BIN`
+`PSP_GAME/USRDIR/DATA000.BIN`, `PSP_GAME/USRDIR/DATA001.BIN`
 
 Evidence:
-- MCD3 entry `112` in `DATA002.BIN` is a 480x272 PNG containing the in-game title background art.
-- PPSSPP GE inspection shows the in-game title page as a 512x256 runtime texture at `0x04115240`; that texture is the uploaded form of this PNG, not `PSP_GAME/PIC1.PNG`.
-- v43 patches this image with a small `小方 oid Codex 汉化` credit near the top-left of the visible runtime title band.
+- MCD3 entry `6` in `DATA001.BIN` is a `.TDL` containing child `0` named `tback`.
+- `tback` is the in-game title background texture: a 512x256 8bpp swizzled `MIG.00.1PSP` child with pixel data starting at `0x450`. Decoding the index plane shows the same background art and right-side vertical copyright seen in PPSSPP GE.
+- Earlier `DATA002/0112` and `PSP_GAME/PIC1.PNG` experiments affected shell/side images but did not change the in-game title screen.
+- v43 patches `tback` with a small `小方 oid Codex 汉化` credit near the top-left of the visible title band.
 
 Mutation rules:
 - Patch only staged extracted builds, not the original extracted source.
-- Keep the MCD3 entry size fixed. `tools/patch_title_credit.py` rewrites entry `112` with the patched PNG and pads remaining bytes after PNG `IEND`.
+- Keep the MCD3 and TDL entry sizes fixed. `tools/patch_title_credit.py` unswizzles the 512x256 index plane, writes the credit mask with bright index `0xF0`, reswizzles the plane, and writes it back into the existing child.
 - The broad builder resets `PSP_GAME/PIC1.PNG` from the clean extracted source so the PSP shell image does not keep stale credit text from older experiments.
 - `tools/patch_title_credit.py` owns this patch; use `--no-title-credit` on the broad builder to skip it.
 

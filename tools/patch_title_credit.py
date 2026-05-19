@@ -1,22 +1,28 @@
 from __future__ import annotations
 
 import argparse
-from io import BytesIO
 from pathlib import Path
 
 from mcd3 import read_mcd3
+from mig import swizzle_texture_bytes, unswizzle_texture_bytes
 from PIL import Image, ImageDraw, ImageFont
+from tdl import read_tdl_bytes
 
 
 DEFAULT_CREDIT_TEXT = "小方 oid Codex 汉化"
 USRDIR_RELATIVE_PATH = Path("PSP_GAME") / "USRDIR"
 MCD3_INDEX_NAME = "DATA000.BIN"
-TITLE_ARCHIVE_NAME = "DATA002.BIN"
-TITLE_PNG_ENTRY_ID = 112
+TITLE_ARCHIVE_NAME = "DATA001.BIN"
+TITLE_TDL_ENTRY_ID = 6
+TITLE_TBACK_CHILD_INDEX = 0
+TITLE_TBACK_PIXEL_OFFSET = 0x450
+TITLE_TBACK_WIDTH = 512
+TITLE_TBACK_HEIGHT = 256
+TITLE_TBACK_INK_INDEX = 0xF0
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Patch a small credit line into the in-game title background PNG.")
+    parser = argparse.ArgumentParser(description="Patch a small credit line into the in-game title background texture.")
     parser.add_argument("extracted_root", type=Path, help="PPSSPP-ready extracted build root.")
     parser.add_argument("--text", default=DEFAULT_CREDIT_TEXT, help="Credit text to draw.")
     parser.add_argument("--dry-run", action="store_true", help="Validate the target image without writing.")
@@ -29,7 +35,7 @@ def main() -> int:
         print(
             "patched title credit in "
             f"{args.extracted_root / USRDIR_RELATIVE_PATH / TITLE_ARCHIVE_NAME}"
-            f" entry {TITLE_PNG_ENTRY_ID}"
+            f" entry {TITLE_TDL_ENTRY_ID} child {TITLE_TBACK_CHILD_INDEX}"
         )
     return 0
 
@@ -37,44 +43,72 @@ def main() -> int:
 def patch_title_credit(extracted_root: Path, text: str = DEFAULT_CREDIT_TEXT, dry_run: bool = False) -> None:
     usrdir = extracted_root / USRDIR_RELATIVE_PATH
     index = read_mcd3(usrdir / MCD3_INDEX_NAME)
-    entry = index.entries[TITLE_PNG_ENTRY_ID]
+    entry = index.entries[TITLE_TDL_ENTRY_ID]
     if entry.archive_name != TITLE_ARCHIVE_NAME:
         raise ValueError(
-            f"expected entry {TITLE_PNG_ENTRY_ID} in {TITLE_ARCHIVE_NAME}, got {entry.archive_name!r}"
+            f"expected entry {TITLE_TDL_ENTRY_ID} in {TITLE_ARCHIVE_NAME}, got {entry.archive_name!r}"
         )
 
     target = usrdir / TITLE_ARCHIVE_NAME
     archive = bytearray(target.read_bytes())
     if entry.end_offset > len(archive):
-        raise ValueError(f"entry {TITLE_PNG_ENTRY_ID} extends past {target}")
+        raise ValueError(f"entry {TITLE_TDL_ENTRY_ID} extends past {target}")
 
-    original_png = bytes(archive[entry.offset : entry.end_offset])
-    image = Image.open(BytesIO(original_png)).convert("RGBA")
-    if image.size != (480, 272):
-        raise ValueError(f"expected title PNG to be 480x272, got {image.size[0]}x{image.size[1]}")
+    tdl_data = bytearray(archive[entry.offset : entry.end_offset])
+    tdl = read_tdl_bytes(bytes(tdl_data), Path("<DATA001/0006>"))
+    child = tdl.entries[TITLE_TBACK_CHILD_INDEX]
+    if child.name != "tback":
+        raise ValueError(f"expected child {TITLE_TBACK_CHILD_INDEX} to be tback, got {child.name!r}")
 
-    draw_credit(image, text)
+    mig_data = bytearray(tdl_data[child.offset : child.end_offset])
+    pixel_size = TITLE_TBACK_WIDTH * TITLE_TBACK_HEIGHT
+    pixel_end = TITLE_TBACK_PIXEL_OFFSET + pixel_size
+    if pixel_end > len(mig_data):
+        raise ValueError("tback pixel data extends past MIG child")
+
+    linear = bytearray(
+        unswizzle_texture_bytes(
+            bytes(mig_data[TITLE_TBACK_PIXEL_OFFSET:pixel_end]),
+            width_bytes=TITLE_TBACK_WIDTH,
+            height=TITLE_TBACK_HEIGHT,
+        )
+    )
+
+    mask = Image.new("L", (TITLE_TBACK_WIDTH, TITLE_TBACK_HEIGHT), 0)
+    draw_credit_mask(mask, text)
+    mask_pixels = mask.tobytes()
+    for index, alpha in enumerate(mask_pixels):
+        if alpha:
+            linear[index] = TITLE_TBACK_INK_INDEX
+
+    mig_data[TITLE_TBACK_PIXEL_OFFSET:pixel_end] = swizzle_texture_bytes(
+        bytes(linear),
+        width_bytes=TITLE_TBACK_WIDTH,
+        height=TITLE_TBACK_HEIGHT,
+    )
+    tdl_data[child.offset : child.end_offset] = mig_data
+
     if not dry_run:
-        buffer = BytesIO()
-        image.convert("RGB").save(buffer, format="PNG", optimize=True)
-        patched_png = buffer.getvalue()
-        if len(patched_png) > entry.size:
-            raise ValueError(
-                f"patched title PNG is {len(patched_png)} bytes, larger than entry {TITLE_PNG_ENTRY_ID} size {entry.size}"
-            )
-        archive[entry.offset : entry.end_offset] = patched_png + b"\x00" * (entry.size - len(patched_png))
+        archive[entry.offset : entry.end_offset] = tdl_data
         target.write_bytes(archive)
 
 
-def draw_credit(image: Image.Image, text: str) -> None:
-    draw = ImageDraw.Draw(image, "RGBA")
+def draw_credit_mask(mask: Image.Image, text: str) -> None:
+    draw = ImageDraw.Draw(mask)
     font = load_font(13)
     x = 8
-    # The title PNG is uploaded into a 512x256 runtime texture whose visible
-    # title band starts below the top edge; keep the credit inside that band.
-    y = 42
-    draw.text((x + 1, y + 1), text, font=font, fill=(0, 0, 0, 96))
-    draw.text((x, y), text, font=font, fill=(245, 248, 255, 230))
+    y = 38
+    draw.text((x, y), text, font=font, fill=255)
+
+
+def draw_credit(image: Image.Image, text: str) -> None:
+    mask = Image.new("L", image.size, 0)
+    draw_credit_mask(mask, text)
+    draw = ImageDraw.Draw(image, "RGBA")
+    for y in range(image.height):
+        for x in range(image.width):
+            if mask.getpixel((x, y)):
+                draw.point((x, y), fill=(245, 248, 255, 230))
 
 
 def load_font(size: int) -> ImageFont.ImageFont:
