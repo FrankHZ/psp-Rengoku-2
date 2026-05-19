@@ -18,12 +18,12 @@ def rengoku2_title(value: str) -> str:
 def rengoku2_detail(value: str) -> str:
     value = re.sub(
         r"ペテロの門を押し開きし魂共よ。\r?\n淑女の許しを得、汝等の罪を浄化せよ。",
-        lambda match: "推开彼得之门的灵魂们啊。"
+        lambda match: "推开彼得之门的众魂啊。"
         + ("\r\n" if "\r\n" in match.group(0) else "\n")
-        + "蒙淑女允准，净化尔等罪孽。",
+        + "得淑女之宽恕，净化汝等之罪。",
         value,
     )
-    value = value.replace("クリア回数", "通关次数")
+    value = value.replace("クリア回数", "通关总次数")
     value = value.replace("死亡回数", "死亡次数")
     value = value.replace("撃破数", "击破数")
     return value

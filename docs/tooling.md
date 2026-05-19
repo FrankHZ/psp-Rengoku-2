@@ -27,7 +27,7 @@ an old experiment must be reconstructed.
 | `tools/compare_chs_fonts.py` | Compares candidate CHS font rendering. |
 | `tools/patch_savedata_sfo.py` | Lists or patches existing PSP savedata `PARAM.SFO` metadata; `--rengoku2-chs` translates the current Rengoku 2 save-list title/detail fields in fixed-size UTF-8 slots. |
 | `tools/patch_eboot_runtime_strings.py` | Patches verified runtime strings in a decrypted EBOOT ELF: name-input OSK prompt, game/save title, savedata detail template, and play-time label. |
-| `tools/patch_title_credit.py` | Patches staged `PSP_GAME/PIC1.PNG` with a small `CHS PATCH v43` title-background credit. |
+| `tools/patch_title_credit.py` | Patches staged `PSP_GAME/PIC1.PNG` with a small `小方 oid Codex 汉化` title-background credit. |
 
 Current broad-build command shape:
 

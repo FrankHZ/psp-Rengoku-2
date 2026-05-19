@@ -11,7 +11,7 @@ Treat this as the baseline until tester/reviewer feedback says otherwise:
 local/rebuilt/combined_chs_v43_savedata_extracted/
 ```
 
-The current build keeps the JP-first DATA003/1089 story pass, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text into layered review/runtime sheets, promotes the full local reviewer JSON package plus the latest help/manual and DATA002 UI feedback, keeps standalone attack attributes in English, keeps known DATA002 rough UI rows cleared, patches EBOOT runtime metadata strings for new saves, and adds a small title-background CHS patch credit. Glyph capacity is not the active blocker after the confirmed low/high bitplane packing model.
+The current build keeps the JP-first DATA003/1089 story pass, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text into layered review/runtime sheets, promotes the full local reviewer JSON package plus the latest help/manual and DATA002 UI feedback, keeps standalone attack attributes in English, keeps known DATA002 rough UI rows cleared, patches EBOOT runtime metadata strings for new saves, and adds a small `小方 oid Codex 汉化` title-background credit. Glyph capacity is not the active blocker after the confirmed low/high bitplane packing model.
 
 Current build policy:
 
@@ -172,7 +172,7 @@ DATA001/0017: latest help/manual layout feedback promoted
 DATA001/0012 and DATA003/1089: latest runtime-fit handoff applied without mixing fitted strings into reviewed JSON
 DATA003/1089: JP-first story-script pass with glossary-normalized story names
 EBOOT: new-save metadata templates and the name-input OSK prompt are patched in decrypted EBOOT runtime strings
-PSP_GAME/PIC1.PNG: title background has a small `CHS PATCH v43` credit
+PSP_GAME/PIC1.PNG: title background has a small `小方 oid Codex 汉化` credit
 translation_reviewed/: local-only nested git repo for reviewer JSON inputs
 local/work/translation_review_slim_v12_reviewed_all/: all-file reviewed package, 2492 entries
 runtime-fit overrides: source-slot shortening for a small set of long reviewed rows; reviewer text is retained in the review pack

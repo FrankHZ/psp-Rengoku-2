@@ -30,7 +30,7 @@ Current text/review inputs:
 | `local/work/actual_cjk_requirement_v1/` | Actual translated/candidate-bank CJK requirement report. |
 | `local/work/full_jp_text_decode_v1/` | JP decode output built from the reviewed glyph table. |
 | `local/work/translation_refine_v1/` | Current JP+EN refinement packs and merged target sheets. Keep `merged_target_sheets_all_fit_v1/` plus `merged_target_sheets_v41_reviewed_all/`; older intermediate target-sheet directories were removed. |
-| `local/work/translation_review_slim_v12_reviewed_all/` | Current all-file review package promoted from `translation_reviewed/`; includes 2492 entries, 242 changed/promoted rows, and runtime-fit notes. |
+| `local/work/translation_review_slim_v12_reviewed_all/` | Current all-file review package promoted from `translation_reviewed/`; includes 2492 entries, 244 changed/promoted rows, and runtime-fit notes. |
 | `translation_reviewed/` | Local reviewer-edited input packs; promote into generated work sheets, but do not treat as build output. |
 
 Current font artifacts:

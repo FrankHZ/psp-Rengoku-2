@@ -62,7 +62,7 @@ Current human review package:
 local/work/translation_review_slim_v12_reviewed_all/
 entries: 2492
 fields: id, category, chs, jp, en plus equipment layer fields where applicable
-changed/promoted rows: 242
+changed/promoted rows: 244
 rough markers: 0
 
 translation_reviewed/
@@ -104,7 +104,7 @@ DATA001/0015: reviewer-edited current_chs promoted into chs_unshrunk/chs_shrunk 
 DATA001/0017: Skill Points wording normalized to 熟练度 in visible status/help text
 DATA003/1089: 855 story glyph rows patched from reviewed JP decode; 31 rows glossary-normalized
 DATA001/0016 records 5-10: standalone attack attributes restored to GRAPPLE/SLASH/IMPACT/QUANTUM/BULLET/HEAT
-translation_reviewed package promoted: 242 changed rows across tutorial, DATA001/0012, equipment, UI, help, DATA002, and DATA003
+translation_reviewed package promoted: 244 changed rows across tutorial, DATA001/0012, equipment, UI, help, DATA002, and DATA003
 DATA002/0065: standalone GRAPPLE label restored to English; rough UI/gallery/sound rows remain cleared
 DATA001/0016 records 142-144: upgrade stat abbreviations use source labels En/He/Pr
 DATA002/0065: latest missing UI/gallery/sound rows promoted, including `开场` and `结局`
@@ -113,7 +113,7 @@ DATA001/0012 and DATA003/1089: runtime-fit override handoff applied; reviewer JS
 EBOOT ASCII advance table: halfwidth `1` width is patched from 5 to 7 so it aligns with other halfwidth digits while the original glyph bitmap stays unchanged
 EBOOT save-list metadata templates: new saves should write Chinese title/detail/time labels from the runtime EBOOT strings
 EBOOT OSK prompt: `名前を入力してください` is patched to `请输入名称`
-PSP_GAME/PIC1.PNG title background: small `CHS PATCH v43` credit patched into the correct title art
+PSP_GAME/PIC1.PNG title background: small `小方 oid Codex 汉化` credit patched into the correct title art
 source hard paragraph breaks and generated soft wraps preserved
 Latin, punctuation, symbols, and key-icon glyphs still reuse original source cells where known
 ```

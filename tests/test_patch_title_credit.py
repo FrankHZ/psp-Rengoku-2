@@ -15,7 +15,7 @@ from patch_title_credit import DEFAULT_CREDIT_TEXT, draw_credit
 
 
 class PatchTitleCreditTests(unittest.TestCase):
-    def test_draw_credit_changes_bottom_right_only(self) -> None:
+    def test_draw_credit_changes_top_left_only(self) -> None:
         image = Image.new("RGBA", (480, 272), (10, 20, 30, 255))
 
         draw_credit(image, DEFAULT_CREDIT_TEXT)
@@ -27,8 +27,8 @@ class PatchTitleCreditTests(unittest.TestCase):
             if image.getpixel((x, y)) != (10, 20, 30, 255)
         ]
         self.assertTrue(changed)
-        self.assertGreaterEqual(min(x for x, _y in changed), 360)
-        self.assertGreaterEqual(min(y for _x, y in changed), 240)
+        self.assertLess(max(x for x, _y in changed), 180)
+        self.assertLess(max(y for _x, y in changed), 40)
 
 
 if __name__ == "__main__":

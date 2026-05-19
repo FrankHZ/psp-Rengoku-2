@@ -6,14 +6,14 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 
-DEFAULT_CREDIT_TEXT = "CHS PATCH v43"
+DEFAULT_CREDIT_TEXT = "小方 oid Codex 汉化"
 PIC1_RELATIVE_PATH = Path("PSP_GAME") / "PIC1.PNG"
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Patch a small credit line into the PSP title background PIC1.PNG.")
     parser.add_argument("extracted_root", type=Path, help="PPSSPP-ready extracted build root.")
-    parser.add_argument("--text", default=DEFAULT_CREDIT_TEXT, help="ASCII credit text to draw.")
+    parser.add_argument("--text", default=DEFAULT_CREDIT_TEXT, help="Credit text to draw.")
     parser.add_argument("--dry-run", action="store_true", help="Validate the target image without writing.")
     args = parser.parse_args()
 
@@ -41,24 +41,18 @@ def patch_title_credit(extracted_root: Path, text: str = DEFAULT_CREDIT_TEXT, dr
 
 def draw_credit(image: Image.Image, text: str) -> None:
     draw = ImageDraw.Draw(image, "RGBA")
-    font = load_font(12)
-    bbox = draw.textbbox((0, 0), text, font=font)
-    text_w = bbox[2] - bbox[0]
-    text_h = bbox[3] - bbox[1]
-    x = image.width - text_w - 12
-    y = image.height - text_h - 10
-    pad_x = 5
-    pad_y = 3
-    draw.rounded_rectangle(
-        (x - pad_x, y - pad_y, x + text_w + pad_x, y + text_h + pad_y),
-        radius=3,
-        fill=(0, 0, 0, 96),
-    )
-    draw.text((x, y), text, font=font, fill=(218, 230, 246, 210))
+    font = load_font(13)
+    x = 8
+    y = 7
+    draw.text((x + 1, y + 1), text, font=font, fill=(0, 0, 0, 96))
+    draw.text((x, y), text, font=font, fill=(245, 248, 255, 230))
 
 
 def load_font(size: int) -> ImageFont.ImageFont:
     for path in (
+        Path("C:/Windows/Fonts/msyh.ttc"),
+        Path("C:/Windows/Fonts/simhei.ttf"),
+        Path("C:/Windows/Fonts/simsun.ttc"),
         Path("C:/Windows/Fonts/segoeui.ttf"),
         Path("C:/Windows/Fonts/arial.ttf"),
     ):

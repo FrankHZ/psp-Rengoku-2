@@ -88,7 +88,7 @@ class ParamSfoTests(unittest.TestCase):
         self.assertEqual(set(changes), {"SAVEDATA_TITLE", "SAVEDATA_DETAIL", "TITLE"})
         self.assertEqual(sfo.string_value("SAVEDATA_TITLE"), "4 F 游戏时间 292:55")
         self.assertIn("推开彼得之门", sfo.string_value("SAVEDATA_DETAIL"))
-        self.assertIn("通关次数：999", sfo.string_value("SAVEDATA_DETAIL"))
+        self.assertIn("通关总次数：999", sfo.string_value("SAVEDATA_DETAIL"))
         self.assertEqual(sfo.string_value("TITLE"), "炼狱贰 The Stairway to H.E.A.V.E.N.")
 
 
