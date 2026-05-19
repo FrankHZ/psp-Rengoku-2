@@ -23,7 +23,7 @@ def rengoku2_detail(value: str) -> str:
         + "得淑女之宽恕，净化汝等之罪。",
         value,
     )
-    value = value.replace("クリア回数", "通关总次数")
+    value = value.replace("クリア回数", "通关次数")
     value = value.replace("死亡回数", "死亡次数")
     value = value.replace("撃破数", "击破数")
     return value
