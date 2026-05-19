@@ -19,7 +19,7 @@ The current CHS handoff is:
 local/rebuilt/combined_chs_v42_review_feedback_extracted/
 ```
 
-The build keeps the JP-first story baseline, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text with separate review/runtime layers, promotes the full reviewer JSON package plus the latest help/manual and DATA002 UI feedback, keeps standalone attack-attribute labels in English, and keeps DATA002/0065 rough UI rows cleared. It uses the full SemiBold 18px CJK font atlas, preserves original Latin/punctuation/symbol glyphs where source codes are known, widens the visible footprint of the original halfwidth `1` glyph for better digit alignment, and keeps source-budget wrapping for long Chinese prose.
+The build keeps the JP-first story baseline, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text with separate review/runtime layers, promotes the full reviewer JSON package plus the latest help/manual and DATA002 UI feedback, keeps standalone attack-attribute labels in English, and keeps DATA002/0065 rough UI rows cleared. It uses the full SemiBold 18px CJK font atlas, preserves original Latin/punctuation/symbol glyphs where source codes are known, patches the EBOOT ASCII advance table so halfwidth `1` aligns with the other digits, and keeps source-budget wrapping for long Chinese prose.
 
 Current text review package:
 

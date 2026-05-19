@@ -410,9 +410,12 @@ Files:
 Evidence:
 - `EBOOT.BIN` starts with `~PSP`, has high entropy, and quick scans show no useful plain strings.
 - `BOOT.BIN` is all zeroes in this extraction.
+- `local/tools/deceboot_0_3/deceboot.exe` decrypts the current `EBOOT.BIN` to a standard ELF of 1766741 bytes.
+- PPSSPP memory testing confirmed the ASCII advance table at runtime address `0x08924840` with default load address `0x08804000`. The halfwidth `1` advance byte is runtime `0x08924851`, ELF virtual/module offset `0x00120851`, decrypted ELF file offset `0x001208d1`.
+- The current visual fix changes decrypted ELF file offset `0x001208d1` from `0x05` to `0x07`, making halfwidth `1` advance like the other halfwidth digits while leaving the ANK bitmap unchanged.
 
 Mutation rules:
-- Defer executable work until data/font survey results require it.
+- Keep executable changes narrowly scoped. The current broad build may use a decrypted ELF EBOOT with only the halfwidth `1` advance byte changed.
 
 ## DATA005.BIN
 

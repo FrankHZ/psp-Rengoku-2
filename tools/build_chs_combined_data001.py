@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 from pathlib import Path
 from typing import Any
 
@@ -26,29 +27,7 @@ DEFAULT_TARGETS = (
     ("DATA001/0017", "local/work/ui_help_chs_v1/DATA001_0017_help_sheet.json"),
 )
 
-ANK_DIGIT_ONE_PATCH = {
-    "mode": "bitmap_bitplane",
-    "target_page": "local/work/tdl_DATA001_0002/0000_codeANK9x14_00_0.bin",
-    "target_child": 0,
-    "target_cell": 17,
-    "layer": "low",
-    "rows": [
-        ".........",
-        "..##+....",
-        ".#+#+....",
-        "...#+....",
-        "...#+....",
-        "...#+....",
-        "...#+....",
-        "...#+....",
-        "...#+....",
-        "...#+....",
-        "...#+....",
-        "#######..",
-        "+++++++..",
-        ".........",
-    ],
-}
+DEFAULT_PATCHED_EBOOT = Path("local/work/eboot_width_patch/EBOOT_DEC_WIDTH7.BIN")
 
 
 def main() -> int:
@@ -69,6 +48,17 @@ def main() -> int:
     parser.add_argument("--threshold", type=int, default=64)
     parser.add_argument("--gray-threshold", type=int, default=176)
     parser.add_argument("--stroke-radius", type=int, default=0)
+    parser.add_argument(
+        "--patched-eboot",
+        type=Path,
+        default=DEFAULT_PATCHED_EBOOT,
+        help="Optional decrypted/patched EBOOT to copy into the staged build when present.",
+    )
+    parser.add_argument(
+        "--no-eboot-width-patch",
+        action="store_true",
+        help="Do not copy the local patched EBOOT into the staged build.",
+    )
     parser.add_argument(
         "--assignment-model",
         choices=("single", "bitplane"),
@@ -91,6 +81,7 @@ def main() -> int:
         gray_threshold=args.gray_threshold,
         stroke_radius=args.stroke_radius,
         assignment_model=args.assignment_model,
+        patched_eboot=None if args.no_eboot_width_patch else args.patched_eboot,
         overwrite=args.overwrite,
     )
     print(f"staged {args.output_root}")
@@ -109,6 +100,7 @@ def build_combined_data001(
     gray_threshold: int = 176,
     stroke_radius: int = 0,
     assignment_model: str = "bitplane",
+    patched_eboot: Path | None = DEFAULT_PATCHED_EBOOT,
     overwrite: bool = False,
 ) -> None:
     targets = load_targets(target_specs)
@@ -142,7 +134,6 @@ def build_combined_data001(
         stroke_radius,
         work_root / "previews",
     )
-    font_patches.insert(0, ANK_DIGIT_ONE_PATCH)
 
     text_patches = []
     for target in targets:
@@ -180,6 +171,16 @@ def build_combined_data001(
         encoding="utf-8",
     )
     stage_font_probe(stage_config)
+    apply_patched_eboot(output_root, patched_eboot)
+
+
+def apply_patched_eboot(output_root: Path, patched_eboot: Path | None) -> None:
+    if patched_eboot is None or not patched_eboot.exists():
+        return
+    target = output_root / "PSP_GAME" / "SYSDIR" / "EBOOT.BIN"
+    if not target.exists():
+        raise FileNotFoundError(f"staged EBOOT target does not exist: {target}")
+    shutil.copyfile(patched_eboot, target)
 
 
 def load_targets(target_specs: tuple[tuple[str, Path], ...]) -> list[dict[str, Any]]:

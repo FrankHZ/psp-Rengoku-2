@@ -110,7 +110,7 @@ DATA001/0016 records 142-144: upgrade stat abbreviations use source labels En/He
 DATA002/0065: latest missing UI/gallery/sound rows promoted, including `开场` and `结局`
 DATA001/0017: latest help/manual layout feedback promoted
 DATA001/0012 and DATA003/1089: runtime-fit override handoff applied; reviewer JSON keeps reviewer text, target sheets keep separate fitted strings
-codeANK9x14_00_0 low cell 17: halfwidth digit `1` keeps a thin main stroke but gets a wider visible footprint for alignment with other digits
+EBOOT ASCII advance table: halfwidth `1` width is patched from 5 to 7 so it aligns with other halfwidth digits while the original glyph bitmap stays unchanged
 source hard paragraph breaks and generated soft wraps preserved
 Latin, punctuation, symbols, and key-icon glyphs still reuse original source cells where known
 ```
