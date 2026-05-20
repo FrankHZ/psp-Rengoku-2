@@ -27,6 +27,7 @@ class PatchPspPic0Tests(unittest.TestCase):
 
             patch_pic0(root, replacement)
 
+            self.assertEqual(target.read_bytes(), replacement.read_bytes())
             with Image.open(target) as image:
                 self.assertEqual(image.size, (310, 180))
                 self.assertEqual(image.convert("RGBA").getpixel((0, 0)), (10, 20, 30, 255))

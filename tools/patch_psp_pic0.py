@@ -38,12 +38,12 @@ def patch_pic0(
         raise FileNotFoundError(f"missing staged PIC0 target: {source_target}")
 
     expected_size = read_png_size(source_target)
-    image = validate_pic0_replacement(replacement_png, expected_size)
+    validate_pic0_replacement(replacement_png, expected_size)
     if dry_run:
         return target
 
     target.parent.mkdir(parents=True, exist_ok=True)
-    image.save(target, format="PNG", optimize=True)
+    target.write_bytes(replacement_png.read_bytes())
     return target
 
 
