@@ -12,7 +12,7 @@ Evidence:
 - Game data is concentrated in `PSP_GAME/USRDIR/DATA000.BIN` through `DATA005.BIN`.
 - `SYSDIR/UPDATE` appears to be PSP firmware update data and is not a translation target.
 - `PSP_GAME/PIC0.PNG` is the PSP shell preview/description image. For Rengoku 2 JP it is a 310x180 PNG containing the logo, Japanese blurb, and copyright line; it matches PPSSPP's game preview screen.
-- `PSP_GAME/ICON0.PNG` is the smaller PSP shell icon, and `PSP_GAME/PIC1.PNG` is the 480x272 PSP shell background.
+- `PSP_GAME/ICON0.PNG` is the smaller PSP shell icon, and `PSP_GAME/PIC1.PNG` is the 480x272 PSP shell background. The current releasable v43 ISO uses `local/work/title_credit_probe/rebuilt_pic1_credit.png` as the staged `PIC1.PNG`, adding a small upper-left `小方 oid Codex 汉化` credit for shell preview screens only.
 
 Known rebuild shape:
 - UMDGen v40 uses blank volume id, path tables at LBA 18 and 20, root directory at LBA 22, one 2048-byte sector for each directory, unversioned file identifiers, and the observed file LBA order beginning with `UMD_DATA.BIN` at 28 and `PSP_GAME/SYSDIR/EBOOT.BIN` at 29.
@@ -417,13 +417,13 @@ Evidence:
 - `tback` is an in-game title background layer: a 512x256 8bpp swizzled `MIG.00.1PSP` child. Offset probes showed useful decodes around `0x210`/`0x250`, but the layer is filtered/tinted in-game and small credit text becomes dark or misaligned. It is not the current credit target.
 - MCD3 entry `4` in `DATA001.BIN` is a `.TDL` containing child `0` named `tlogo`.
 - `tlogo` is the in-game title-logo layer: a 512x256 8bpp swizzled `MIG.00.1PSP` child with pixel data starting at `0x80`; its palette starts at `0x200d0`, and transparent background uses index `0xEB`.
-- Earlier `DATA002/0112` and `PSP_GAME/PIC1.PNG` experiments affected shell/side images but did not change the in-game title screen.
+- Earlier `DATA002/0112` affected shell/side images but did not change the in-game title screen. `PSP_GAME/PIC1.PNG` is now intentionally used for the PSP shell preview background credit and still does not affect in-game title rendering.
 - The latest local experiment patches `tlogo` with a small `小方 oid Codex 汉化` credit near the bottom-left of the 512x256 logo texture. CJK glyphs come from `local/fonts/full-semibold-18.fnt`; Latin glyphs are cut from `DATA001/0002` child `codeANK9x14_00_0`. The result is visible in PPSSPP but still visually rough, so the clean `combined_chs_v43_savedata` build omits it.
 
 Mutation rules:
 - Patch only staged extracted builds, not the original extracted source.
 - Keep the MCD3 and TDL entry sizes fixed. `tools/patch_title_credit.py` unswizzles the 512x256 `tlogo` index plane, writes the credit mask with existing white alpha palette indices, reswizzles the plane, and writes it back into the existing child.
-- The broad builder resets `PSP_GAME/PIC1.PNG` from the clean extracted source so the PSP shell image does not keep stale credit text from older experiments.
+- The broad builder resets `PSP_GAME/PIC1.PNG` from the clean extracted source. Reapply `local/work/title_credit_probe/rebuilt_pic1_credit.png` to staged `PSP_GAME/PIC1.PNG` before rebuilding a releasable ISO if a fresh broad build is made.
 - `tools/patch_title_credit.py` owns this experiment; use `--no-title-credit` on the broad builder for the releasable v43 savedata build.
 
 ## Executables

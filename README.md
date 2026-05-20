@@ -21,7 +21,7 @@ local/rebuilt/combined_chs_v43_savedata_extracted/
 
 The build keeps the JP-first story baseline, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text with separate review/runtime layers, promotes the full reviewer JSON package including help/manual and DATA002 UI feedback, keeps standalone attack-attribute labels in English, and keeps DATA002/0065 rough UI rows cleared. It uses the full SemiBold 18px CJK font atlas, preserves original Latin/punctuation/symbol glyphs where source codes are known, patches the EBOOT ASCII advance table so halfwidth `1` aligns with the other digits, translates the EBOOT save-list metadata templates for new saves, and keeps source-budget wrapping for long Chinese prose.
 
-The current releasable v43 savedata build is intentionally clean and has no title-screen credit texture patch. A separate latest local experiment exists at `local/rebuilt/combined_chs_v43_title_logo_ank3_retry.iso`; it patches the title logo layer with `小方 oid Codex 汉化`, but the visual result is still considered experimental rather than part of the releasable baseline.
+The current releasable v43 savedata build keeps the in-game title textures clean, but uses the earlier PSP shell `PIC1.PNG` background with a small `小方 oid Codex 汉化` credit in the upper-left. A separate local experiment exists at `local/rebuilt/combined_chs_v43_title_logo_ank3_retry.iso`; it patches the in-game title logo layer, but the visual result is still considered experimental rather than part of the releasable baseline.
 
 Current text review package:
 
