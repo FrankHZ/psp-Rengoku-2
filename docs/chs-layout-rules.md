@@ -123,6 +123,23 @@ font cells, so they do not get overwritten by CHS glyph assignments. Use the
 same approach for other manual/tutorial button hints when the original JP row
 exposes a clear source icon code.
 
+For reviewer-facing code-aware JP exports, use readable icon names instead of
+numeric codes:
+
+```text
+0x0283 / 0x0284 -> <icon:L>
+0x0285 / 0x0286 -> <icon:R>
+0x0287 -> <icon:○>
+0x0288 -> <icon:×>
+0x0289 -> <icon:△>
+0x028a -> <icon:□>
+```
+
+These dedicated button-icon codes live in `child03 codeJAP14x14_04_ low`,
+directly below the `0x0282` euro-sign cell. Ordinary Latin uses separate visible
+glyph codes such as `0x01a8`/`0x01ae` for fullwidth `Ｌ`/`Ｒ`; do not treat those
+as button icons in reviewer-facing JP exports.
+
 ## Manual Prose Layout
 
 For prose-heavy help pages, prefer the generic prose wrapper before adding a

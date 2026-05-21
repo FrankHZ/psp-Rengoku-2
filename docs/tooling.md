@@ -18,6 +18,7 @@ an old experiment must be reconstructed.
 | `tools/export_chs_font_corpus.py` | Exports CJK-only CHS corpora for external font generation. |
 | `tools/build_full_jp_texts.py` | Builds the reviewed `code,char` map from `local/ocr_reviewed/` and re-decodes known JP extracts. |
 | `tools/export_translation_review_pack.py` | Exports JSON review files with CHS text and alignment context when a fresh reviewer pack is needed. |
+| `tools/export_code_aware_review_pack.py` | Exports the current `translation_reviewed/` files into a reviewer JSON package whose `chs` is reviewer Chinese and whose `jp` is rendered from source codes. It makes hidden code points explicit: `0x0020 ->` halfwidth space, `0x0100 ->` fullwidth space, `0x000A -> \n`, `#GRAM#` stays a runtime player-name token, and dedicated `0x0283..0x028a` button glyphs are shown as readable `<icon:L>`, `<icon:R>`, `<icon:○>`, `<icon:×>`, `<icon:△>`, `<icon:□>` tokens. |
 | `tools/format_chs_manual_layout.py` | Applies manual/help layout overrides and key-token cleanup. Retained for future manual edits. |
 | `tools/make_chs_name_input_sheet.py` | Creates DATA002/0065 name-input confirmation rows 82-84 when that sheet is regenerated. |
 | `tools/make_equipment_jp_first_layers.py` | Builds layered DATA001/0015 equipment sheets with `chs_unshrunk` for review and `chs_shrunk` for runtime fitting; accepts reviewer `current_chs` overrides from `translation_reviewed/equipment.json`. |

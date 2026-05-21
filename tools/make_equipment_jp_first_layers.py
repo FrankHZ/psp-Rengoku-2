@@ -361,7 +361,7 @@ def build_layers(
         en = str(row.get("en", ""))
         source_codes = source_codes_by_key.get((record, run), [])
         current = preserve_source_symbols(str(row.get("current_chs", row.get("chs", ""))), jp, source_codes)
-        has_human_review = "current_chs" in row
+        has_human_review = "current_chs" in row or "chs" in row
 
         if run == 0:
             unshrunk = current

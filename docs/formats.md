@@ -334,6 +334,7 @@ Verification:
   - `E01` -> `DATA001/0016` record `12`, input-key info/help overlay.
   - `G1E` -> `DATA002/0065` record `82`, new-game player-name input screen.
   - `G1F` -> `DATA002/0065` record `84`, new-game player-name input screen.
+- `DATA002/0065#0085:0` is a symbol/low-code row. The reviewed JP glyph map does not decode it reliably, so code-aware review exports should keep `chs` from reviewer Chinese and render `jp` as the raw source code sequence instead of a guessed string.
 - Ignored local USA reference alignment shows the same `DATA001` offset-table family with shifted entry IDs:
   - JP `DATA001/0003` -> USA `DATA001/0009`.
   - JP `DATA001/0008` -> USA `DATA001/0017`.
@@ -364,6 +365,7 @@ Evidence:
   - `#page`, `#white`, `#center`, `#left`, `#color`, `#readbg`, `#readwait`, `#wait`, `#fade`, `#bgm`, `#end`.
 - Non-command records contain glyph-code streams and occasional embedded direct ASCII tokens such as `#GRAM#`, `SLEEP`, and `ALIVE`.
 - Rows decoded as Japanese `CgramC` are backed by the literal source code sequence `#GRAM#`; CHS replacements must preserve `#GRAM#` so the game can fill a custom protagonist name at runtime.
+- For code-aware review exports, render source `0x0020` as a halfwidth space, render `0x0100` as a fullwidth space, and render `0x000A` as `\n`. The mixed-code player-name sequence `0x0023 0x0047 0x0052 0x0041 0x004d 0x0023` should be shown as `#GRAM#`, not the reviewed-glyph-map visual artifact `CgramC`. Dedicated button-icon codes `0x0283`/`0x0284`/`0x0285`/`0x0286`/`0x0287`/`0x0288`/`0x0289`/`0x028a` should be shown as readable icon tokens such as `<icon:L>`, `<icon:R>`, `<icon:○>`, `<icon:×>`, `<icon:△>`, and `<icon:□>`. Ordinary Latin uses separate visible glyph codes such as `0x01a8`/`0x01ae` for fullwidth `Ｌ`/`Ｒ`; do not rewrite those as button icons. The `chs` field in those exports remains reviewer Chinese from `translation_reviewed/`; the rendered code-aware view belongs in `jp`.
 
 Role:
 - Confirmed story command/control table.

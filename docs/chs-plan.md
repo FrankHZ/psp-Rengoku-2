@@ -69,6 +69,18 @@ translation_reviewed/
 local reviewer-edited JSON inputs, tracked by its own local git repo
 ```
 
+Current code-aware review export:
+
+```text
+local/work/translation_review_reviewedjp_spacecodes_v44/
+entries: 2492
+fields: id, category, chs, jp
+chs: current reviewer Chinese from translation_reviewed/
+jp: source-code-aware reviewed JP view
+rendering: 0x0020 -> halfwidth space, 0x0100 -> fullwidth space, 0x000A -> \n, mixed-code player-name token -> #GRAM#, dedicated 0x0283..0x028a button glyphs -> <icon:L>/<icon:R>/<icon:○>/<icon:×>/<icon:△>/<icon:□>
+special case: DATA002/0065#0085:0 keeps jp as raw source codes because it is a symbol/low-code row not reliably decoded by the reviewed JP glyph map
+```
+
 ## Confirmed Runtime Model
 
 The font uses 11 physical JP pages. Each physical 9x9 page provides a low and a

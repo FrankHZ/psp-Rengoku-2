@@ -30,6 +30,7 @@ Current text/review inputs:
 | `local/work/full_translation_glyph_estimate_v1/` | Parsed target-row estimate and queue reports. |
 | `local/work/actual_cjk_requirement_v1/` | Actual translated/candidate-bank CJK requirement report. |
 | `local/work/full_jp_text_decode_v1/` | JP decode output built from the reviewed glyph table. |
+| `local/work/translation_review_reviewedjp_spacecodes_v44/` | Code-aware v44 translation review JSON generated from the current `translation_reviewed/` input. It keeps reviewer Chinese in `chs`, renders `jp` from source codes with `0x0020 ->` halfwidth space, `0x0100 ->` fullwidth space, `0x000A -> \n`, the mixed-code player-name token sequence as `#GRAM#`, and dedicated `0x0283..0x028a` button glyphs as `<icon:L>`, `<icon:R>`, `<icon:○>`, `<icon:×>`, `<icon:△>`, or `<icon:□>`. It drops `en`/`fit_note` and records the `DATA002/0065#0085:0` raw-code special case in `summary.json`. |
 | `local/work/translation_refine_v1/` | Current JP+EN refinement packs and merged target sheets. Keep `merged_target_sheets_all_fit_v1/` plus `merged_target_sheets_v41_reviewed_all/`; older intermediate target-sheet directories were removed. |
 | `local/work/translation_review_slim_v12_reviewed_all/` | Current all-file review package promoted from `translation_reviewed/`; includes 2492 entries, 246 changed/promoted rows, runtime-fit notes, and DATA003 player-name token preservation notes. |
 | `translation_reviewed/` | Local reviewer-edited input packs; promote into generated work sheets, but do not treat as build output. |
