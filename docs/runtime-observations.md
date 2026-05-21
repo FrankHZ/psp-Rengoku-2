@@ -113,6 +113,11 @@ name tokens. The relevant local target is `DATA001/0012`; `DATA003/1089`
 contains script/control context and visible candidate text but is not the
 primary table for that confirmed dialogue slice.
 
+`DATA003/1089` player-name rows decode as JP `CgramC`, but source-code
+inspection shows the embedded ASCII token is `#GRAM#` (`0x23 47 52 41 4D
+0x23`). Keep that marker in CHS output; writing literal `GRAM` or `CgramC`
+prevents custom protagonist names from being substituted.
+
 External Japanese wiki pages such as `https://w.atwiki.jp/rengoku2/pages/14.html`
 may be used for future translation reference, but they are not committed source
 material.

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -75,8 +76,16 @@ def load_replacements(path: Path) -> list[tuple[str, str]]:
 def apply_terms(text: str, replacements: list[tuple[str, str]]) -> str:
     result = text
     for source, target in replacements:
-        result = result.replace(source, target)
+        result = replace_term(result, source, target)
     return result
+
+
+def replace_term(text: str, source: str, target: str) -> str:
+    if target.startswith(source):
+        suffix = target[len(source) :]
+        if suffix:
+            return re.sub(re.escape(source) + rf"(?!{re.escape(suffix)})", target, text)
+    return text.replace(source, target)
 
 
 def apply_to_target(payload: dict[str, Any], replacements: list[tuple[str, str]]) -> list[dict[str, Any]]:

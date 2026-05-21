@@ -363,6 +363,7 @@ Evidence:
   - `#start 2F`, `#start 3F`, `#start 4F`, through later floor/area sections.
   - `#page`, `#white`, `#center`, `#left`, `#color`, `#readbg`, `#readwait`, `#wait`, `#fade`, `#bgm`, `#end`.
 - Non-command records contain glyph-code streams and occasional embedded direct ASCII tokens such as `#GRAM#`, `SLEEP`, and `ALIVE`.
+- Rows decoded as Japanese `CgramC` are backed by the literal source code sequence `#GRAM#`; CHS replacements must preserve `#GRAM#` so the game can fill a custom protagonist name at runtime.
 
 Role:
 - Confirmed story command/control table.
@@ -403,7 +404,7 @@ Evidence:
 Mutation rules:
 - Game metadata translation is optional and separate from the text-table build.
 - Existing saves can be patched with `tools/patch_savedata_sfo.py`; use `--rengoku2-chs --dry-run` first to review the translated `SAVEDATA_TITLE`, `SAVEDATA_DETAIL`, and `TITLE` fields.
-- New-save metadata templates are in the decrypted EBOOT ELF as UTF-8 runtime strings. v43 patches the title, detail prose/counters, and play-time label there; existing savedata still needs standalone `PARAM.SFO` patching.
+- New-save metadata templates are in the decrypted EBOOT ELF as UTF-8 runtime strings. v44 patches the title, detail prose/counters, and play-time label there; existing savedata still needs standalone `PARAM.SFO` patching.
 - The v43 savedata detail prose starts with `推开彼得之门的众魂啊。` and `得淑女之宽恕，净化汝等之罪。`.
 - The game writes the clear/death/kill counters at fixed byte offsets within the original detail template. Keep the replacement detail string 200 bytes long and keep the three `000` slots at byte offsets `121`, `140`, and `156`.
 
@@ -418,7 +419,7 @@ Evidence:
 - MCD3 entry `4` in `DATA001.BIN` is a `.TDL` containing child `0` named `tlogo`.
 - `tlogo` is the in-game title-logo layer: a 512x256 8bpp swizzled `MIG.00.1PSP` child with pixel data starting at `0x80`; its palette starts at `0x200d0`, and transparent background uses index `0xEB`.
 - Earlier `DATA002/0112` affected shell/side images but did not change the in-game title screen. `PSP_GAME/PIC1.PNG` is now intentionally used for the PSP shell preview background credit and still does not affect in-game title rendering.
-- The latest local experiment patches `tlogo` with a small `小方 oid Codex 汉化` credit near the bottom-left of the 512x256 logo texture. CJK glyphs come from `local/fonts/full-semibold-18.fnt`; Latin glyphs are cut from `DATA001/0002` child `codeANK9x14_00_0`. The result is visible in PPSSPP but still visually rough, so the clean `combined_chs_v43_savedata` build omits it.
+- The latest local experiment patches `tlogo` with a small `小方 oid Codex 汉化` credit near the bottom-left of the 512x256 logo texture. CJK glyphs come from `local/fonts/full-semibold-18.fnt`; Latin glyphs are cut from `DATA001/0002` child `codeANK9x14_00_0`. The result is visible in PPSSPP but still visually rough, so the clean `combined_chs_v44_reviewed_token` build omits it.
 
 Mutation rules:
 - Patch only staged extracted builds, not the original extracted source.

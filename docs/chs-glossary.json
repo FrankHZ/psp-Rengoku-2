@@ -54,9 +54,9 @@
       "key": "gram",
       "jp": ["CgramC"],
       "en": ["GRAM", "#GRAM#"],
-      "chs": "GRAM",
+      "chs": "#GRAM#",
       "replace": [],
-      "notes": "Player/protagonist token; keep stylized Latin."
+      "notes": "DATA003 player/protagonist token. JP decode shows CgramC, but source codes are #GRAM# and must remain a runtime marker. DATA001 story dialogue uses @GRAM@ instead."
     }
   ]
 }

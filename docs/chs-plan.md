@@ -12,14 +12,14 @@ docs/chs-layout-rules.md
 Current PPSSPP-ready broad build:
 
 ```text
-local/rebuilt/combined_chs_v43_savedata_extracted/
+local/rebuilt/combined_chs_v44_reviewed_token_extracted/
 ```
 
 Current work root and coverage:
 
 ```text
-local/work/combined_chs_v43_savedata/
-local/work/chs_coverage_v43_savedata/
+local/work/combined_chs_v44_reviewed_token/
+local/work/chs_coverage_v44_reviewed_token/
 ```
 
 Included targets:
@@ -41,10 +41,10 @@ Current coverage:
 parsed rows across current target tables: 1637
 DATA003/1089 story glyph rows patched:    855
 total current text patch rows:           2492
-assigned CJK glyphs:                     1524
-physical cells used:                      846
+assigned CJK glyphs:                     1523
+physical cells used:                      845
 reserved source logical cells:            153
-logical headroom before source reserves:  258
+logical headroom before source reserves:  259
 ```
 
 Current font/quantizer baseline:
@@ -62,7 +62,7 @@ Current human review package:
 local/work/translation_review_slim_v12_reviewed_all/
 entries: 2492
 fields: id, category, chs, jp, en plus equipment layer fields where applicable
-changed/promoted rows: 244
+changed/promoted rows: 246
 rough markers: 0
 
 translation_reviewed/
@@ -95,7 +95,7 @@ not extra storage.
 
 ## Current Status
 
-v43 is the current releasable baseline. Glyph capacity is not the active blocker
+v44 is the current releasable baseline. Glyph capacity is not the active blocker
 for the current parsed target set, and the current `translation_reviewed/`
 package has been promoted into the target sheets and reviewer-facing package.
 
@@ -103,12 +103,13 @@ package has been promoted into the target sheets and reviewer-facing package.
 DATA001/0015: reviewer-edited current_chs promoted into chs_unshrunk/chs_shrunk layers
 DATA003/1089: 855 story glyph rows patched from reviewed JP decode; 31 rows glossary-normalized
 DATA001/0016 records 5-10: standalone attack attributes restored to GRAPPLE/SLASH/IMPACT/QUANTUM/BULLET/HEAT
-translation_reviewed package promoted: 244 changed rows across tutorial, DATA001/0012, equipment, UI, help, DATA002, and DATA003
+translation_reviewed package promoted: 246 changed rows across tutorial, DATA001/0012, equipment, UI, help, DATA002, and DATA003
+DATA003/1089 player-name token: JP-decoded `CgramC` rows preserve runtime `#GRAM#` in CHS so custom protagonist names are substituted
 EBOOT ASCII advance table: halfwidth `1` width is patched from 5 to 7 so it aligns with other halfwidth digits while the original glyph bitmap stays unchanged
 EBOOT save-list metadata templates: new saves write Chinese title/detail/time labels from the runtime EBOOT strings
 EBOOT savedata detail counter slots remain fixed at byte offsets 121/140/156 inside the original 200-byte template
 EBOOT OSK prompt: `名前を入力してください` is patched to `请输入名称`
-title-screen credit: releasable `combined_chs_v43_savedata` keeps in-game title textures clean, but uses the PSP shell `PIC1.PNG` upper-left `小方 oid Codex 汉化` credit from `local/work/title_credit_probe/rebuilt_pic1_credit.png`; latest in-game logo experiment is `combined_chs_v43_title_logo_ank3_retry`, patching `DATA001/0004` `tlogo`, but its visual quality is still under review
+title-screen credit: releasable `combined_chs_v44_reviewed_token` keeps in-game title textures clean, but uses the PSP shell `PIC1.PNG` upper-left `小方 oid Codex 汉化` credit from `local/work/title_credit_probe/rebuilt_pic1_credit.png`; latest in-game logo experiment is `combined_chs_v43_title_logo_ank3_retry`, patching `DATA001/0004` `tlogo`, but its visual quality is still under review
 source hard paragraph breaks and generated soft wraps preserved
 Latin, punctuation, symbols, and key-icon glyphs still reuse original source cells where known
 ```
@@ -121,7 +122,7 @@ Existing PPSSPP savedata list metadata can still be patched separately with:
 tools/patch_savedata_sfo.py --rengoku2-chs
 ```
 
-v43 patches the runtime EBOOT templates used for new-save metadata and the name
+v44 patches the runtime EBOOT templates used for new-save metadata and the name
 input OSK prompt. Existing savedata `PARAM.SFO` files are not rewritten by the
 ISO and still need the standalone patch tool if they should be updated.
 

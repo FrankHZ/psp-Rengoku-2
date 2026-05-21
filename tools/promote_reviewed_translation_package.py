@@ -62,7 +62,13 @@ RUNTIME_FIT_OVERRIDES = {
     "DATA001/0017#0098:0": "3. H.E.A.V.E.N.-B",
     "DATA001/0017#0100:0": "4. H.E.A.V.E.N.-C",
     "DATA002/0065#0176:0": "开场",
+    "DATA003/1089#0055:0": "毕竟状况很惨烈。",
     "DATA003/1089#0320:0": "无数人造人的未来",
+}
+
+PLAYER_NAME_TOKEN_NOTES = {
+    "@GRAM@": "reviewed_v44_player_token_at",
+    "#GRAM#": "reviewed_v44_player_token_hash",
 }
 
 
@@ -171,6 +177,13 @@ def apply_review_rows(payload: dict[str, Any], review_rows: list[dict[str, Any]]
             continue
         review_id = str(review["id"])
         new = normalize_runtime_text(RUNTIME_FIT_OVERRIDES.get(review_id, str(review.get("chs", ""))))
+        player_token = source_player_name_token(row)
+        player_token_note = None
+        if player_token is not None:
+            normalized = normalize_player_name_token(new, player_token)
+            if normalized != new:
+                new = normalized
+                player_token_note = PLAYER_NAME_TOKEN_NOTES[player_token]
         max_units = source_max_units(row)
         unit_count = translation_units(new)
         if max_units is not None and unit_count > max_units:
@@ -184,6 +197,8 @@ def apply_review_rows(payload: dict[str, Any], review_rows: list[dict[str, Any]]
             str(row.get("notes", "")),
             "reviewed_v41_fit" if review_id in RUNTIME_FIT_OVERRIDES else "reviewed_v41",
         )
+        if player_token_note is not None:
+            row["notes"] = append_note(str(row.get("notes", "")), player_token_note)
         if old != new:
             changes.append({"id": review["id"], "old": old, "new": new, "max_units": max_units})
 
@@ -225,6 +240,50 @@ def translation_units(text: str) -> int:
 
 def normalize_runtime_text(text: str) -> str:
     return text.replace("\u3000", " ")
+
+
+def source_player_name_token(row: dict[str, Any]) -> str | None:
+    codes = normalize_source_codes(row.get("source_codes", []))
+    if contains_ascii_token(codes, "#GRAM#"):
+        return "#GRAM#"
+    if contains_ascii_token(codes, "@GRAM@"):
+        return "@GRAM@"
+    jp = str(row.get("jp", ""))
+    if "CgramC" in jp:
+        return "#GRAM#"
+    if "@GRAM@" in jp:
+        return "@GRAM@"
+    return None
+
+
+def contains_ascii_token(codes: list[int], token: str) -> bool:
+    needle = [ord(char) for char in token]
+    if not needle or len(codes) < len(needle):
+        return False
+    for index in range(0, len(codes) - len(needle) + 1):
+        if codes[index : index + len(needle)] == needle:
+            return True
+    return False
+
+
+def normalize_source_codes(source_codes: list[Any]) -> list[int]:
+    codes: list[int] = []
+    for code in source_codes:
+        try:
+            codes.append(parse_code_value(code))
+        except (TypeError, ValueError):
+            continue
+    return codes
+
+
+def parse_code_value(code: Any) -> int:
+    return int(code, 16 if isinstance(code, str) and code.lower().startswith("0x") else 10)
+
+
+def normalize_player_name_token(text: str, token: str) -> str:
+    if token in text:
+        return text
+    return re.sub(r"CgramC|GRAM|gram", token, text)
 
 
 def source_max_units(row: dict[str, Any]) -> int | None:

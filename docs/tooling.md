@@ -23,7 +23,7 @@ an old experiment must be reconstructed.
 | `tools/make_equipment_jp_first_layers.py` | Builds layered DATA001/0015 equipment sheets with `chs_unshrunk` for review and `chs_shrunk` for runtime fitting; accepts reviewer `current_chs` overrides from `translation_reviewed/equipment.json`. |
 | `tools/apply_story_glossary.py` | Applies `docs/chs-glossary.json` to DATA003/1089 target and review sheets so story names stay consistent. |
 | `tools/make_ui_data002_review_layers.py` | Builds the DATA001/0016 UI and DATA002/0065 target/review overlays: English standalone attack attributes plus translated DATA002 rough rows. Retained for regenerating those layers if needed. |
-| `tools/promote_reviewed_translation_package.py` | Promotes the local `translation_reviewed/` JSON package into v41 target sheets and a consolidated v12 review package, with runtime-fit overrides for rows too long for source slots. |
+| `tools/promote_reviewed_translation_package.py` | Promotes the local `translation_reviewed/` JSON package into v41 target sheets and a consolidated v12 review package, with runtime-fit overrides for rows too long for source slots. It also normalizes player-name placeholders back to the source token form (`@GRAM@` or `#GRAM#`) when reviewer prose uses literal `GRAM`/`CgramC`. |
 | `tools/compare_chs_fonts.py` | Compares candidate CHS font rendering. |
 | `tools/patch_savedata_sfo.py` | Lists or patches existing PSP savedata `PARAM.SFO` metadata; `--rengoku2-chs` translates the current Rengoku 2 save-list title/detail fields in fixed-size UTF-8 slots. |
 | `tools/patch_eboot_runtime_strings.py` | Patches verified runtime strings in a decrypted EBOOT ELF: name-input OSK prompt, game/save title, savedata detail template, and play-time label. |
@@ -152,8 +152,8 @@ PSP shell preview image patch example:
 
 ```powershell
 .\.venv\Scripts\python.exe tools/patch_psp_pic0.py `
-  local/rebuilt/combined_chs_v43_savedata_extracted `
-  local/work/title_pic0_chs.png `
+  local/rebuilt/combined_chs_v44_reviewed_token_extracted `
+  translation_reviewed/PIC0.PNG `
   --dry-run
 ```
 

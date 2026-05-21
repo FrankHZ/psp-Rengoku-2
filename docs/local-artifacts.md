@@ -10,13 +10,13 @@ Current PPSSPP build:
 
 | Path | Purpose |
 | --- | --- |
-| `local/rebuilt/combined_chs_v43_savedata_extracted/` | Current PPSSPP-ready broad CHS build with promoted reviewer feedback, reviewed equipment text, story glossary names, English attack attributes, DATA002 rough UI labels cleared, EBOOT halfwidth `1` advance patch, EBOOT new-save metadata string patches, translated `PIC0.PNG`, and the PSP shell `PIC1.PNG` upper-left credit. It intentionally has no in-game title-texture credit patch. |
-| `local/rebuilt/combined_chs_v43_savedata.iso` | Current ISO built from the v43 extracted folder by `tools/build_psp_iso.py`; its high-level ISO9660/UMD layout follows the PPSSPP-tested v41/v40 path. |
+| `local/rebuilt/combined_chs_v44_reviewed_token_extracted/` | Current PPSSPP-ready broad CHS build with promoted reviewer feedback, reviewed equipment text, story glossary names, DATA003 `#GRAM#` player-name token preservation, English attack attributes, DATA002 rough UI labels cleared, EBOOT halfwidth `1` advance patch, EBOOT new-save metadata string patches, translated `PIC0.PNG`, and the PSP shell `PIC1.PNG` upper-left credit. It intentionally has no in-game title-texture credit patch. |
+| `local/rebuilt/combined_chs_v44_reviewed_token.iso` | Current ISO built from the v44 extracted folder by `tools/build_psp_iso.py`; its high-level ISO9660/UMD layout follows the PPSSPP-tested v41/v40 path. |
 | `local/rebuilt/combined_chs_v43_title_logo_ank3_retry_extracted/`, `local/rebuilt/combined_chs_v43_title_logo_ank3_retry.iso` | Latest local title-credit experiment. It patches `DATA001/0004` `tlogo` with `小方 oid Codex 汉化`, using the CHS SemiBold BMFont for CJK and original ANK glyphs for Latin. PPSSPP shows it, but the visual quality is not final, so it is not the releasable baseline. |
-| `local/work/combined_chs_v43_savedata/` | Current build metadata, stage config, glyph assignment, text payloads, and previews. |
-| `local/work/chs_coverage_v43_savedata/` | Current parsed-row and glyph-headroom coverage report. |
+| `local/work/combined_chs_v44_reviewed_token/` | Current build metadata, stage config, glyph assignment, text payloads, and previews. |
+| `local/work/chs_coverage_v44_reviewed_token/` | Current parsed-row and glyph-headroom coverage report. |
 | `local/work/eboot_width_patch/` | Current EBOOT work area. `EBOOT_DEC_WIDTH7_SAVECHS.BIN` is the decrypted EBOOT with ASCII `1` advance patched from 5 to 7 plus new-save metadata and OSK prompt strings; broad builds copy it into `PSP_GAME/SYSDIR/EBOOT.BIN` when present. |
-| `local/work/title_credit_probe/` | Ignored title-texture extraction/probe outputs and PNG previews from the texture search. `rebuilt_pic1_credit.png` is the current source for the PSP shell `PIC1.PNG` credit used by the releasable v43 ISO. `tback` probes proved visible but too dark/filter-affected; the latest in-game experiment targets `DATA001/0004` TDL child `tlogo` instead. Intermediate test ISOs were removed; some extracted folders may remain as local evidence. |
+| `local/work/title_credit_probe/` | Ignored title-texture extraction/probe outputs and PNG previews from the texture search. `rebuilt_pic1_credit.png` is the current source for the PSP shell `PIC1.PNG` credit used by the releasable v44 ISO. `tback` probes proved visible but too dark/filter-affected; the latest in-game experiment targets `DATA001/0004` TDL child `tlogo` instead. Intermediate test ISOs were removed; some extracted folders may remain as local evidence. |
 | `local/tools/deceboot_0_3/` | Local PSP EBOOT decryptor used to produce the decrypted ELF for the width-table patch. |
 
 Current text/review inputs:
@@ -31,7 +31,7 @@ Current text/review inputs:
 | `local/work/actual_cjk_requirement_v1/` | Actual translated/candidate-bank CJK requirement report. |
 | `local/work/full_jp_text_decode_v1/` | JP decode output built from the reviewed glyph table. |
 | `local/work/translation_refine_v1/` | Current JP+EN refinement packs and merged target sheets. Keep `merged_target_sheets_all_fit_v1/` plus `merged_target_sheets_v41_reviewed_all/`; older intermediate target-sheet directories were removed. |
-| `local/work/translation_review_slim_v12_reviewed_all/` | Current all-file review package promoted from `translation_reviewed/`; includes 2492 entries, 244 changed/promoted rows, and runtime-fit notes. |
+| `local/work/translation_review_slim_v12_reviewed_all/` | Current all-file review package promoted from `translation_reviewed/`; includes 2492 entries, 246 changed/promoted rows, runtime-fit notes, and DATA003 player-name token preservation notes. |
 | `translation_reviewed/` | Local reviewer-edited input packs; promote into generated work sheets, but do not treat as build output. |
 
 Current font artifacts:

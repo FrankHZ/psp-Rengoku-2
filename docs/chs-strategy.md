@@ -8,10 +8,10 @@ workflow evolves.
 Treat this as the baseline until tester/reviewer feedback says otherwise:
 
 ```text
-local/rebuilt/combined_chs_v43_savedata_extracted/
+local/rebuilt/combined_chs_v44_reviewed_token_extracted/
 ```
 
-The current clean build keeps the JP-first DATA003/1089 story pass, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text into layered review/runtime sheets, promotes the full local reviewer JSON package including help/manual and DATA002 UI feedback, keeps standalone attack attributes in English, keeps known DATA002 rough UI rows cleared, and patches EBOOT runtime metadata strings for new saves. Glyph capacity is not the active blocker after the confirmed low/high bitplane packing model.
+The current clean build keeps the JP-first DATA003/1089 story pass, applies the story-name glossary, promotes reviewer-edited DATA001/0015 equipment text into layered review/runtime sheets, promotes the full local reviewer JSON package including help/manual and DATA002 UI feedback, keeps standalone attack attributes in English, keeps known DATA002 rough UI rows cleared, preserves DATA003/1089 `#GRAM#` player-name tokens, and patches EBOOT runtime metadata strings for new saves. Glyph capacity is not the active blocker after the confirmed low/high bitplane packing model.
 
 Current build policy:
 
@@ -20,7 +20,7 @@ use generated CHS font only for CJK ideographs
 reuse source Latin, digits, punctuation, symbols, and key icons when known
 patch EBOOT ASCII advance table so source halfwidth `1` uses width 7 like other halfwidth digits
 patch EBOOT runtime save-list metadata templates and name-input prompt
-keep the releasable v43 savedata build free of in-game title-credit texture changes
+keep the releasable v44 build free of in-game title-credit texture changes
 use the PSP shell `PIC1.PNG` background credit for out-of-game preview screens
 reserve source cells for every reused symbol code
 preserve explicit paragraph/list hard breaks
@@ -72,6 +72,8 @@ Story proper names must pass through `docs/chs-glossary.json`. Use Divine Comedy
 
 Runtime user input such as the player name is a variable token. Treat it as a
 wildcard, for example `@GRAM@`/`#GRAM#`, not as literal translatable text.
+`DATA001/0012` uses `@GRAM@`; `DATA003/1089` has JP-decoded `CgramC`, but the
+underlying source codes and USA alignment show it is the `#GRAM#` runtime token.
 
 ### Optional Story References
 
@@ -93,15 +95,15 @@ logical layers:           2
 logical capacity:      1782
 ```
 
-Current v43 usage:
+Current v44 usage:
 
 ```text
-assigned CJK glyphs:                   1524
-physical cells used:                    846
-low-layer glyphs:                       746
+assigned CJK glyphs:                   1523
+physical cells used:                    845
+low-layer glyphs:                       745
 high-layer glyphs:                      778
 reserved source logical cells:          153
-logical headroom before source reserves: 258
+logical headroom before source reserves: 259
 font: local/fonts/full-semibold-18.fnt
 quantization: palette3, threshold 64, gray threshold 176
 2bpp convention: 0 background, 1 light gray, 2 deep gray, 3 white
@@ -162,7 +164,7 @@ translation_reviewed/
 local reviewer-edited JSON inputs, tracked by its own local git repo
 ```
 
-Current v43 pass:
+Current v44 pass:
 
 ```text
 DATA001/0015: reviewer-edited current_chs promoted to chs_unshrunk/chs_shrunk layers
@@ -174,10 +176,10 @@ DATA002/0065: standalone GRAPPLE label restored to English; DATA002 rough UI/gal
 DATA002/0065: missing UI/gallery/sound rows are translated, including `开场` and `结局`
 DATA001/0017: help/manual layout feedback is promoted
 DATA001/0012 and DATA003/1089: runtime-fit handoff applied without mixing fitted strings into reviewed JSON
-DATA003/1089: JP-first story-script pass with glossary-normalized story names
+DATA003/1089: JP-first story-script pass with glossary-normalized story names and `#GRAM#` runtime player-name tokens preserved for custom-name substitution
 EBOOT: new-save metadata templates and the name-input OSK prompt are patched in decrypted EBOOT runtime strings
 EBOOT savedata detail text starts with `推开彼得之门的众魂啊。` / `得淑女之宽恕，净化汝等之罪。`; counter write offsets remain 121/140/156
-title-screen credit: `combined_chs_v43_savedata` has PSP shell `PIC1.PNG` upper-left credit only; in-game title textures remain clean, and latest in-game experiment is `combined_chs_v43_title_logo_ank3_retry`
+title-screen credit: `combined_chs_v44_reviewed_token` has PSP shell `PIC1.PNG` upper-left credit only; in-game title textures remain clean, and latest in-game experiment is `combined_chs_v43_title_logo_ank3_retry`
 translation_reviewed/: local-only nested git repo for reviewer JSON inputs
 local/work/translation_review_slim_v12_reviewed_all/: all-file reviewed package, 2492 entries
 runtime-fit overrides: source-slot shortening for a small set of long reviewed rows; reviewer text is retained in the review pack
@@ -186,9 +188,9 @@ runtime-fit overrides: source-slot shortening for a small set of long reviewed r
 Known remaining external/system text:
 
 ```text
-PSP savedata list metadata is written into savedata PARAM.SFO. v43 patches the EBOOT templates used for new saves.
+PSP savedata list metadata is written into savedata PARAM.SFO. v44 patches the EBOOT templates used for new saves.
 Existing savedata PARAM.SFO files can be patched separately with tools/patch_savedata_sfo.py.
-The PSP OSK prompt was outside the DATA001/002/003 text-table path, but v43 patches the known decrypted EBOOT prompt string.
+The PSP OSK prompt was outside the DATA001/002/003 text-table path, but v44 patches the known decrypted EBOOT prompt string.
 ```
 
 Recommended next loop:
