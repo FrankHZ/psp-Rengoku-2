@@ -4,9 +4,9 @@
 
 发布与实机/模拟器展示：
 
-- ROM 发布贴：https://stage1st.com/2b/thread-2281317-1-1.html
-- B 站实况 1：https://www.bilibili.com/video/BV1hqGq6dE6f/?vd_source=1b420207a50e87a574d9bfc22a6c18a8
-- B 站实况 2：https://www.bilibili.com/video/BV19SGo6EECq/?vd_source=1b420207a50e87a574d9bfc22a6c18a8
+- S1 发布帖：[汉化] [PSP]炼狱 贰 The Stairway to H.E.A.V.E.N._小方&oid汉化版：https://stage1st.com/2b/thread-2281317-1-1.html
+- B 站资源分享：【汉化资源分享】PSP 炼狱2 通往天国得阶梯 汉化版发布中！相当另类得一款游戏：https://www.bilibili.com/video/BV1hqGq6dE6f/?vd_source=1b420207a50e87a574d9bfc22a6c18a8
+- B 站实况/展示：2026年PSP汉化游戏《炼狱 贰 通往天国的阶梯》：https://www.bilibili.com/video/BV19SGo6EECq/?vd_source=1b420207a50e87a574d9bfc22a6c18a8
 
 ## 当前状态
 
